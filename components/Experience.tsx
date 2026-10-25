@@ -1,10 +1,16 @@
 "use client";
 
-import { useState, useId } from 'react';
+import { useState, useId, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowUpRight, MoveUpRight, Sparkles, Layers, ArrowLeft } from 'lucide-react';
-import { Formula } from './Formula';
+import { ArrowUpRight, MoveUpRight } from 'lucide-react';
+import { InteractiveProbabilityFormula } from './InteractiveProbabilityFormula';
+import {
+  getOutcomeDotAnimation,
+  NAV_SECTIONS,
+  resolveActiveNavSection,
+  type NavSectionId,
+} from '@/lib/interactive-formula';
 import {
   dice,
   odd,
@@ -33,27 +39,76 @@ function SectionWrapper({
   prototype,
   enabled,
   quiet,
-  sectionNumber,
-  sectionTitle,
   children,
 }: {
   prototype: boolean;
   enabled: boolean;
   quiet: boolean;
-  sectionNumber?: string;
-  sectionTitle?: string;
   children: React.ReactNode;
 }) {
   if (!prototype) return <>{children}</>;
   return (
-    <FoldingSectionCard
-      enabled={enabled}
-      quiet={quiet}
-      sectionNumber={sectionNumber}
-      sectionTitle={sectionTitle}
-    >
+    <FoldingSectionCard enabled={enabled} quiet={quiet}>
       {children}
     </FoldingSectionCard>
+  );
+}
+
+function OutcomeDot({
+  value,
+  x,
+  y,
+  isSelected,
+  quiet,
+  duration,
+}: {
+  value: string;
+  x: number;
+  y: number;
+  isSelected: boolean;
+  quiet: boolean;
+  duration: number;
+}) {
+  const prevSelectedRef = useRef<boolean>(isSelected);
+  const wasSelected = prevSelectedRef.current;
+
+  useEffect(() => {
+    prevSelectedRef.current = isSelected;
+  }, [isSelected]);
+
+  const anim = getOutcomeDotAnimation({
+    isSelected,
+    wasSelected,
+    quiet,
+  });
+
+  return (
+    <motion.g animate={{ x, y }} transition={{ duration }}>
+      <motion.circle
+        r="19"
+        animate={{
+          scale: anim.scale,
+          fill: anim.fill,
+        }}
+        transition={anim.transition}
+        stroke={anim.stroke}
+        strokeWidth="1"
+        style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
+      />
+      <motion.text
+        textAnchor="middle"
+        dy="6"
+        animate={{
+          scale: anim.scale,
+          fill: anim.textColor,
+        }}
+        transition={anim.transition}
+        style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
+        fontSize="17"
+      >
+        {value}
+      </motion.text>
+    </motion.g>
   );
 }
 
@@ -62,14 +117,45 @@ export default function Experience({
   prototype = false,
   folding: initialFolding,
 }: ExperienceProps) {
+  const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<DisplayMode>('full');
   const [scenario, setScenario] = useState<Scenario>('prime');
   const [region, setRegion] = useState<Region>('union');
-  const [foldingEnabled, setFoldingEnabled] = useState<boolean>(
-    initialFolding ?? (prototype ? true : false)
-  );
+  const [activeNav, setActiveNav] = useState<NavSectionId>('beranda');
+  const foldingEnabled = initialFolding ?? prototype;
   const reduced = useReducedMotion();
   const grainId = useId();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const sections = [
+      { id: 'beranda', el: document.getElementById('beranda') },
+      { id: 'dadu', el: document.getElementById('dadu') },
+      { id: 'lab', el: document.getElementById('lab') },
+      { id: 'materi', el: document.getElementById('materi') },
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0];
+        if (visible?.target?.id) {
+          setActiveNav(resolveActiveNavSection(visible.target.id));
+        }
+      },
+      { threshold: 0, rootMargin: '-70px 0px -50% 0px' }
+    );
+
+    sections.forEach((s) => {
+      if (s.el) observer.observe(s.el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const b = scenario === 'prime' ? prime : even;
   const shared = intersection(odd, b);
@@ -81,7 +167,7 @@ export default function Experience({
       ? shared
       : complement(dice.outcomes, odd);
 
-  const quiet = reduced || mode !== 'full';
+  const quiet = (mounted && reduced) || mode !== 'full';
   const duration = quiet ? motionTokens.instant : motionTokens.diagram;
 
   const points =
@@ -109,41 +195,71 @@ export default function Experience({
         Lewati navigasi
       </a>
 
-      {prototype && (
-        <div className="prototype-banner">
-          <span>
-            <Sparkles size={14} className="inline mr-1 text-[#cf4500]" />
-            KLON PROTOTIPE: Klon Beranda Utama dengan 3D Folding Scroll & Dadu Bebas
-          </span>
-          <Link href="/" className="banner-link">
-            <ArrowLeft size={14} /> Beranda Asli
-          </Link>
-        </div>
-      )}
-
-      <header className={prototype ? 'prototype-header' : ''}>
+      <header>
         <Link className="brand" href={prototype ? '/prototype' : '/'}>
           <span className="brand-symbol">
             <i />
             <i />
           </span>
           ruang peluang<span className="brand-dot">.</span>
-          {prototype && <span className="prototype-tag">PROTOTIPE</span>}
         </Link>
-        <nav aria-label="Navigasi utama">
-          <Link href={prototype ? '/prototype' : '/'} aria-current={!styleguide ? 'page' : undefined}>
-            Beranda
-          </Link>
-          <a href="#lab">Lab Diagram</a>
-          <a href="#dadu">Dadu 3D</a>
-          <a href="#materi">Materi</a>
+        <nav aria-label="Navigasi utama" className="nav-pill-group">
+          {NAV_SECTIONS.map((item) => {
+            const isActive = activeNav === item.id;
+            const isHome = item.id === 'beranda';
+            const href = isHome ? (prototype ? '/prototype' : '/') : `#${item.id}`;
+
+            return isHome ? (
+              <Link
+                key={item.id}
+                href={href}
+                className={`nav-pill-item ${isActive ? 'is-active' : ''}`}
+                aria-current={isActive && !styleguide ? 'page' : undefined}
+                onClick={() => setActiveNav('beranda')}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    className="nav-active-pill"
+                    transition={
+                      quiet
+                        ? { duration: 0 }
+                        : { type: 'spring', stiffness: 380, damping: 28 }
+                    }
+                  />
+                )}
+                <span className="nav-pill-text">{item.label}</span>
+              </Link>
+            ) : (
+              <a
+                key={item.id}
+                href={href}
+                className={`nav-pill-item ${isActive ? 'is-active' : ''}`}
+                aria-current={isActive ? 'true' : undefined}
+                onClick={() => setActiveNav(item.id)}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    className="nav-active-pill"
+                    transition={
+                      quiet
+                        ? { duration: 0 }
+                        : { type: 'spring', stiffness: 380, damping: 28 }
+                    }
+                  />
+                )}
+                <span className="nav-pill-text">{item.label}</span>
+              </a>
+            );
+          })}
         </nav>
         <Link
           className="nav-go"
           href={prototype ? '/' : '/styleguide'}
           aria-label={prototype ? 'Kembali ke beranda utama' : 'Buka sistem desain'}
         >
-          {prototype ? <ArrowLeft size={20} /> : <ArrowUpRight size={20} />}
+          <ArrowUpRight size={20} />
         </Link>
       </header>
 
@@ -166,46 +282,14 @@ export default function Experience({
           </label>
         </div>
 
-        {/* Page-level 3D Folding Mode Comparison Switcher on Prototype */}
-        {prototype && (
-          <div className="folding-toggle-bar">
-            <div className="folding-toggle-info">
-              <Layers size={18} className="text-[#cf4500]" />
-              <span>
-                <strong>3D Folding Scroll:</strong> Setiap bagian beranda dibagi menjadi kartu 3D yang melipat secara fisik saat di-scroll.
-              </span>
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                className={`folding-toggle-btn ${foldingEnabled ? 'is-active' : ''}`}
-                onClick={() => setFoldingEnabled(true)}
-                aria-pressed={foldingEnabled}
-              >
-                Lipatan 3D Aktif
-              </button>
-              <button
-                type="button"
-                className={`folding-toggle-btn ${!foldingEnabled ? 'is-active' : ''}`}
-                onClick={() => setFoldingEnabled(false)}
-                aria-pressed={!foldingEnabled}
-              >
-                Mode Datar Standar
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className={prototype && foldingEnabled ? 'folding-sections-container' : 'prototype-sections-wrap'}>
+        <div className={prototype ? 'folding-sections-container' : 'prototype-sections-wrap'}>
           {/* CARD 00: HERO */}
           <SectionWrapper
             prototype={prototype}
             enabled={foldingEnabled}
             quiet={!!quiet}
-            sectionNumber="00 / PENGANTAR"
-            sectionTitle="RUANG UNTUK RASA INGIN TAHU"
           >
-            <section className={`hero ${!styleguide ? 'homepage-hero' : ''}`}>
+            <section id="beranda" className={`hero ${!styleguide ? 'homepage-hero' : ''}`}>
               <div className="hero-copy">
                 <div className="eyebrow">RUANG UNTUK RASA INGIN TAHU</div>
                 <h1>
@@ -219,7 +303,7 @@ export default function Experience({
                   <br />
                   Temukan alasan di balik setiap rumus.
                 </p>
-                <a className="button primary" href="#lab">
+                <a className="button primary" href="#dadu">
                   Mulai bereksplorasi <ArrowUpRight size={20} />
                 </a>
               </div>
@@ -282,13 +366,33 @@ export default function Experience({
             </section>
           </SectionWrapper>
 
-          {/* CARD 01: VENN DIAGRAM LAB */}
+          {/* CARD 01: 3D DICE SCROLLYTELLING */}
           <SectionWrapper
             prototype={prototype}
             enabled={foldingEnabled}
             quiet={!!quiet}
-            sectionNumber="01 / EKSPERIMEN HIMPUNAN"
-            sectionTitle="LAB INTERAKTIF DIAGRAM VENN"
+          >
+            <section id="dadu" className="scrolly-section-wrapper">
+              <div className="section-title">
+                <div>
+                  <div className="eyebrow">DARI BENDA FISIK KE PELUANG</div>
+                  <h2>Dadu yang Bergulir.</h2>
+                </div>
+                <p>
+                  Sebelum angka dan rumus dihitung, peluang berakar dari peristiwa nyata. Gulir untuk
+                  mengamati bagaimana pergerakan dadu 3D melahirkan ruang sampel dan titik kejadian.
+                </p>
+              </div>
+
+              <ScrollScene3D quiet={!!quiet} />
+            </section>
+          </SectionWrapper>
+
+          {/* CARD 02: VENN DIAGRAM LAB */}
+          <SectionWrapper
+            prototype={prototype}
+            enabled={foldingEnabled}
+            quiet={!!quiet}
           >
             <section id="lab" className="lab-section">
           <div className="section-title">
@@ -322,6 +426,7 @@ export default function Experience({
                   S
                 </text>
                 <motion.circle
+                  initial={{ cx: scenario === 'prime' ? 220 : 150 }}
                   animate={{ cx: scenario === 'prime' ? 220 : 150 }}
                   transition={{ duration }}
                   cy="170"
@@ -329,6 +434,7 @@ export default function Experience({
                   fill={region === 'complement' ? '#ead5ce' : '#efb3a3'}
                 />
                 <motion.circle
+                  initial={{ cx: scenario === 'prime' ? 340 : 400 }}
                   animate={{ cx: scenario === 'prime' ? 340 : 400 }}
                   transition={{ duration }}
                   cy="170"
@@ -343,22 +449,15 @@ export default function Experience({
                   B · {scenario === 'prime' ? 'prima' : 'genap'}
                 </text>
                 {points.map((p) => (
-                  <motion.g key={p.v} animate={{ x: p.x, y: p.y }} transition={{ duration }}>
-                    <circle
-                      r="19"
-                      fill={selected.includes(p.v) ? '#141413' : '#fff'}
-                      stroke="#141413"
-                      strokeWidth="1"
-                    />
-                    <text
-                      textAnchor="middle"
-                      dy="6"
-                      fill={selected.includes(p.v) ? '#fff' : '#141413'}
-                      fontSize="17"
-                    >
-                      {p.v}
-                    </text>
-                  </motion.g>
+                  <OutcomeDot
+                    key={p.v}
+                    value={p.v}
+                    x={p.x}
+                    y={p.y}
+                    isSelected={selected.includes(p.v)}
+                    quiet={!!quiet}
+                    duration={duration}
+                  />
                 ))}
               </svg>
               <div className="legend">
@@ -416,14 +515,17 @@ export default function Experience({
                     ? 'IRISAN'
                     : 'KOMPLEMEN A'}
                 </span>
-                <Formula
-                  tex={`P(${
+                <InteractiveProbabilityFormula
+                  eventNotation={
                     region === 'union'
                       ? 'A\\cup B'
                       : region === 'intersection'
                       ? 'A\\cap B'
                       : 'A^c'
-                  })=\\frac{${selected.length}}{${dice.outcomes.length}}`}
+                  }
+                  numerator={selected.length}
+                  denominator={dice.outcomes.length}
+                  quiet={!!quiet}
                 />
                 <p>
                   {region === 'union'
@@ -451,37 +553,11 @@ export default function Experience({
         </section>
       </SectionWrapper>
 
-      {/* CARD 02: 3D DICE SCROLLYTELLING */}
-      <SectionWrapper
-        prototype={prototype}
-        enabled={foldingEnabled}
-        quiet={!!quiet}
-        sectionNumber="02 / FISIKA KE PROBABILITAS"
-        sectionTitle="DADU 3D SCROLLYTELLING"
-      >
-        <section id="dadu" className="scrolly-section-wrapper">
-          <div className="section-title">
-            <div>
-              <div className="eyebrow">DARI BENDA FISIK KE PELUANG</div>
-              <h2>Dadu yang Bergulir.</h2>
-            </div>
-            <p>
-              Sebelum angka dan rumus dihitung, peluang berakar dari peristiwa nyata. Gulir untuk
-              mengamati bagaimana pergerakan dadu 3D melahirkan ruang sampel dan titik kejadian.
-            </p>
-          </div>
-
-          <ScrollScene3D quiet={!!quiet} folding={foldingEnabled} />
-        </section>
-      </SectionWrapper>
-
       {/* CARD 03: CURRICULUM MATERIAL LIST */}
       <SectionWrapper
         prototype={prototype}
         enabled={foldingEnabled}
         quiet={!!quiet}
-        sectionNumber="03 / PETA BELAJAR"
-        sectionTitle="5 MODUL MATERI KURIKULUM"
       >
         <MaterialList quiet={!!quiet} />
       </SectionWrapper>

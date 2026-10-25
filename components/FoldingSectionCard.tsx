@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from 'react';
+import { useRef, useState, useEffect, type ReactNode } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { FOLD_BREAKPOINTS } from '@/lib/folding';
 
@@ -10,8 +10,6 @@ interface FoldingSectionCardProps {
   className?: string;
   enabled?: boolean;
   quiet?: boolean;
-  sectionNumber?: string;
-  sectionTitle?: string;
 }
 
 export default function FoldingSectionCard({
@@ -20,12 +18,15 @@ export default function FoldingSectionCard({
   className = '',
   enabled = true,
   quiet = false,
-  sectionNumber,
-  sectionTitle,
 }: FoldingSectionCardProps) {
+  const [mounted, setMounted] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const systemReduced = useReducedMotion();
-  const isQuiet = Boolean(quiet || systemReduced || !enabled);
+  const isQuiet = Boolean(quiet || (mounted && systemReduced) || !enabled);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -81,14 +82,6 @@ export default function FoldingSectionCard({
             style={{ opacity: creaseOpacity }}
             aria-hidden="true"
           />
-        )}
-
-        {/* Optional decorative card index badge */}
-        {sectionNumber && (
-          <div className="section-card-index-pill font-mono" aria-hidden="true">
-            <span>{sectionNumber}</span>
-            {sectionTitle && <span>· {sectionTitle}</span>}
-          </div>
         )}
 
         {children}

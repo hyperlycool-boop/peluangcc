@@ -1,15 +1,29 @@
 "use client";
 
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'motion/react';
-import { Sparkles } from 'lucide-react';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+  useInView,
+  useMotionValue,
+} from 'motion/react';
+import type { MotionValue } from 'motion/react';
 import Die3D from './Die3D';
 import { Formula } from '@/components/Formula';
+import {
+  DIE_KINEMATICS_BREAKPOINTS,
+  FLOATING_STAGE_BREAKPOINTS,
+  getScrollyStage,
+  calculateDecelerationFactor,
+  TUMBLE_CONFIG,
+} from '@/lib/scrolly';
 
 interface ScrollScene3DProps {
   onStageChange?: (stage: number) => void;
   quiet?: boolean;
-  folding?: boolean;
 }
 
 interface StepItem {
@@ -56,94 +70,63 @@ const STAGES: readonly StepItem[] = [
   },
 ];
 
-interface FoldingStepCardProps {
+interface FloatingStageItemProps {
   st: StepItem;
-  isActive: boolean;
+  smooth: MotionValue<number>;
   isReduced: boolean;
-  folding: boolean;
+  isActive: boolean;
 }
 
-function FoldingStepCard({ st, isActive, isReduced, folding }: FoldingStepCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // 3D Origami kinematics: Entry fold (-20°) -> Flat reading zone (0°) -> Exit fold (+18°)
-  const rawRotX = useTransform(
-    scrollYProgress,
-    [0, 0.28, 0.45, 0.72, 1],
-    [-20, -10, 0, 0, 18]
+function FloatingStageItem({ st, smooth, isReduced, isActive }: FloatingStageItemProps) {
+  // Pure typography transition mappings consuming single source of truth FLOATING_STAGE_BREAKPOINTS
+  const bp = FLOATING_STAGE_BREAKPOINTS[st.num as 1 | 2 | 3 | 4];
+  const rawOpacity = useTransform(
+    smooth,
+    bp.progress as unknown as number[],
+    bp.opacity as unknown as number[]
+  );
+  const rawY = useTransform(
+    smooth,
+    bp.progress as unknown as number[],
+    bp.translateY as unknown as number[]
   );
 
-  // Depth pullback in Z for realistic paper perspective
-  const rawTranslateZ = useTransform(
-    scrollYProgress,
-    [0, 0.35, 0.65, 1],
-    [-25, 0, 0, -25]
-  );
-
-  // Crease lighting overlay: darkest when angled away, transparent when flat
-  const rawCreaseOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.45, 0.72, 0.95, 1],
-    [0.26, 0.16, 0, 0, 0.16, 0.24]
-  );
-
-  // Subtle natural scale
-  const rawScale = useTransform(
-    scrollYProgress,
-    [0, 0.35, 0.65, 1],
-    [0.98, 1, 1, 0.98]
-  );
-
-  const rotX = isReduced || !folding ? 0 : rawRotX;
-  const translateZ = isReduced || !folding ? 0 : rawTranslateZ;
-  const creaseOpacity = isReduced || !folding ? 0 : rawCreaseOpacity;
-  const scale = isReduced || !folding ? 1 : rawScale;
+  const opacity = isReduced ? (isActive ? 1 : 0) : rawOpacity;
+  const y = isReduced ? 0 : rawY;
 
   return (
     <motion.div
-      ref={cardRef}
-      className={`scrolly-step-card ${folding ? 'folding-step-card' : ''} ${isActive ? 'is-active-step' : ''}`}
+      className={`floating-stage-item stage-${st.num} ${st.num % 2 === 1 ? 'stage-pos-left' : 'stage-pos-right'} ${
+        isActive ? 'is-active-stage' : ''
+      }`}
       style={{
-        rotateX: rotX,
-        translateZ: translateZ,
-        scale: scale,
-        transformOrigin: '50% 50%',
+        opacity,
+        y,
+        pointerEvents: isActive ? 'auto' : 'none',
       }}
+      aria-hidden={!isActive}
     >
-      {/* 3D Dynamic Crease Lighting Layer */}
-      {folding && (
-        <motion.div
-          className="folding-crease-overlay"
-          style={{ opacity: creaseOpacity }}
-          aria-hidden="true"
-        />
-      )}
-
-      <div className="step-card-header">
-        <span className="step-badge">{st.badge}</span>
-        <span className="step-num font-mono">0{st.num}</span>
+      <div className="floating-stage-header">
+        <span className="floating-stage-badge">{st.badge}</span>
+        <span className="floating-stage-num font-mono">0{st.num}</span>
       </div>
 
-      <h3>{st.title}</h3>
-      <p>{st.desc}</p>
+      <h3 className="floating-stage-title">{st.title}</h3>
+      <p className="floating-stage-desc">{st.desc}</p>
 
       {st.formula && (
-        <div className="step-formula">
+        <div className="floating-stage-formula">
           <Formula tex={st.formula} />
         </div>
       )}
 
       {st.num === 4 && (
-        <p className="step-lesson-hint">
+        <p className="floating-stage-hint">
           Perhitungan angka detail, irisan himpunan, dan pembuktian lengkap dibahas pada setiap modul materi di bawah.
         </p>
       )}
 
-      <div className="step-action-sync">
+      <div className="floating-stage-sync">
         <span className="sync-dot" />
         <small>{st.dieAction}</small>
       </div>
@@ -151,82 +134,147 @@ function FoldingStepCard({ st, isActive, isReduced, folding }: FoldingStepCardPr
   );
 }
 
-export default function ScrollScene3D({ onStageChange, quiet = false, folding = false }: ScrollScene3DProps) {
+export default function ScrollScene3D({
+  onStageChange,
+  quiet = false,
+}: ScrollScene3DProps) {
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const systemReduced = useReducedMotion();
-  const isReduced = Boolean(quiet || systemReduced);
+  const isReduced = Boolean(quiet || (mounted && systemReduced));
 
-  // Scroll tracking inside the container
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Scroll tracking inside the 380vh runway container
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   });
 
-  // Calm, controlled spring physics: low stiffness caps velocity so animation never spins wildly
+  // Spring physics: calm stiffness caps rotational velocity for smooth 60fps
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 28, // Calibrated low stiffness limits max rotational velocity
-    damping: 24,   // High damping ratio absorbs rapid scroll spikes cleanly
-    mass: 1.2,     // Natural inertia prevents abrupt jumps
+    stiffness: 28,
+    damping: 24,
+    mass: 1.2,
     restDelta: 0.0005,
   });
 
-  // Limited, gentle rotation speed across stages:
-  // Stage 1 (0.00 - 0.22): Rest isometrik seimbang (X: 18°, Y: 35°)
-  // Stage 2 (0.26 - 0.54): Di udara, berguling perlahan terukur
-  // Stage 3 (0.56 - 0.78): Mendarat tenang memperlihatkan sisi atas (X: 0°, Y: 270°)
-  // Stage 4 (0.80 - 1.00): Sudut pengamatan tenang (X: 22°, Y: 295°)
+  // Multi-axis rotations & elevations mapped from calibrated breakpoints
   const rotX = useTransform(
     smooth,
-    [0, 0.22, 0.38, 0.54, 0.60, 0.78, 0.86, 1],
-    [18, 18, 65, 30, 0, 0, 22, 22]
+    DIE_KINEMATICS_BREAKPOINTS.progress as unknown as number[],
+    DIE_KINEMATICS_BREAKPOINTS.rotateX as unknown as number[]
   );
 
   const rotY = useTransform(
     smooth,
-    [0, 0.22, 0.38, 0.54, 0.60, 0.78, 0.86, 1],
-    [35, 35, 140, 230, 270, 270, 295, 295]
+    DIE_KINEMATICS_BREAKPOINTS.progress as unknown as number[],
+    DIE_KINEMATICS_BREAKPOINTS.rotateY as unknown as number[]
   );
 
   const rotZ = useTransform(
     smooth,
-    [0, 0.22, 0.38, 0.54, 0.60, 0.78, 0.86, 1],
-    [0, 0, 12, 5, 0, 0, 0, 0]
+    DIE_KINEMATICS_BREAKPOINTS.progress as unknown as number[],
+    DIE_KINEMATICS_BREAKPOINTS.rotateZ as unknown as number[]
   );
 
-  // Controlled, gentle elevation (lifts max 60px rather than flying away)
   const elevY = useTransform(
     smooth,
-    [0, 0.22, 0.38, 0.54, 0.60, 0.78, 0.86, 1],
-    [0, 0, -60, -45, 0, 0, -15, -15]
+    DIE_KINEMATICS_BREAKPOINTS.progress as unknown as number[],
+    DIE_KINEMATICS_BREAKPOINTS.translateY as unknown as number[]
   );
 
-  // Floor shadow dynamics matching elevation
   const shadowScale = useTransform(
     smooth,
-    [0, 0.22, 0.38, 0.54, 0.60, 0.78, 0.86, 1],
-    [1, 1, 0.65, 0.75, 1.08, 1.08, 0.95, 0.95]
+    DIE_KINEMATICS_BREAKPOINTS.progress as unknown as number[],
+    DIE_KINEMATICS_BREAKPOINTS.shadowScale as unknown as number[]
   );
 
   const shadowOpacity = useTransform(
     smooth,
-    [0, 0.22, 0.38, 0.54, 0.60, 0.78, 0.86, 1],
-    [0.42, 0.42, 0.2, 0.24, 0.48, 0.48, 0.38, 0.38]
+    DIE_KINEMATICS_BREAKPOINTS.progress as unknown as number[],
+    DIE_KINEMATICS_BREAKPOINTS.shadowOpacity as unknown as number[]
   );
 
-  // Active stage state driven by the smoothed spring value
-  const [stage, setStage] = useState(1);
-  const [scrollPct, setScrollPct] = useState(0);
-  const lastStageRef = useRef(1);
+  // Active stage state
+  const [stage, setStage] = useState<1 | 2 | 3 | 4>(1);
+  const lastStageRef = useRef<number>(1);
+  const [isRolling, setIsRolling] = useState(false);
+  const tossTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Viewport detection: Only animate continuous roll when runway is in view
+  const isInView = useInView(containerRef, { margin: '100px 0px 100px 0px' });
+
+  // Motion values for continuous 3D tumbling in airborne stages (Stages 1 & 2)
+  const tumbleX = useMotionValue(0);
+  const tumbleY = useMotionValue(0);
+  const tumbleZ = useMotionValue(0);
+
+  const angleXRef = useRef(0);
+  const angleYRef = useRef(0);
+
+  // Continuous tumbling animation loop: automatically stops when off-screen or landed (Stage > 2)
+  useEffect(() => {
+    if (!isInView || isReduced || stage > 2) {
+      if (tumbleX.get() !== 0) tumbleX.set(0);
+      if (tumbleY.get() !== 0) tumbleY.set(0);
+      if (tumbleZ.get() !== 0) tumbleZ.set(0);
+      return;
+    }
+
+    let lastTime = performance.now();
+    let rafId: number;
+
+    const tick = (now: number) => {
+      const delta = now - lastTime;
+      lastTime = now;
+
+      const p = smooth.get();
+      const factor = calculateDecelerationFactor(p);
+
+      if (factor <= 0.0001) {
+        if (tumbleX.get() !== 0) tumbleX.set(0);
+        if (tumbleY.get() !== 0) tumbleY.set(0);
+        if (tumbleZ.get() !== 0) tumbleZ.set(0);
+        return;
+      }
+
+      // Cap delta at 35ms to prevent jump on tab focus switch
+      const dt = Math.min(delta, 35) / 1000;
+      const timeSec = now / 1000;
+
+      angleXRef.current += TUMBLE_CONFIG.SPEED_X * dt * factor;
+      angleYRef.current += TUMBLE_CONFIG.SPEED_Y * dt * factor;
+
+      // Smooth decay without angular flips or discontinuities
+      const curX = ((angleXRef.current % 360 + 360) % 360) * factor;
+      const curY = ((angleYRef.current % 360 + 360) % 360) * factor;
+      const curZ = Math.sin(timeSec * 2) * 20 * factor;
+
+      tumbleX.set(curX);
+      tumbleY.set(curY);
+      tumbleZ.set(curZ);
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isInView, isReduced, stage, smooth, tumbleX, tumbleY, tumbleZ]);
+
+  useEffect(() => {
+    return () => {
+      if (tossTimerRef.current) {
+        clearTimeout(tossTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     return smooth.on('change', (v) => {
-      setScrollPct(Math.round(v * 100));
-      let current = 1;
-      if (v < 0.24) current = 1;
-      else if (v < 0.56) current = 2;
-      else if (v < 0.80) current = 3;
-      else current = 4;
-
+      const current = getScrollyStage(v);
       if (current !== lastStageRef.current) {
         lastStageRef.current = current;
         setStage(current);
@@ -235,87 +283,49 @@ export default function ScrollScene3D({ onStageChange, quiet = false, folding = 
     });
   }, [smooth, onStageChange]);
 
+  const handleDieClick = () => {
+    if (isRolling || isReduced) return;
+    setIsRolling(true);
+    if (tossTimerRef.current) {
+      clearTimeout(tossTimerRef.current);
+    }
+    tossTimerRef.current = setTimeout(() => setIsRolling(false), 1200);
+  };
+
   return (
-    <div ref={containerRef} className="scrolly-split-container">
-      {/* LEFT COLUMN: Narrative Steps (with optional 3D Folding Scroll) */}
-      <div className={`scrolly-text-column ${folding ? 'folding-perspective-container' : ''}`}>
-        {STAGES.map((st) => (
-          <FoldingStepCard
-            key={st.num}
-            st={st}
-            isActive={stage === st.num}
-            isReduced={isReduced}
-            folding={folding}
+    <div ref={containerRef} className="scrolly-canvas-runway">
+      {/* Pinned 100vh Sticky Stage: Locks into center of viewport */}
+      <div className="scrolly-stage-pinned">
+        {/* CENTER STAGE: The 3D Die is the main attention, locked in dead center */}
+        <div className="scrolly-die-center-stage">
+          <Die3D
+            size={170}
+            rotateX={isReduced ? 18 : rotX}
+            rotateY={isReduced ? 35 : rotY}
+            rotateZ={isReduced ? 0 : rotZ}
+            translateY={isReduced ? 0 : elevY}
+            tumbleX={isReduced ? 0 : tumbleX}
+            tumbleY={isReduced ? 0 : tumbleY}
+            tumbleZ={isReduced ? 0 : tumbleZ}
+            shadowScale={isReduced ? 1 : shadowScale}
+            shadowOpacity={isReduced ? 0.35 : shadowOpacity}
+            highlightFace={stage === 3 ? 3 : null}
+            onClick={handleDieClick}
+            isRolling={isRolling}
           />
-        ))}
-      </div>
+        </div>
 
-      {/* RIGHT COLUMN: Free-Floating 3D Die (TAKEN OUT OF THE BOX) */}
-      <div className="scrolly-sticky-column">
-        <div className="scrolly-die-freeform">
-          {/* Subtle floating telemetry pill (no heavy box) */}
-          <div className="freeform-status-pill">
-            <span className="status-kicker">DADU 3D</span>
-            <span className="status-divider">·</span>
-            <span className="status-label">
-              {stage === 1
-                ? 'Dadu Seimbang'
-                : stage === 2
-                ? 'Melayang Bebas'
-                : stage === 3
-                ? 'Hasil Teramati'
-                : 'Definisi Peluang'}
-            </span>
-            <span className="status-pct font-mono">{scrollPct}%</span>
-          </div>
-
-          {/* 3D Visual Stage: Floating directly on page canvas */}
-          <div className="freeform-stage-viewport">
-            <Die3D
-              size={135}
-              rotateX={isReduced ? 18 : rotX}
-              rotateY={isReduced ? 35 : rotY}
-              rotateZ={isReduced ? 0 : rotZ}
-              translateY={isReduced ? 0 : elevY}
-              shadowScale={isReduced ? 1 : shadowScale}
-              shadowOpacity={isReduced ? 0.35 : shadowOpacity}
-              highlightFace={stage === 3 ? 3 : null}
+        {/* FLOATING TYPOGRAPHY: Pure text appearing in empty space around the die (NO BOXES) */}
+        <div className="scrolly-floating-narrative">
+          {STAGES.map((st) => (
+            <FloatingStageItem
+              key={st.num}
+              st={st}
+              smooth={smooth}
+              isReduced={isReduced}
+              isActive={stage === st.num}
             />
-
-            {/* Stage 3 Live Observation Callout (No Numbers/Complex Formulas) */}
-            {stage === 3 && (
-              <motion.div
-                className="freeform-proof-callout"
-                initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="proof-tag">
-                  <Sparkles size={13} className="text-[#cf4500]" />
-                  <span>Satu Kejadian Nyata Teramati</span>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Stage 4 Basic Formula Callout (Directs to Individual Pages for Details) */}
-            {stage === 4 && (
-              <motion.div
-                className="freeform-venn-callout"
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.35 }}
-              >
-                <div className="side-venn-row">
-                  <div className="venn-pill venn-pill-shared">
-                    P(A) = n(A) / n(S)
-                  </div>
-                </div>
-                <small className="venn-outside-note">
-                  Perhitungan angka & rumus detail tersedia di setiap halaman materi
-                </small>
-              </motion.div>
-            )}
-          </div>
+          ))}
         </div>
       </div>
     </div>

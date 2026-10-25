@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { materials } from '@/lib/materials';
 import MaterialDiagram from './MaterialDiagram';
@@ -51,9 +52,27 @@ export default function MaterialList({ quiet }: MaterialListProps) {
                 {experiment === i ? 'Tutup animasi' : 'Coba animasi'} <span aria-hidden="true">{experiment === i ? '−' : '+'}</span>
               </button>
             </div>
-            <div id={`material-experiment-${m.slug}`} hidden={experiment !== i} className="material-live-experiment" data-quiet={quiet}>
-              {experiment === i && <LessonExperiment index={i} />}
-            </div>
+            <AnimatePresence initial={false}>
+              {experiment === i && (
+                <motion.div
+                  id={`material-experiment-${m.slug}`}
+                  key={`experiment-${m.slug}`}
+                  className="material-live-experiment"
+                  data-quiet={quiet}
+                  initial={quiet ? false : { opacity: 0, height: 0 }}
+                  animate={quiet ? { opacity: 1 } : { opacity: 1, height: 'auto' }}
+                  exit={quiet ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                  transition={
+                    quiet
+                      ? { duration: 0 }
+                      : { duration: 0.38, ease: [0.16, 1, 0.3, 1] }
+                  }
+                  style={{ overflow: 'hidden' }}
+                >
+                  <LessonExperiment index={i} />
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div className="material-preview" hidden={experiment === i}>
               <div>
                 <MaterialDiagram index={i} quiet={quiet} />

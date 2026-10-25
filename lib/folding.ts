@@ -67,3 +67,18 @@ export function calculateFoldValues(progress: number, isQuiet: boolean = false):
     creaseOpacity: interpolatePiecewise(p, inP, creaseOpacity),
   };
 }
+
+export {
+  SCROLLY_STAGE_THRESHOLDS,
+  getScrollyStage,
+  DIE_KINEMATICS_BREAKPOINTS,
+  calculateCenteredDieKinematics,
+  calculateFloatingTextState,
+  TUMBLE_CONFIG,
+  calculateDecelerationFactor,
+  calculateContinuousTumble,
+  type CenteredDieKinematics,
+  type FloatingTextState,
+  type ContinuousTumbleAngles,
+} from './scrolly';
+

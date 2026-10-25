@@ -10,6 +10,9 @@
   --radius-stadium: 40px;
   --radius-circle: 50%;
   --radius-pill: 999px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 * {
@@ -19,6 +22,8 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 120px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html.lenis,
@@ -110,8 +115,43 @@ header {
 
 nav {
   display: flex;
-  gap: 26px;
+  gap: 6px;
   font-size: 14px;
+  align-items: center;
+}
+
+.nav-pill-item {
+  position: relative;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: #63584f;
+  transition: color 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.nav-pill-item:hover {
+  color: #141413;
+}
+
+.nav-pill-item.is-active {
+  color: #141413;
+  font-weight: 500;
+}
+
+.nav-active-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(20, 20, 19, 0.06);
+  border: 1px solid rgba(20, 20, 19, 0.08);
+  z-index: 0;
+}
+
+.nav-pill-text {
+  position: relative;
+  z-index: 1;
 }
 
 nav a[aria-current] {
@@ -125,6 +165,11 @@ nav a[aria-current] {
   width: 40px;
   display: grid;
   place-items: center;
+  transition: transform 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+
+.nav-go:active {
+  transform: scale(0.97);
 }
 
 main,
@@ -205,6 +250,16 @@ h1 em {
   margin: 25px 0 30px;
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -214,6 +269,11 @@ h1 em {
   border-radius: 999px;
   font-size: 15px;
   font-weight: 600;
+  transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+
+.button:active {
+  transform: scale(0.97);
 }
 
 .primary {
@@ -221,8 +281,10 @@ h1 em {
   color: white;
 }
 
-.primary:hover {
-  background: #aa3900;
+@media (hover: hover) and (pointer: fine) {
+  .primary:hover {
+    background: #aa3900;
+  }
 }
 
 .hero-art {
@@ -254,6 +316,7 @@ h1 em {
 
 .mono {
   font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 .section-title {
@@ -360,6 +423,16 @@ section#materi,
   padding: 11px 15px;
   background: transparent;
   font-size: 13px;
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out);
+}
+
+.segmented button:active,
+.region-buttons button:active {
+  transform: scale(0.97);
 }
 
 .segmented .active,
@@ -394,6 +467,85 @@ section#materi,
   color: var(--signal);
   font-family: var(--font-mono), monospace;
   font-size: 15px;
+}
+
+.interactive-formula {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 25px;
+  line-height: 1;
+  padding: 3px 0;
+  vertical-align: middle;
+}
+
+.interactive-formula .formula {
+  display: inline-block;
+  padding: 0;
+}
+
+.formula-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  font-family: KaTeX_Main, Times New Roman, serif;
+  font-size: 0.95em;
+  line-height: 1;
+  margin-left: 0.15em;
+}
+
+.formula-fraction-num {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+
+.formula-fraction-bar {
+  display: block;
+  width: 100%;
+  min-width: 1.2ch;
+  height: 1.2px;
+  background-color: currentColor;
+  margin: 1px 0;
+}
+
+.formula-fraction-den {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rolling-number-window {
+  display: inline-block;
+  height: 1.15em;
+  line-height: 1.15em;
+  overflow: hidden;
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+  position: relative;
+}
+
+.rolling-number-reel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+.rolling-number-digit {
+  height: 1.15em;
+  line-height: 1.15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .answer p {
@@ -809,8 +961,17 @@ footer > a:last-child {
   font-size: 13px;
 }
 
+.material-open svg {
+  transition: transform 220ms var(--ease-out);
+}
+
+.material-item.is-active .material-open svg,
+.material-open:hover svg {
+  transform: translate(3px, -3px);
+}
+
 .material-item .module {
-  transition: color 0.2s, padding 0.3s;
+  transition: color 180ms var(--ease-out), padding-left 220ms var(--ease-out);
 }
 
 .material-item.is-active .module {
@@ -821,7 +982,7 @@ footer > a:last-child {
 .material-preview {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s ease;
+  transition: grid-template-rows 280ms var(--ease-drawer);
 }
 
 .material-preview > div {
@@ -1172,10 +1333,27 @@ footer {
 
 .die-stage[role='button'] {
   cursor: pointer;
+  transition: transform 160ms var(--ease-out);
 }
 
-.die-stage:focus-visible .die-cube {
-  filter: drop-shadow(0 0 12px var(--signal));
+.die-stage[role='button']:active {
+  transform: scale(0.97);
+}
+
+.die-stage:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 8px;
+  border-radius: 20px;
+}
+
+.die-elevation-layer,
+.die-orbit-layer,
+.die-tumble-layer {
+  position: relative;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .die-cube {
@@ -1190,10 +1368,10 @@ footer {
 }
 
 @keyframes die-toss-bounce {
-  0% { transform: translateY(0); }
-  35% { transform: translateY(-90px); }
-  65% { transform: translateY(-25px); }
-  100% { transform: translateY(0); }
+  0% { translate: 0 0; }
+  35% { translate: 0 -90px; }
+  65% { translate: 0 -25px; }
+  100% { translate: 0 0; }
 }
 
 .die-face {
@@ -1225,6 +1403,25 @@ footer {
 .die-pip-accent {
   background: var(--signal);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(207, 69, 0, 0.35);
+}
+
+.die-pip-observed-pulse {
+  animation: pip-observed-pulse 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes pip-observed-pulse {
+  0% {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(207, 69, 0, 0.75);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  40% {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 18px 5px rgba(207, 69, 0, 0.55);
+    transform: translate(-50%, -50%) scale(1.22);
+  }
+  100% {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px 1px rgba(207, 69, 0, 0.35);
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .die-floor-shadow {
@@ -1382,114 +1579,162 @@ footer {
   margin: 40px 0 80px;
 }
 
-.scrolly-split-container {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: 40px;
-  align-items: flex-start;
+/* ==========================================================================
+   Centered Locked 3D Stage & Floating Typography Scrollytelling
+   (The Die is the main attention, pinned in dead center. No boxes!)
+   ========================================================================== */
+
+.scrolly-canvas-runway {
   position: relative;
-  margin-top: 35px;
+  width: 100%;
+  height: clamp(340vh, 380vh, 420vh);
+  margin-top: 10px;
 }
 
-/* Left: Narrative text cards scrolling naturally with generous, paced scroll runway */
-.scrolly-text-column {
+.scrolly-stage-pinned {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
-  gap: 12vh;
-  padding: 30px 0 100px;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
 }
 
-.scrolly-step-card {
-  background: var(--lifted);
-  border: 1px solid #ded7d1;
-  border-radius: 32px;
-  padding: 36px 32px;
-  transition: all 0.35s ease;
-  min-height: clamp(520px, 70vh, 760px);
+/* Center Stage: Die is the absolute focal point */
+.scrolly-die-center-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: auto;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
-.scrolly-step-card.is-active-step {
-  border-color: var(--signal);
-  box-shadow: 0 14px 40px rgba(207, 69, 0, 0.08);
-  transform: scale(1.01);
+/* Floating Narrative: Negative space container around the die */
+.scrolly-floating-narrative {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.step-card-header {
+/* Pure Floating Typography (NO BOXES) */
+.floating-stage-item {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  max-width: clamp(300px, 28vw, 400px);
+  pointer-events: auto;
+  will-change: opacity, transform;
+}
+
+.floating-stage-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.step-badge {
-  font-size: 10px;
+.floating-stage-badge {
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--signal);
 }
 
-.step-num {
-  font-size: 13px;
+.floating-stage-num {
+  font-size: 14px;
   color: #736b65;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
-.scrolly-step-card h2,
-.scrolly-step-card h3 {
-  font-size: 26px;
+.floating-stage-title {
+  font-size: clamp(26px, 2.5vw, 34px);
   margin: 0 0 12px;
   letter-spacing: -0.03em;
   line-height: 1.15;
+  color: var(--text);
+  text-wrap: balance;
 }
 
-.scrolly-step-card p {
-  font-size: 15px;
+.floating-stage-desc {
+  font-size: clamp(14px, 1.1vw, 16px);
   line-height: 1.6;
   color: #6f645b;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
+  text-wrap: pretty;
 }
 
-.step-formula {
-  background: #f5f1ed;
-  border-radius: 16px;
-  padding: 10px 16px;
-  margin-bottom: 16px;
+.floating-stage-formula {
+  margin: 8px 0 16px;
 }
 
-.step-formula .formula {
-  font-size: 18px;
+.floating-stage-formula .formula {
+  font-size: 20px;
 }
 
-.step-lesson-hint {
-  font-size: 13px;
+.floating-stage-hint {
+  font-size: 12.5px;
   color: #736b65;
-  background: #fdfaf7;
-  border: 1px dashed #ded7d1;
-  border-radius: 14px;
-  padding: 10px 14px;
-  margin: 12px 0 16px;
   line-height: 1.5;
+  margin: 6px 0 16px;
+  opacity: 0.9;
 }
 
-.step-action-sync {
-  display: flex;
+.floating-stage-sync {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 12px;
   color: #736b65;
-  border-top: 1px solid #eee8e2;
-  padding-top: 12px;
 }
 
 .sync-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--signal);
-  flex-shrink: 0;
+  display: inline-block;
+  animation: sync-dot-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes sync-dot-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(207, 69, 0, 0.45);
+  }
+}
+
+/* Desktop layout: Flanking margins on left & right of centered die */
+@media (min-width: 1024px) {
+  .stage-pos-left {
+    left: clamp(36px, 6vw, 110px);
+    top: 50%;
+    translate: 0 -50%;
+    text-align: left;
+  }
+  .stage-pos-right {
+    right: clamp(36px, 6vw, 110px);
+    top: 50%;
+    translate: 0 -50%;
+    text-align: left;
+  }
 }
 
 /* ==========================================================================
@@ -1536,7 +1781,13 @@ footer {
   border-radius: clamp(24px, 3vw, 36px);
   padding: clamp(32px, 5vw, 56px) clamp(24px, 4vw, 48px);
   box-shadow: 0 12px 36px rgba(48, 32, 16, 0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+.folding-section-card .lab-grid {
+  border-radius: 20px;
 }
 
 .folding-section-card.is-flat,
@@ -1561,35 +1812,6 @@ footer {
   max-width: 100% !important;
 }
 
-.section-card-index-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--signal);
-  background: #fcf6f3;
-  border: 1px solid #f6d8cc;
-  border-radius: 999px;
-  padding: 4px 12px;
-  margin-bottom: 24px;
-  letter-spacing: 0.06em;
-}
-
-.folding-step-card {
-  position: relative;
-  overflow: hidden;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.folding-step-card.is-active-step {
-  border-color: var(--signal);
-  box-shadow: 0 16px 42px rgba(207, 69, 0, 0.09);
-}
-
 .folding-crease-overlay {
   position: absolute;
   inset: 0;
@@ -1605,128 +1827,7 @@ footer {
     rgba(20, 20, 19, 0.22) 100%
   );
   mix-blend-mode: multiply;
-  transition: opacity 0.12s ease-out;
-}
-
-/* Folding Mode Toggle Widget for Prototype */
-.folding-toggle-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  background: #fbf7f4;
-  border: 1px solid #e5ded7;
-  border-radius: 16px;
-  padding: 12px 18px;
-  margin-bottom: 24px;
-}
-
-.folding-toggle-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: var(--ink);
-}
-
-.folding-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 999px;
-  border: 1px solid #ded7d1;
-  background: #fff;
-  color: var(--ink);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.folding-toggle-btn:hover {
-  border-color: var(--ink);
-}
-
-.folding-toggle-btn.is-active {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
-}
-
-/* Right: Sticky 3D Die Stage (Side-by-side, completely freeform - TAKEN OUT OF THE BOX) */
-.scrolly-sticky-column {
-  position: sticky;
-  top: 125px;
-  width: 100%;
-}
-
-.scrolly-die-freeform {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  min-height: 520px;
-  /* Crucial: Absolutely no card box, no border, no background, no shadow */
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* Subtle, unboxed status pill floating above the die */
-.freeform-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(222, 215, 209, 0.7);
-  padding: 6px 16px;
-  border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(20, 20, 19, 0.04);
-  margin-bottom: 20px;
-}
-
-.status-kicker {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #736b65;
-}
-
-.status-divider {
-  color: #c4bbb3;
-  font-size: 12px;
-}
-
-.status-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--signal);
-}
-
-.status-pct {
-  font-size: 11px;
-  font-weight: 700;
-  color: #736b65;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 2px 7px;
-  border-radius: 999px;
-  margin-left: 4px;
-}
-
-/* The open canvas 3D viewport */
-.freeform-stage-viewport {
-  width: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-height: 400px;
+  transition: opacity 150ms var(--ease-out);
 }
 
 /* Highlighted face in Stage 3 */
@@ -1736,145 +1837,54 @@ footer {
   box-shadow: 0 0 24px rgba(207, 69, 0, 0.4), inset 0 0 16px rgba(207, 69, 0, 0.15) !important;
 }
 
-.die-face-highlight-badge {
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--signal);
-  color: white;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 2px 8px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-/* Stage 3 Freeform Proof Callout */
-.freeform-proof-callout {
-  position: absolute;
-  bottom: 0px;
-  background: #141413;
-  color: white;
-  border-radius: 20px;
-  padding: 10px 18px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-  max-width: 320px;
-  text-align: center;
-}
-
-.proof-tag {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #f6cf7b;
-}
-
-.proof-pills {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.proof-pill {
-  font-size: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  padding: 3px 8px;
-  border-radius: 999px;
-}
-
-.proof-pill-accent {
-  background: var(--signal);
-  color: white;
-  font-weight: 700;
-}
-
-/* Stage 4 Freeform Venn Callout */
-.freeform-venn-callout {
-  position: absolute;
-  bottom: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(222, 215, 209, 0.8);
-  border-radius: 20px;
-  padding: 10px 18px;
-  box-shadow: 0 8px 24px rgba(20, 20, 19, 0.05);
-}
-
-.side-venn-row {
-  display: flex;
-  gap: 6px;
-}
-
-.venn-pill {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-.venn-pill-a {
-  background: #fdf3ef;
-  color: var(--signal);
-  border: 1px solid #f6cfbf;
-}
-
-.venn-pill-shared {
-  background: var(--signal);
-  color: white;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(207, 69, 0, 0.3);
-}
-
-.venn-pill-b {
-  background: #fff8eb;
-  color: #b87500;
-  border: 1px solid #fae1af;
-}
-
-.venn-outside-note {
-  font-size: 10px;
-  color: #736b65;
-}
-
-@media (max-width: 900px) {
-  .scrolly-split-container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+@media (max-width: 1023px) and (min-width: 761px) {
+  .scrolly-die-center-stage {
+    top: 38%;
+    transform: translate(-50%, -50%) scale(0.85);
   }
-  .scrolly-sticky-column {
-    order: -1;
-    position: sticky;
-    top: 85px;
-    z-index: 20;
+  .stage-pos-left,
+  .stage-pos-right {
+    left: 50%;
+    right: auto;
+    top: 62%;
+    translate: -50% 0;
+    max-width: 440px;
+    text-align: center;
   }
-  .scrolly-die-freeform {
-    min-height: 250px;
+  .floating-stage-header,
+  .floating-stage-sync {
+    justify-content: center;
   }
-  .freeform-status-pill {
-    margin-bottom: 8px;
+}
+
+@media (max-width: 760px) {
+  .scrolly-canvas-runway {
+    height: 330vh;
   }
-  .freeform-stage-viewport {
-    min-height: 210px;
+  .scrolly-die-center-stage {
+    top: 34%;
+    transform: translate(-50%, -50%) scale(0.72);
   }
-  .scrolly-step-card {
-    min-height: clamp(380px, 50vh, 520px);
+  .stage-pos-left,
+  .stage-pos-right {
+    left: 50%;
+    right: auto;
+    top: 56%;
+    translate: -50% 0;
+    width: calc(100% - 32px);
+    max-width: 330px;
+    text-align: center;
+  }
+  .floating-stage-header,
+  .floating-stage-sync {
+    justify-content: center;
+  }
+  .floating-stage-title {
+    font-size: 21px;
+  }
+  .floating-stage-desc {
+    font-size: 13.5px;
+    line-height: 1.5;
   }
   .folding-perspective-container {
     perspective: 800px;
@@ -1887,29 +1897,9 @@ footer {
     gap: 28px;
     padding: 10px 0 40px;
   }
-  .folding-step-card {
-    min-height: clamp(380px, 50vh, 520px);
-    padding: 28px 20px;
-  }
   .folding-section-card {
     padding: 24px 16px;
     border-radius: 20px;
-  }
-  .folding-toggle-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .prototype-header {
-    border-radius: 20px;
-    margin: 10px 12px 0;
-    padding: 12px 16px;
-  }
-  .prototype-header nav {
-    overflow-x: auto;
-    white-space: nowrap;
-    max-width: 100%;
-    gap: 12px;
   }
 }
 
@@ -2123,9 +2113,9 @@ footer {
 .ball-travel { animation: lesson-ball-travel 500ms var(--experiment-ease) both; }
 @keyframes lesson-ball-travel { from { opacity: .2; transform: translate(-80px, -20px) rotate(-90deg); } to { opacity: 1; transform: translate(0, 0) rotate(0); } }
 @media (prefers-reduced-motion: reduce) {
-  .result-die-roll, .frequency-plot, .ball-travel { animation: experiment-fade 150ms ease both !important; }
+  .result-die-roll, .frequency-plot, .ball-travel, .die-pip-observed-pulse, .sync-dot { animation: none !important; }
   .complement-focus { transition: opacity 150ms ease !important; }
-  .folding-step-card, .folding-section-card { transform: none !important; }
+  .folding-section-card { transform: none !important; }
   .folding-crease-overlay { opacity: 0 !important; display: none !important; }
 }
 

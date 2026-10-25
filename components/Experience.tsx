@@ -20,6 +20,7 @@ import {
   intersection,
   complement,
   motionTokens,
+  easeLuxury,
 } from '@/lib/math';
 import MaterialList from './MaterialList';
 import ScrollScene3D from './ScrollScene3D';
@@ -83,31 +84,37 @@ function OutcomeDot({
   });
 
   return (
-    <motion.g animate={{ x, y }} transition={{ duration }}>
-      <motion.circle
-        r="19"
-        animate={{
-          scale: anim.scale,
-          fill: anim.fill,
-        }}
-        transition={anim.transition}
-        stroke={anim.stroke}
-        strokeWidth="1"
-        style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
-      />
-      <motion.text
-        textAnchor="middle"
-        dy="6"
-        animate={{
-          scale: anim.scale,
-          fill: anim.textColor,
-        }}
-        transition={anim.transition}
-        style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
-        fontSize="17"
-      >
-        {value}
-      </motion.text>
+    <motion.g
+      animate={{ x, y }}
+      transition={{ duration, ease: easeLuxury }}
+    >
+      <g className="outcome-dot-group">
+        <circle r="24" fill="transparent" />
+        <motion.circle
+          r="19"
+          animate={{
+            scale: anim.scale,
+            fill: anim.fill,
+          }}
+          transition={anim.transition}
+          stroke={anim.stroke}
+          strokeWidth="1"
+          style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
+        />
+        <motion.text
+          textAnchor="middle"
+          dy="6"
+          animate={{
+            scale: anim.scale,
+            fill: anim.textColor,
+          }}
+          transition={anim.transition}
+          style={{ transformOrigin: 'center', transformBox: 'fill-box', pointerEvents: 'none' }}
+          fontSize="17"
+        >
+          {value}
+        </motion.text>
+      </g>
     </motion.g>
   );
 }
@@ -428,7 +435,7 @@ export default function Experience({
                 <motion.circle
                   initial={{ cx: scenario === 'prime' ? 220 : 150 }}
                   animate={{ cx: scenario === 'prime' ? 220 : 150 }}
-                  transition={{ duration }}
+                  transition={{ duration, ease: easeLuxury }}
                   cy="170"
                   r="105"
                   fill={region === 'complement' ? '#ead5ce' : '#efb3a3'}
@@ -436,7 +443,7 @@ export default function Experience({
                 <motion.circle
                   initial={{ cx: scenario === 'prime' ? 340 : 400 }}
                   animate={{ cx: scenario === 'prime' ? 340 : 400 }}
-                  transition={{ duration }}
+                  transition={{ duration, ease: easeLuxury }}
                   cy="170"
                   r="105"
                   fill="#f6cf7b"

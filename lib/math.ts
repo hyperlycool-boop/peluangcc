@@ -56,9 +56,12 @@ export const odd = ['1', '3', '5'] as const;
 export const prime = ['2', '3', '5'] as const;
 export const even = ['2', '4', '6'] as const;
 
+export const easeLuxury = [0.16, 1, 0.3, 1] as const;
+
 export const motionTokens = {
   instant: 0,
   step: 0.35,
   diagram: 0.65,
   orbit: 1.2,
+  easeLuxury: [0.16, 1, 0.3, 1] as const,
 } as const;

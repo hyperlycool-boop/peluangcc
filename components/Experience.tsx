@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useId, useEffect } from 'react';
+import { useState, useId, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ArrowUpRight, MoveUpRight } from 'lucide-react';
@@ -23,11 +23,17 @@ import {
   easeLuxury,
 } from '@/lib/math';
 import { useHydrated } from '@/lib/use-hydrated';
+import {
+  readDisplayMode,
+  setDisplayMode,
+  subscribeDisplayMode,
+  type DisplayMode,
+} from '@/lib/display-mode';
 import MaterialList from './MaterialList';
 import ScrollScene3D from './ScrollScene3D';
 import FoldingSectionCard from './FoldingSectionCard';
 
-export type DisplayMode = 'full' | 'calm' | 'focus';
+export type { DisplayMode };
 export type Scenario = 'prime' | 'even';
 export type Region = 'union' | 'intersection' | 'complement';
 
@@ -125,7 +131,8 @@ export default function Experience({
   folding: initialFolding,
 }: ExperienceProps) {
   const mounted = useHydrated();
-  const [mode, setMode] = useState<DisplayMode>('full');
+  // Saved for the session and mirrored on <html data-motion> so page transitions respect it too.
+  const mode = useSyncExternalStore<DisplayMode>(subscribeDisplayMode, readDisplayMode, () => 'full');
   const [scenario, setScenario] = useState<Scenario>('prime');
   const [region, setRegion] = useState<Region>('union');
   const [activeNav, setActiveNav] = useState<NavSectionId>('beranda');
@@ -207,7 +214,7 @@ export default function Experience({
         Lewati navigasi
       </a>
 
-      <header>
+      <header className="site-header">
         <Link className="brand" href={prototype ? '/prototype' : '/'}>
           <span className="brand-symbol">
             <i />
@@ -282,7 +289,7 @@ export default function Experience({
             <select
               aria-label="Mode tampilan"
               value={mode}
-              onChange={(e) => setMode(e.target.value as DisplayMode)}
+              onChange={(e) => setDisplayMode(e.target.value as DisplayMode)}
             >
               <option value="full">Interaktif penuh</option>
               <option value="calm">Tenang</option>

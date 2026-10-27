@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, ViewTransition } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { materials } from '@/lib/materials';
 import MaterialDiagram from './MaterialDiagram';
 import { LessonExperiment } from './LessonExperiments';
+import { HOME_INDEX, lessonNavTypes, lessonTitleTransitionName } from '@/lib/route-transition';
 
 interface MaterialListProps {
   quiet: boolean;
@@ -30,12 +31,15 @@ export default function MaterialList({ quiet }: MaterialListProps) {
             <Link
               className="module"
               href={`/materi/${m.slug}`}
+              transitionTypes={lessonNavTypes(HOME_INDEX, i)}
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}
             >
               <span className="module-number">0{i + 1}</span>
-              <h3>{m.title}</h3>
+              <ViewTransition name={lessonTitleTransitionName(m.slug)} share="morph" default="none">
+                <h3>{m.title}</h3>
+              </ViewTransition>
               <p>{m.description}</p>
               <span className="material-open">
                 Pelajari <ArrowUpRight size={18} />

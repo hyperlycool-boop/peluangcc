@@ -2111,3 +2111,91 @@ footer {
     transition: none !important;
   }
 }
+
+/* ── Tier 2 motion ─────────────────────────────────────────────────────────
+   Page entrances play only on a hard load: NavigationMarker sets html[data-navigated]
+   before in-app navigations, where view transitions provide the motion instead.
+   Fill mode `backwards` so finished entrances never pin transform (keeps :active scale working). */
+@keyframes page-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.homepage-hero .hero-copy > * { animation: page-rise 700ms var(--ease-luxury) backwards; }
+.homepage-hero .hero-copy > :nth-child(2) { animation-delay: 110ms; }
+.homepage-hero .hero-copy > :nth-child(3) { animation-delay: 200ms; }
+
+.lesson > * { animation: page-rise 600ms var(--ease-luxury) backwards; animation-delay: 240ms; }
+.lesson > :nth-child(1) { animation-delay: 0ms; }
+.lesson > :nth-child(2) { animation-delay: 60ms; }
+.lesson > :nth-child(3) { animation-delay: 120ms; }
+.lesson > :nth-child(4) { animation-delay: 180ms; }
+
+html[data-navigated] .homepage-hero .hero-copy > *,
+html[data-navigated] .lesson > * { animation: none; }
+
+/* Section titles rise in as they scroll into view (scroll-driven; no JS, never hidden where unsupported). */
+@supports (animation-timeline: view()) {
+  .section-title {
+    animation: page-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 5% entry 65%;
+  }
+}
+
+[data-mode='calm'] .section-title,
+[data-mode='focus'] .section-title,
+[data-mode='calm'] .homepage-hero .hero-copy > *,
+[data-mode='focus'] .homepage-hero .hero-copy > * { animation: none; }
+
+/* "Lihat pembahasan": the answer expands instead of popping open. */
+@supports selector(::details-content) {
+  .lesson details { interpolate-size: allow-keywords; }
+  .lesson details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition: block-size 320ms var(--ease-drawer), content-visibility 320ms allow-discrete;
+  }
+  .lesson details[open]::details-content { block-size: auto; }
+}
+
+/* Coin toss: new coins flip in, staggered per batch via inline animation-delay. */
+@keyframes coin-flip {
+  from { opacity: 0; transform: translateY(-12px) rotateX(-540deg); }
+  60% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+.coin-flip { animation: coin-flip 420ms var(--experiment-ease) backwards; }
+
+/* Route transitions: React <ViewTransition> + Link transitionTypes (see lib/route-transition.ts). */
+.site-header { view-transition-name: site-header; }
+::view-transition-group(site-header) { animation: none; z-index: 100; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+::view-transition { pointer-events: none; }
+
+::view-transition-group(.morph) { animation-duration: 420ms; animation-timing-function: var(--ease-luxury); }
+
+@keyframes vt-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes vt-slide { from { translate: var(--vt-offset); } to { translate: 0; } }
+::view-transition-old(.nav-forward) { --vt-offset: -60px; animation: 150ms ease-in both vt-fade reverse, 400ms var(--ease-in-out) both vt-slide reverse; }
+::view-transition-new(.nav-forward) { --vt-offset: 60px; animation: 210ms ease-out 150ms both vt-fade, 400ms var(--ease-in-out) both vt-slide; }
+::view-transition-old(.nav-back) { --vt-offset: 60px; animation: 150ms ease-in both vt-fade reverse, 400ms var(--ease-in-out) both vt-slide reverse; }
+::view-transition-new(.nav-back) { --vt-offset: -60px; animation: 210ms ease-out 150ms both vt-fade, 400ms var(--ease-in-out) both vt-slide; }
+
+/* Tenang / Fokus ujian (lib/display-mode.ts sets html[data-motion]) also calm page transitions. */
+html[data-motion='quiet']::view-transition-old(*),
+html[data-motion='quiet']::view-transition-new(*),
+html[data-motion='quiet']::view-transition-group(*) {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage-hero .hero-copy > *, .lesson > *, .section-title, .coin-flip { animation: none !important; }
+  .lesson details::details-content { transition: none !important; }
+  ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

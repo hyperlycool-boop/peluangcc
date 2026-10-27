@@ -103,3 +103,14 @@ export function frequencyDrawDuration(added: number, quiet: boolean): number {
   if (added >= 10) return 0.4;
   return 0.25;
 }
+
+export const COIN_FLIP_STAGGER_MS = 30;
+
+/**
+ * Delay before a coin in the visible history flips in.
+ * New coins stagger from the first one that is both new (index >= prevCount) and visible (index >= coinBase).
+ */
+export function coinFlipDelayMs(absIndex: number, prevCount: number, coinBase: number): number {
+  const firstNewVisible = Math.max(prevCount, coinBase);
+  return Math.max(0, absIndex - firstNewVisible) * COIN_FLIP_STAGGER_MS;
+}

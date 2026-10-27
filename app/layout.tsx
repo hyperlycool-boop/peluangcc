@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css';
 import 'lenis/dist/lenis.css';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
+import NavigationMarker from '@/components/NavigationMarker';
 
 const sofia = Sofia_Sans({
   subsets: ['latin'],
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={`${sofia.variable} ${mono.variable}`}>
+        <NavigationMarker />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

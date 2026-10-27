@@ -4,6 +4,7 @@ import { useId, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { materials } from '@/lib/materials';
 import {
+  coinFlipDelayMs,
   createDrawState,
   drawBall,
   frequencyDomain,
@@ -67,7 +68,7 @@ function ComplementExperiment({ quiet }: ExperimentProps) {
 }
 
 function FrequencyExperiment({ quiet }: ExperimentProps) {
-  const [{ tosses, prevCount, batch }, setRun] = useState({ tosses: [] as boolean[], prevCount: 0, batch: 0 });
+  const [{ tosses, prevCount, batch, flipDelays }, setRun] = useState({ tosses: [] as boolean[], prevCount: 0, batch: 0, flipDelays: [] as number[] });
   const successes = tosses.filter(Boolean).length;
   const domain = frequencyDomain(tosses.length);
   const { settled, fresh } = splitFrequencyPath(tosses, prevCount, domain);
@@ -76,7 +77,13 @@ function FrequencyExperiment({ quiet }: ExperimentProps) {
   // Crossing a domain step rescales the whole line at once; jump the dot with it instead of sweeping across.
   const dotDuration = frequencyDomain(prevCount) === domain ? drawDuration : 0;
   const coinBase = Math.max(0, tosses.length - 12);
-  const add = (n: number) => setRun(r => ({ tosses: [...r.tosses, ...Array.from({ length: n }, () => Math.random() < .5)], prevCount: r.tosses.length, batch: r.batch + 1 }));
+  const add = (n: number) => setRun(r => {
+    const next = [...r.tosses, ...Array.from({ length: n }, () => Math.random() < .5)];
+    const base = Math.max(0, next.length - 12);
+    // Each coin's flip delay is fixed when its batch is added, so later tosses never re-time it mid-flip.
+    const delays = Array.from({ length: n }, (_, k) => coinFlipDelayMs(r.tosses.length + k, r.tosses.length, base));
+    return { tosses: next, prevCount: r.tosses.length, batch: r.batch + 1, flipDelays: [...r.flipDelays, ...delays] };
+  });
   return <>
     <p>Lempar koin adil dan amati proporsi sisi angka. Garis berasal dari percobaanmu sendiri; hasilnya bisa berada di atas atau di bawah ½.</p>
     <svg className="frequency-chart" viewBox="0 0 600 225" role="img" aria-label={`Grafik frekuensi relatif dari ${tosses.length} lemparan, ${successes} angka`}>
@@ -89,9 +96,9 @@ function FrequencyExperiment({ quiet }: ExperimentProps) {
       {tosses.length > 0 && <motion.circle r="5" fill="#cf4500" initial={false} animate={{ cx: endX, cy: endY }} transition={{ duration: dotDuration, ease: 'easeOut' }} />}
       {!tosses.length && <text x="115" y="65">Mulai percobaan untuk menggambar grafik.</text>}
     </svg>
-    <div className="coin-history" aria-label="Hasil 12 lemparan terakhir">{tosses.slice(-12).map((s, i) => <span key={coinBase + i} className={`coin experiment-arrive ${s ? 'coin-angka' : ''}`}>{s ? 'A' : 'G'}</span>)}</div>
+    <div className="coin-history" aria-label="Hasil 12 lemparan terakhir">{tosses.slice(-12).map((s, i) => <span key={coinBase + i} className={`coin coin-flip ${s ? 'coin-angka' : ''}`} style={{ animationDelay: `${flipDelays[coinBase + i] ?? 0}ms` }}>{s ? 'A' : 'G'}</span>)}</div>
     <small>A = angka · G = gambar · menampilkan maksimal 12 hasil terakhir</small>
-    <div className="experiment-controls"><button className="experiment-primary" disabled={tosses.length >= 1000} onClick={() => add(1)}>Lempar 1 kali</button><button disabled={tosses.length > 990} onClick={() => add(10)}>+10 lemparan</button><button disabled={tosses.length > 900} onClick={() => add(100)}>+100 lemparan</button><button onClick={() => setRun(r => ({ tosses: [], prevCount: 0, batch: r.batch + 1 }))}>Ulangi</button></div>
+    <div className="experiment-controls"><button className="experiment-primary" disabled={tosses.length >= 1000} onClick={() => add(1)}>Lempar 1 kali</button><button disabled={tosses.length > 990} onClick={() => add(10)}>+10 lemparan</button><button disabled={tosses.length > 900} onClick={() => add(100)}>+100 lemparan</button><button onClick={() => setRun(r => ({ tosses: [], prevCount: 0, batch: r.batch + 1, flipDelays: [] }))}>Ulangi</button></div>
     <div className="experiment-result" role="status"><span className="experiment-equation">{tosses.length ? `Frekuensi relatif = ${successes}/${tosses.length} = ${(successes / tosses.length).toFixed(3)}` : 'Belum ada data percobaan.'}</span><span>Angka teramati: {successes} · Frekuensi harapan: 0,5 × {tosses.length} = {tosses.length / 2}. Hasil nyata tidak harus sama dengan harapan.</span></div>
   </>;
 }

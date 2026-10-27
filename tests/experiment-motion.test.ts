@@ -8,6 +8,8 @@ import {
   frequencyPoints,
   splitFrequencyPath,
   frequencyDrawDuration,
+  coinFlipDelayMs,
+  COIN_FLIP_STAGGER_MS,
 } from '../lib/experiment-motion';
 
 const pickFirst = () => 0;
@@ -133,5 +135,29 @@ describe('Frequency chart incremental drawing', () => {
     expect(frequencyDrawDuration(100, false)).toBe(0.65);
     expect(frequencyDrawDuration(0, false)).toBe(0);
     expect(frequencyDrawDuration(100, true)).toBe(0);
+  });
+});
+
+describe('Coin flip stagger', () => {
+  it('flips a single new toss immediately', () => {
+    // 5 tosses before, 6 now, all visible (coinBase 0): the new coin is index 5.
+    expect(coinFlipDelayMs(5, 5, 0)).toBe(0);
+  });
+
+  it('staggers a batch from its first visible new coin', () => {
+    // 3 before, +10 → 13 tosses, last 12 visible start at index 1; new coins are 3..12.
+    expect(coinFlipDelayMs(3, 3, 1)).toBe(0);
+    expect(coinFlipDelayMs(4, 3, 1)).toBe(COIN_FLIP_STAGGER_MS);
+    expect(coinFlipDelayMs(12, 3, 1)).toBe(9 * COIN_FLIP_STAGGER_MS);
+  });
+
+  it('starts at the window edge when the batch is larger than the visible window', () => {
+    // 0 before, +100 → visible window starts at 88, all visible coins are new.
+    expect(coinFlipDelayMs(88, 0, 88)).toBe(0);
+    expect(coinFlipDelayMs(99, 0, 88)).toBe(11 * COIN_FLIP_STAGGER_MS);
+  });
+
+  it('never returns a negative delay for older coins', () => {
+    expect(coinFlipDelayMs(1, 3, 1)).toBe(0);
   });
 });

@@ -1,0 +1,30 @@
+import { chromium } from '@playwright/test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const browser = await chromium.launch({channel:'chrome',headless:true});
+const page = await browser.newPage();
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+fs.mkdirSync('docs/screenshots',{recursive:true});
+for(const width of [1440,768,360]){
+ await page.setViewportSize({width,height:1000});
+ await page.goto('http://127.0.0.1:3000',{waitUntil:'networkidle'});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.screenshot({path:`docs/screenshots/foundation-${width}.png`,fullPage:true});
+ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Overflow ${width}`);
+ await page.getByRole('button',{name:'A ∩ B',exact:true}).click();
+ await page.getByText('2 hasil termasuk A dan B sekaligus: {3, 5}.',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Ganjil & genap',exact:true}).click();
+ await page.getByText('0 hasil termasuk A dan B sekaligus: ∅.',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Aᶜ',exact:true}).click();
+ await page.getByText('Hasil yang bukan ganjil adalah {2, 4, 6}. Peluangnya 1 − 3/6 = 3/6.',{exact:true}).waitFor();
+ await page.getByLabel('Mode tampilan').selectOption('focus');
+ assert.equal(await page.locator('.hero-art').isVisible(),false);
+}
+await page.goto('http://127.0.0.1:3000/styleguide',{waitUntil:'networkidle'});
+await page.getByRole('heading',{name:'Hangat. Jelas. Terukur.'}).waitFor();
+await page.setViewportSize({width:1440,height:1000});
+await page.screenshot({path:'docs/screenshots/styleguide-1440.png',fullPage:true});
+assert.equal((await page.request.get('http://127.0.0.1:3000/laporan-awal.md')).status(),200);
+assert.deepEqual(errors,[]);
+await browser.close();
+console.log('PASS: 1440/768/360, no overflow, 3 set operations, focus mode, styleguide, report download, no page errors');

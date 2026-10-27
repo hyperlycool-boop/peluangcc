@@ -10,11 +10,12 @@ const WIDTHS = [1440, 768, 375];
 const LESSONS = ['ruang-sampel', 'peluang-komplemen', 'frekuensi-kejadian', 'kejadian-majemuk', 'bebas-bersyarat'];
 const SHOTS = [
   { name: 'beranda', path: '/' },
-  { name: 'materi', path: '/materi/kejadian-majemuk' },
-  { name: 'latihan', path: '/latihan', openDetails: true },
+  { name: 'materi', path: '/materi/kejadian-majemuk', openDetails: true },
   { name: 'referensi', path: '/referensi' },
 ];
-const CHECKED = ['/', '/latihan', '/referensi', ...LESSONS.map((s) => `/materi/${s}`)];
+const CHECKED = ['/', '/referensi', ...LESSONS.map((s) => `/materi/${s}`)];
+// Practice problems live on their lesson page: exercise ids per lesson.
+const EXERCISES = { 'kejadian-majemuk': ['soal-1', 'soal-2'], 'ruang-sampel': ['soal-3'] };
 
 let browser;
 try {
@@ -84,7 +85,19 @@ try {
     }
   }
 
-  // 4. Unknown lesson returns 404.
+  // 4. Each practice problem is on its lesson page, with a solution; /latihan no longer exists.
+  report.exercises = [];
+  for (const [slug, ids] of Object.entries(EXERCISES)) {
+    await page.goto(`${BASE}/materi/${slug}`, { waitUntil: 'networkidle' });
+    for (const id of ids) {
+      const present = await page.locator(`#${id} details`).count();
+      report.exercises.push({ lesson: slug, id, hasSolution: present === 1 });
+      assert.equal(present, 1, `#${id} with solution missing on /materi/${slug}`);
+    }
+  }
+  assert.equal((await page.request.get(`${BASE}/latihan`)).status(), 404);
+
+  // 5. Unknown lesson returns 404.
   report.notFound = (await page.request.get(`${BASE}/materi/tidak-ada`)).status();
   assert.equal(report.notFound, 404);
 

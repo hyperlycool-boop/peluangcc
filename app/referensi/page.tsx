@@ -56,7 +56,7 @@ export default function Page() {
                     Dipakai untuk: {c.scope.join(', ')}.
                   </p>
                   <p className="reference-note">{c.note}</p>
-                  {(lessons.length > 0 || c.id === 'lembar-guru') && (
+                  {lessons.length > 0 && (
                     <p className="reference-used">
                       Dipakai di:{' '}
                       {lessons.map((m, i) => (
@@ -65,12 +65,6 @@ export default function Page() {
                           <Link href={`/materi/${m.slug}`}>{m.title}</Link>
                         </span>
                       ))}
-                      {c.id === 'lembar-guru' && (
-                        <>
-                          {lessons.length > 0 && ', '}
-                          <Link href="/latihan">Latihan soal</Link>
-                        </>
-                      )}
                     </p>
                   )}
                 </li>

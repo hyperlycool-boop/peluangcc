@@ -158,8 +158,8 @@ describe('Sumber dan referensi', () => {
 });
 
 describe('Halaman situs', () => {
-  it('Latihan dan Referensi punya tautan unik', () => {
-    expect(SITE_PAGES.map((p) => p.href)).toEqual(['/latihan', '/referensi']);
+  it('Referensi punya tautan unik dan tidak ada halaman Latihan terpisah', () => {
+    expect(SITE_PAGES.map((p) => p.href)).toEqual(['/referensi']);
     expect(new Set(SITE_PAGES.map((p) => p.id)).size).toBe(SITE_PAGES.length);
   });
 });

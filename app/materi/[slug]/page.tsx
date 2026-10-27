@@ -12,6 +12,7 @@ import { exercisesForLesson } from '@/lib/exercises';
 import { LessonExperiment } from '@/components/LessonExperiments';
 import { Formula } from '@/components/Formula';
 import { SourceCredits } from '@/components/SourceCredits';
+import { ExerciseCard } from '@/components/ExerciseCard';
 import { SiteFooter, SubpageHeader } from '@/components/SiteChrome';
 
 interface PageProps {
@@ -69,18 +70,9 @@ export default async function Page({ params }: PageProps) {
               <p>{m.answer}</p>
             </details>
           </section>
-          {practice.length > 0 && (
-            <section>
-              <h2>Latihan untuk materi ini.</h2>
-              <ul className="practice-links">
-                {practice.map((e) => (
-                  <li key={e.id}>
-                    <Link href={`/latihan#${e.id}`}>{e.title} →</Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          {practice.map((exercise, i) => (
+            <ExerciseCard key={exercise.id} exercise={exercise} number={i + 1} />
+          ))}
           <SourceCredits
             ids={m.sources}
             note="Penjelasan dan contoh disusun untuk proyek ini berdasarkan sumber di atas."

@@ -30,33 +30,6 @@
       "overflow": false
     },
     {
-      "path": "/latihan",
-      "width": 1440,
-      "scrollWidth": 1440,
-      "formulaErrors": 0,
-      "formulas": 13,
-      "h1": "Latihan soal.",
-      "overflow": false
-    },
-    {
-      "path": "/latihan",
-      "width": 768,
-      "scrollWidth": 768,
-      "formulaErrors": 0,
-      "formulas": 13,
-      "h1": "Latihan soal.",
-      "overflow": false
-    },
-    {
-      "path": "/latihan",
-      "width": 375,
-      "scrollWidth": 375,
-      "formulaErrors": 0,
-      "formulas": 13,
-      "h1": "Latihan soal.",
-      "overflow": false
-    },
-    {
       "path": "/referensi",
       "width": 1440,
       "scrollWidth": 1440,
@@ -88,7 +61,7 @@
       "width": 1440,
       "scrollWidth": 1440,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 6,
       "h1": "Ruang sampel",
       "overflow": false
     },
@@ -97,7 +70,7 @@
       "width": 768,
       "scrollWidth": 768,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 6,
       "h1": "Ruang sampel",
       "overflow": false
     },
@@ -106,7 +79,7 @@
       "width": 375,
       "scrollWidth": 375,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 6,
       "h1": "Ruang sampel",
       "overflow": false
     },
@@ -169,7 +142,7 @@
       "width": 1440,
       "scrollWidth": 1440,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 11,
       "h1": "Kejadian majemuk",
       "overflow": false
     },
@@ -178,7 +151,7 @@
       "width": 768,
       "scrollWidth": 768,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 11,
       "h1": "Kejadian majemuk",
       "overflow": false
     },
@@ -187,7 +160,7 @@
       "width": 375,
       "scrollWidth": 375,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 11,
       "h1": "Kejadian majemuk",
       "overflow": false
     },
@@ -230,22 +203,6 @@
     },
     {
       "href": "/#materi",
-      "status": 200
-    },
-    {
-      "href": "/latihan",
-      "status": 200
-    },
-    {
-      "href": "/latihan#soal-1",
-      "status": 200
-    },
-    {
-      "href": "/latihan#soal-2",
-      "status": 200
-    },
-    {
-      "href": "/latihan#soal-3",
       "status": 200
     },
     {
@@ -307,18 +264,6 @@
       "present": true
     },
     {
-      "href": "/latihan#soal-1",
-      "present": true
-    },
-    {
-      "href": "/latihan#soal-2",
-      "present": true
-    },
-    {
-      "href": "/latihan#soal-3",
-      "present": true
-    },
-    {
       "href": "/referensi#ilustrasi",
       "present": true
     },
@@ -340,5 +285,22 @@
     }
   ],
   "notFound": 404,
+  "exercises": [
+    {
+      "lesson": "kejadian-majemuk",
+      "id": "soal-1",
+      "hasSolution": true
+    },
+    {
+      "lesson": "kejadian-majemuk",
+      "id": "soal-2",
+      "hasSolution": true
+    },
+    {
+      "lesson": "ruang-sampel",
+      "id": "soal-3",
+      "hasSolution": true
+    }
+  ],
   "jsErrors": 0
 }

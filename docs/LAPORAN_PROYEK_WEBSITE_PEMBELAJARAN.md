@@ -60,7 +60,7 @@ Siswa menyusun ruang sampel; menghitung peluang dan komplemen; menafsirkan freku
 | 4 | Kejadian majemuk | Gabungan dan irisan, saling lepas dan tidak saling lepas | `/materi/kejadian-majemuk` |
 | 5 | Bebas & bersyarat | Peluang bersyarat, aturan perkalian, kejadian saling bebas | `/materi/bebas-bersyarat` |
 
-Latihan (halaman `/latihan`): kantong 15 bola (merah atau hijau); kartu As atau King dari 52 kartu bridge; delapan orang berbeda duduk berselang-seling di meja bundar. Rencana awal terdapat pada `docs/DRAF_PERTEMUAN_1.md`.
+Latihan (ditampilkan di halaman materi terkait: dua soal pada Kejadian majemuk, satu soal pada Ruang sampel): kantong 15 bola (merah atau hijau); kartu As atau King dari 52 kartu bridge; delapan orang berbeda duduk berselang-seling di meja bundar. Rencana awal terdapat pada `docs/DRAF_PERTEMUAN_1.md`.
 
 ## 2.5 Rencana Sumber Referensi
 Rencana awal: modul Kemendikbud sebagai rujukan konteks sekolah dan OpenStax sebagai rujukan pembanding definisi. Pada tahap validasi (Bab V) rencana ini diperluas menjadi empat sumber: lembar materi guru, OpenStax 3.1, OpenStax 3.2, dan e-modul Kemendikbud. Setiap sumber memiliki ID, penulis, tahun (bila ada), judul, penerbit, URL dan tanggal akses (untuk sumber daring), cakupan, status pemeriksaan, dan catatan. Daftar lengkap ada di Daftar Pustaka dan pada halaman `/referensi`.
@@ -93,12 +93,11 @@ Ruang Peluang
 │   ├── #lab       Lab diagram himpunan (ganjil & prima / ganjil & genap)
 │   └── #materi    Daftar lima materi (pratinjau + "Coba animasi")
 ├── Materi  (/materi/[slug])  × 5
-│   ├── ruang-sampel
+│   ├── ruang-sampel          (+ latihan soal 3)
 │   ├── peluang-komplemen
 │   ├── frekuensi-kejadian
-│   ├── kejadian-majemuk
+│   ├── kejadian-majemuk      (+ latihan soal 1 dan 2)
 │   └── bebas-bersyarat
-├── Latihan  (/latihan)       3 soal + pembahasan
 ├── Referensi  (/referensi)   daftar pustaka, ilustrasi, perangkat lunak, arti status
 └── Halaman pengembang
     ├── /styleguide           sistem desain (dari footer dan tombol panah di header)
@@ -108,19 +107,18 @@ Ruang Peluang
 | Halaman | Fungsi | Dihubungkan dari |
 |---|---|---|
 | Beranda | Pengantar, dadu 3D, lab Venn, daftar materi | Semua halaman (logo) |
-| Materi (5) | Eksperimen, rumus, contoh, pertanyaan, latihan terkait, sumber | Daftar materi di beranda; tombol sebelumnya/berikutnya antar materi |
-| Latihan | Tiga soal dengan pembahasan langkah demi langkah | Header, footer, dan bagian "Latihan untuk materi ini" pada materi 1 dan 4 |
-| Referensi | Daftar pustaka dan status pemeriksaan | Header, footer, dan blok "Sumber" di setiap materi dan latihan |
+| Materi (5) | Eksperimen, rumus, contoh, pertanyaan, latihan soal (materi 1 dan 4), sumber | Daftar materi di beranda; tombol sebelumnya/berikutnya antar materi |
+| Referensi | Daftar pustaka dan status pemeriksaan | Header, footer, dan blok "Sumber" di setiap materi |
 | Styleguide, Prototype | Dokumentasi desain dan prototipe | Footer / tombol header (styleguide); alamat langsung (prototype) |
 
-Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan → Latihan → Referensi.
+Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan (kerjakan latihan pada materi 1 dan 4) → Referensi.
 
 ## 3.4 Wireframe / Sketsa
 
 **Beranda (desktop)**
 ```
 +--------------------------------------------------------------------------+
-| (●●) ruang peluang.  [Beranda] Dadu 3D  Lab Diagram  Materi  Latihan  Referensi  [↗] |
+| (●●) ruang peluang.  [Beranda] Dadu 3D  Lab Diagram  Materi  Referensi  [↗] |
 +--------------------------------------------------------------------------+
 |                                            Mode tampilan [Interaktif penuh ▾]|
 |  Peluang bukan                                                           |
@@ -140,14 +138,14 @@ Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan → Latih
 |  01 Ruang sampel        deskripsi singkat     Pelajari ↗  [Coba animasi +]|
 |  02 … 05                                                                  |
 +--------------------------------------------------------------------------+
-|  ruang peluang.   Materi  Latihan  Referensi   Lihat. Coba. Pahami.  Sistem desain ↗ |
+|  ruang peluang.   Materi  Referensi   Lihat. Coba. Pahami.  Sistem desain ↗ |
 +--------------------------------------------------------------------------+
 ```
 
 **Halaman materi**
 ```
 +-----------------------------------------------+
-| ruang peluang.      Materi  Latihan  Referensi |
+| ruang peluang.      Materi  Referensi |
 +-----------------------------------------------+
 | MATERI 04 / 05                                |
 | Kejadian majemuk                              |
@@ -161,24 +159,12 @@ Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan → Latih
 | [ label  ] [ rumus ]  ×  jumlah rumus materi   |
 | [contoh]                                       |
 | Coba pikirkan.  [pertanyaan] ▸ Lihat pembahasan|
-| Latihan untuk materi ini.  [tautan soal]       |
+| LATIHAN 01  [soal] ▸ Lihat pembahasan          |
 | Sumber  [daftar] [status] [catatan]            |
 | ← materi sebelumnya          materi berikutnya →|
 +-----------------------------------------------+
-| ruang peluang.   Materi  Latihan  Referensi    |
+| ruang peluang.   Materi  Referensi    |
 +-----------------------------------------------+
-```
-
-**Latihan**
-```
-| LATIHAN / 03 SOAL        Latihan soal.        [pengantar]
-| SOAL 01  Judul soal
-| [teks soal]
-| [Perlu diketahui: prasyarat / konvensi]   (jika ada)
-| ▸ Lihat pembahasan → 1. langkah + rumus  2. …  Jawaban.
-| Konsep terkait: [materi] →
-| (diulang untuk soal 02 dan 03)
-| Sumber  [lembar guru]
 ```
 
 **Referensi**
@@ -209,12 +195,12 @@ Pada layar sempit (≤ 760 px) menu header pindah ke baris kedua yang dapat dige
 Gerak diagram 650 ms, jalur orbit 1.200 ms. Mode Tenang, Fokus ujian, dan *reduced motion* menampilkan hasil akhir secara langsung. Dokumentasi lengkap: halaman `/styleguide` dan `docs/ARSITEKTUR.md`.
 
 ## 3.6 Navigasi dan Fitur
-- **Menu header** (beranda): Beranda, Dadu 3D, Lab Diagram, Materi, Latihan, Referensi. Dadu 3D, Lab Diagram, dan Materi berupa jangkar di halaman yang sama dengan penanda bagian aktif; Beranda, Latihan, dan Referensi adalah tautan halaman.
-- **Menu header** (halaman lain): Materi, Latihan, Referensi dengan penanda halaman aktif.
-- **Footer** di semua halaman: Materi, Latihan, Referensi.
+- **Menu header** (beranda): Beranda, Dadu 3D, Lab Diagram, Materi, Referensi. Dadu 3D, Lab Diagram, dan Materi berupa jangkar di halaman yang sama dengan penanda bagian aktif; Beranda dan Referensi adalah tautan halaman.
+- **Menu header** (halaman lain): Materi, Referensi dengan penanda halaman aktif.
+- **Footer** di semua halaman: Materi, Referensi.
 - **Antar materi**: tombol "← sebelumnya" dan "berikutnya →", dengan transisi arah.
 - **Tautan lewati navigasi** pada beranda.
-- **Fitur belajar**: dadu 3D mengikuti gulir; lab Venn (dua skenario, tiga daerah); lima eksperimen interaktif; rumus KaTeX; pertanyaan dengan pembahasan; tiga latihan dengan pembahasan langkah demi langkah; blok sumber di setiap materi; Mode tampilan.
+- **Fitur belajar**: dadu 3D mengikuti gulir; lab Venn (dua skenario, tiga daerah); lima eksperimen interaktif; rumus KaTeX; pertanyaan dengan pembahasan; tiga latihan (di halaman materi 1 dan 4) dengan pembahasan langkah demi langkah; blok sumber di setiap materi; Mode tampilan.
 - **Unduhan**: laporan Markdown tersedia di `/laporan-awal.md` (alamat langsung, belum ada tautan menu).
 - **Belum ada** (keputusan lingkup): pencarian, kuis berskor, video.
 
@@ -278,7 +264,7 @@ Fitur yang dapat dicoba pada prototype: menu jangkar, lab Venn, pratinjau materi
    - ketiga jawaban latihan dihitung ulang **tanpa rumus**: mengenumerasi 15 bola, 52 kartu, dan 5.040 susunan duduk (dengan satu orang dikunci agar putaran tidak terhitung ganda), lalu hasilnya dibandingkan dengan 11/15, 2/13, dan 1/35;
    - rumus yang wajib ada pada tiap materi diperiksa teksnya, dan setiap sumber yang dikutip harus terdaftar;
    - contoh bersyarat (3/10) ÷ (3/5) = 2/4 diperiksa.
-4. **Pemeriksaan tampilan rumus**: semua rumus KaTeX pada delapan halaman isi (beranda, lima materi, latihan, referensi) dirender tanpa galat (`npm run test:final`).
+4. **Pemeriksaan tampilan rumus**: semua rumus KaTeX pada tujuh halaman isi (beranda, lima materi, referensi) dirender tanpa galat (`npm run test:final`).
 
 ## 5.2 Daftar Sumber
 | ID | Sumber | Status | Yang diperiksa |
@@ -315,9 +301,9 @@ Hasil penting dari pemeriksaan sumber: halaman OpenStax 3.2 **tidak** memuat rum
 | Saling lepas | Definisi (A ∩ B = ∅, n(A ∩ B) = 0) dan rumus P(A ∪ B) = P(A) + P(B) ditambahkan di samping rumus tidak saling lepas | `lib/materials.ts` |
 | Saling bebas dan bersyarat | Tiga rumus berlabel; contoh diberi pemeriksaan (3/10) ÷ (3/5) = 2/4 dan kasus dengan pengembalian | `lib/materials.ts` |
 | Tampilan rumus | Rumus kini berupa daftar kartu berlabel, bukan satu rumus per materi | `app/materi/[slug]/page.tsx`, `app/globals.css` |
-| Tiga latihan | Halaman `/latihan` dengan pembahasan langkah demi langkah; konvensi meja bundar dinyatakan; tautan dari materi terkait | `lib/exercises.ts`, `app/latihan/page.tsx` |
-| Sumber | Halaman `/referensi`, blok "Sumber" pada setiap materi dan latihan, status pemeriksaan, catatan koreksi | `lib/citations.ts`, `app/referensi/page.tsx`, `components/SourceCredits.tsx` |
-| Navigasi | Latihan dan Referensi masuk menu header dan footer | `components/Experience.tsx`, `components/SiteChrome.tsx` |
+| Tiga latihan | Tiga soal dengan pembahasan langkah demi langkah ditampilkan langsung di halaman materi terkait (soal 1–2 di Kejadian majemuk, soal 3 di Ruang sampel); konvensi meja bundar dinyatakan | `lib/exercises.ts`, `components/ExerciseCard.tsx`, `app/materi/[slug]/page.tsx` |
+| Sumber | Halaman `/referensi`, blok "Sumber" pada setiap materi, status pemeriksaan, catatan koreksi | `lib/citations.ts`, `app/referensi/page.tsx`, `components/SourceCredits.tsx` |
+| Navigasi | Referensi masuk menu header dan footer | `components/Experience.tsx`, `components/SiteChrome.tsx` |
 | Pengujian | Tes isi (jawaban latihan, rumus wajib, sumber) | `tests/content.test.ts` |
 
 **Revisi berdasarkan masukan guru:** **[ISI: catat setiap masukan guru dan perubahan yang dilakukan; belum ada yang tercatat]**.
@@ -327,7 +313,7 @@ Hasil penting dari pemeriksaan sumber: halaman OpenStax 3.2 **tidak** memuat rum
 # BAB VI — HASIL AKHIR / FINAL PROJECT (PERTEMUAN 5)
 
 ## 6.1 Deskripsi Website Final
-Ruang Peluang adalah website pembelajaran berbahasa Indonesia untuk topik peluang. Pengguna memulai dari beranda (dadu 3D dan lab Venn), memilih salah satu dari lima materi, mencoba eksperimen, membaca rumus berlabel dan contoh, menjawab pertanyaan, lalu mengerjakan tiga latihan. Setiap materi dan latihan mencantumkan sumbernya, dan seluruh sumber dirinci di halaman referensi.
+Ruang Peluang adalah website pembelajaran berbahasa Indonesia untuk topik peluang. Pengguna memulai dari beranda (dadu 3D dan lab Venn), memilih salah satu dari lima materi, mencoba eksperimen, membaca rumus berlabel dan contoh, menjawab pertanyaan, lalu mengerjakan latihan yang ada di halaman materi terkait. Setiap materi mencantumkan sumbernya, dan seluruh sumber dirinci di halaman referensi.
 
 ## 6.2 Tautan Website atau Lokasi File
 - Tautan publikasi: **[ISI: URL website jika sudah dipublikasikan]**. Saat laporan ini disusun website **belum dipublikasikan**.
@@ -342,12 +328,12 @@ Untuk versi produksi: `npm run build`, kemudian `npm run start`.
 ## 6.3 Fitur Final
 | Fitur | Jumlah / keterangan |
 |---|---|
-| Halaman | Beranda, 5 materi, Latihan, Referensi (ditambah Styleguide dan Prototype untuk pengembang) |
+| Halaman | Beranda, 5 materi (memuat 3 soal latihan), Referensi (ditambah Styleguide dan Prototype untuk pengembang) |
 | Eksperimen interaktif | 5 (satu per materi), juga dapat dibuka dari daftar materi di beranda |
 | Lab Venn | 2 skenario × 3 daerah (gabungan, irisan, komplemen) |
 | Rumus berlabel | 13 rumus pada 5 materi, dirender KaTeX |
-| Latihan | 3 soal, masing-masing dengan pembahasan langkah demi langkah dan konsep terkait |
-| Sumber | 4 sumber; setiap materi dan latihan menautkan ke entri referensinya |
+| Latihan | 3 soal di halaman materi (2 di Kejadian majemuk, 1 di Ruang sampel), masing-masing dengan pembahasan langkah demi langkah |
+| Sumber | 4 sumber; setiap materi menautkan ke entri referensinya |
 | Aksesibilitas | Tautan lewati navigasi, label ARIA pada diagram, tombol dengan status `aria-pressed`, hasil dibacakan (`aria-live`), kontrol keyboard, Mode tampilan, dan dukungan *reduced motion* |
 | Responsif | Diuji pada 1440, 768, dan 375 px |
 
@@ -356,21 +342,22 @@ Pengujian dijalankan pada build produksi (`npm run build`, lalu `npm run start`)
 
 | Aspek | Cara uji | Hasil |
 |---|---|---|
-| Navigasi | Semua tautan menu header dan footer pada 8 halaman isi | Lulus |
-| Tautan | 19 tautan internal unik dibuka | Semua berstatus 200 |
-| Jangkar | 10 tautan berjangkar (`/#lab`, `/#materi`, `/latihan#soal-1..3`, `/referensi#…`) diperiksa keberadaan targetnya | Semua ada |
+| Navigasi | Semua tautan menu header dan footer pada 7 halaman isi | Lulus |
+| Tautan | 15 tautan internal unik dibuka | Semua berstatus 200 |
+| Jangkar | 7 tautan berjangkar (`/#lab`, `/#materi`, `/referensi#…`) diperiksa keberadaan targetnya | Semua ada |
+| Latihan | Soal 1–3 ada di halaman materinya dan memiliki pembahasan; `/latihan` tidak ada | Lulus (404 untuk `/latihan`) |
 | Halaman tidak ada | `/materi/tidak-ada` | 404 sesuai harapan |
-| Tampilan | 8 halaman × 3 lebar (1440, 768, 375 px) = 24 kombinasi | Tidak ada *overflow* mendatar |
-| Rumus | Semua rumus KaTeX pada 8 halaman | Tidak ada galat render |
+| Tampilan | 7 halaman × 3 lebar (1440, 768, 375 px) = 21 kombinasi | Tidak ada *overflow* mendatar |
+| Rumus | Semua rumus KaTeX pada 7 halaman | Tidak ada galat render |
 | Galat JavaScript | Seluruh kunjungan halaman | 0 galat |
 | Materi | Perbandingan dengan lembar guru dan sumber (Bab V); 114 tes otomatis pada 7 berkas | Lulus |
 | Kualitas kode | `npm run typecheck`, `npm run lint` | Lulus; 0 galat lint |
-| Build | `npm run build` | Lulus; 12 halaman statis dibuat |
+| Build | `npm run build` | Lulus; 11 halaman statis dibuat |
 | Gambar | Situs tidak memuat berkas gambar; ilustrasi berupa SVG/CSS | Tidak ada gambar rusak |
 | **Ejaan** | — | **Belum diperiksa secara sistematis.** **[ISI: hasil baca ulang ejaan oleh anggota/guru]** |
 | Peramban dan perangkat | Chromium (Playwright) dan peramban dalam aplikasi, ukuran layar lewat emulasi | Safari, Firefox, dan perangkat fisik **belum** diuji |
 
-Skrip Playwright tahap awal (`tests/browser.mjs`, `tests/homepage.mjs`, `tests/prototype.mjs`) sudah diperbarui untuk menu enam tautan tetapi **belum dijalankan ulang** pada tahap ini; tahap awal mencatat lulus (lihat `docs/VERIFIKASI.md`).
+Skrip Playwright tahap awal (`tests/browser.mjs`, `tests/homepage.mjs`, `tests/prototype.mjs`) sudah diperbarui untuk menu lima tautan tetapi **belum dijalankan ulang** pada tahap ini; tahap awal mencatat lulus (lihat `docs/VERIFIKASI.md`).
 
 ## 6.5 Dokumentasi
 Tangkapan layar halaman final (halaman penuh, *reduced motion*). Ukuran tablet 768 px tersedia di Lampiran G. Pada beranda 1440 px, ruang kosong lebar di sekitar dadu terjadi karena bagian dadu 3D bersifat *sticky* dan tampil utuh hanya saat digulir.
@@ -378,13 +365,12 @@ Tangkapan layar halaman final (halaman penuh, *reduced motion*). Ukuran tablet 7
 | Halaman | Desktop 1440 px | Ponsel 375 px |
 |---|---|---|
 | Beranda | ![Beranda desktop](screenshots/final-beranda-1440.png) | ![Beranda ponsel](screenshots/final-beranda-375.png) |
-| Materi (Kejadian majemuk) | ![Materi desktop](screenshots/final-materi-1440.png) | ![Materi ponsel](screenshots/final-materi-375.png) |
-| Latihan (pembahasan terbuka) | ![Latihan desktop](screenshots/final-latihan-1440.png) | ![Latihan ponsel](screenshots/final-latihan-375.png) |
+| Materi (Kejadian majemuk, latihan dengan pembahasan terbuka) | ![Materi desktop](screenshots/final-materi-1440.png) | ![Materi ponsel](screenshots/final-materi-375.png) |
 | Referensi | ![Referensi desktop](screenshots/final-referensi-1440.png) | ![Referensi ponsel](screenshots/final-referensi-375.png) |
 
 ## 6.6 Evaluasi
 **Yang berhasil**
-- Struktur lengkap: beranda, lima materi, latihan, referensi, dan navigasi konsisten di semua halaman.
+- Struktur lengkap: beranda, lima materi (dengan latihan), referensi, dan navigasi konsisten di semua halaman.
 - Materi diperiksa terhadap lembar guru dan sumber luar; satu salah ketik pada sumber ditemukan dan dikoreksi.
 - Jawaban latihan dibuktikan dengan enumerasi, bukan hanya rumus.
 - Setiap sumber memiliki status pemeriksaan yang jujur, termasuk yang baru sebatas metadata.
@@ -453,7 +439,7 @@ Lihat 3.4. Sketsa tangan atau berkas desain asli: **[ISI: lampirkan jika ada]**.
 | 2. Konsep dan desain — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Nama, tujuan, pengguna, sitemap, wireframe, warna dan huruf, navigasi | BAB III: sitemap, wireframe, tabel desain visual, rancangan navigasi | Wireframe disusun setelah situs dibangun (bukan rancangan awal) → dicatat terbuka di Bab III |
 | 3. Prototype — kelas: **[ISI]**; pengerjaan: 23 Okt (revisi beranda) dan 27 Okt 2026 (riwayat Git) | Prototype dengan tangkapan layar dan daftar fitur | Beranda, lima rute materi, eksperimen, prototipe 3D, 7 komit; BAB IV dan tangkapan layar | Masukan guru belum tercatat; grafik pratinjau hanya ilustrasi → data nyata ada pada eksperimen |
 | 4. Validasi materi — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Memeriksa ketepatan, kejelasan, sumber; merevisi | Pembandingan dengan lembar guru dan sumber; 9 revisi; tes isi (114 tes); BAB V | Isi PDF Kemendikbud belum dibaca; belum ada validasi guru → saran 7.2 |
-| 5. Final project — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Menguji tautan, navigasi, tampilan, keterbacaan, fitur; menyusun laporan | `test:final`: 24 kombinasi tampilan, 19 tautan, 10 jangkar, 0 galat; BAB VI–VII | Ejaan belum diperiksa; belum dipublikasikan; Safari/Firefox belum diuji |
+| 5. Final project — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Menguji tautan, navigasi, tampilan, keterbacaan, fitur; menyusun laporan | `test:final`: 21 kombinasi tampilan, 15 tautan, 7 jangkar, 0 galat; BAB VI–VII | Ejaan belum diperiksa; belum dipublikasikan; Safari/Firefox belum diuji |
 
 ## Lampiran E — Checklist Sebelum Dikumpulkan
 - [ ] Halaman judul dan identitas lengkap — **belum**: identitas bertanda [ISI]
@@ -474,7 +460,7 @@ Saling lepas berarti n(A ∩ B) = 0 (A ∩ B = ∅). Kejadian adalah himpunan ba
 - **Fondasi (Pertemuan 1):** `foundation-1440/768/360.png`, `styleguide-1440.png`
 - **Beranda dan prototype (Pertemuan 3):** `homepage-1440/768/360.png`, `homepage-hover-1440.png`, `current-homepage.png`, `prototype-top-1440.png`, `prototype-scroll-1440.png`, `prototype-3d-folding-1440/768/360.png`
 - **Gulir dadu 3D:** `scrolly-1440-stage1..4.png`, `scrolly-768-stage1..4.png`, `scrolly-375-stage1..4.png`, `scrolly-stage-1..3.png`, `scrolly-paced-stage1..2.png`, `clean-scrolly-*.png`, `current-scrolly-*.png`, `mobile-scrolly-*.png`, `continued-dice-*.png`, `kept-lab-part.png`
-- **Final (Pertemuan 5):** `final-{beranda,materi,latihan,referensi}-{1440,768,375}.png`
+- **Final (Pertemuan 5):** `final-{beranda,materi,referensi}-{1440,768,375}.png`
 
 Semua berkas berada di `docs/screenshots/`.
 
@@ -500,8 +486,11 @@ Semua berkas berada di `docs/screenshots/`.
 | `ba2cd57` | 2026-10-27 | Menambah ESLint dan cakupan Vitest |
 | `f079ed2` | 2026-10-27 | Animasi masuk halaman, transisi rute, gerak tingkat 2 |
 | `4ea891c` | 2026-10-27 | Menyempurnakan gerak dan memindahkannya ke GPU |
+| `4d6e664` | 2026-10-27 | Halaman Referensi, rumus berlabel, kredit sumber, tiga latihan, tes isi |
+| `7db3708` | 2026-10-27 | Skrip pengujian final dan bukti pengujian |
+| `8feac6d` | 2026-10-27 | Laporan sampai Pertemuan 5 |
 
-Perubahan Pertemuan 4–5 (halaman Latihan dan Referensi, rumus, sumber, tes isi, `tests/final.mjs`, laporan ini) **belum di-commit** saat laporan disusun.
+Pada cabang `feat/latihan-referensi-laporan`: `4d6e664` (halaman Referensi, rumus, sumber, tes isi), `7db3708` (`tests/final.mjs` dan bukti pengujian), `8feac6d` (laporan ini). Pemindahan soal latihan dari halaman terpisah ke halaman materi **belum di-commit** saat laporan disusun.
 
 ## Lampiran J — Cara Menjalankan dan Menguji
 ```sh

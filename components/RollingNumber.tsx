@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
   calculateRollingDirection,
@@ -27,16 +27,15 @@ export function RollingNumber({
 }: RollingNumberProps) {
   const systemReduced = useReducedMotion();
   const isQuiet = Boolean(quiet || systemReduced);
-  const prevValueRef = useRef<number | undefined>(undefined);
-
-  const direction: RollingDirection =
-    prevValueRef.current !== undefined && prevValueRef.current !== value
-      ? calculateRollingDirection(value, prevValueRef.current)
-      : 'none';
-
-  useEffect(() => {
-    prevValueRef.current = value;
-  }, [value]);
+  // Previous value kept in state (not a ref) so direction is derived without reading refs during render.
+  const [rolled, setRolled] = useState<{ value: number; direction: RollingDirection }>({
+    value,
+    direction: 'none',
+  });
+  if (rolled.value !== value) {
+    setRolled({ value, direction: calculateRollingDirection(value, rolled.value) });
+  }
+  const direction = rolled.direction;
 
   const numbers = generateSlotReelNumbers(max);
   const spring = getRollingSpringConfig(isQuiet);

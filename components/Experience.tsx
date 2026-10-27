@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useId, useEffect, useRef } from 'react';
+import { useState, useId, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ArrowUpRight, MoveUpRight } from 'lucide-react';
@@ -22,6 +22,7 @@ import {
   motionTokens,
   easeLuxury,
 } from '@/lib/math';
+import { useHydrated } from '@/lib/use-hydrated';
 import MaterialList from './MaterialList';
 import ScrollScene3D from './ScrollScene3D';
 import FoldingSectionCard from './FoldingSectionCard';
@@ -70,16 +71,15 @@ function OutcomeDot({
   quiet: boolean;
   duration: number;
 }) {
-  const prevSelectedRef = useRef<boolean>(isSelected);
-  const wasSelected = prevSelectedRef.current;
-
-  useEffect(() => {
-    prevSelectedRef.current = isSelected;
-  }, [isSelected]);
+  // Previous selection kept in state (not a ref) so the pop is derived without reading refs during render.
+  const [selection, setSelection] = useState({ isSelected, wasSelected: isSelected });
+  if (selection.isSelected !== isSelected) {
+    setSelection({ isSelected, wasSelected: selection.isSelected });
+  }
 
   const anim = getOutcomeDotAnimation({
     isSelected,
-    wasSelected,
+    wasSelected: selection.wasSelected,
     quiet,
   });
 
@@ -124,7 +124,7 @@ export default function Experience({
   prototype = false,
   folding: initialFolding,
 }: ExperienceProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [mode, setMode] = useState<DisplayMode>('full');
   const [scenario, setScenario] = useState<Scenario>('prime');
   const [region, setRegion] = useState<Region>('union');
@@ -132,10 +132,6 @@ export default function Experience({
   const foldingEnabled = initialFolding ?? prototype;
   const reduced = useReducedMotion();
   const grainId = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const sections = [

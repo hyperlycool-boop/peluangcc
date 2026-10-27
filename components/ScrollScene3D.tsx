@@ -12,6 +12,7 @@ import {
 } from 'motion/react';
 import type { MotionValue } from 'motion/react';
 import Die3D from './Die3D';
+import { useHydrated } from '@/lib/use-hydrated';
 import { Formula } from '@/components/Formula';
 import {
   DIE_KINEMATICS_BREAKPOINTS,
@@ -112,14 +113,10 @@ export default function ScrollScene3D({
   onStageChange,
   quiet = false,
 }: ScrollScene3DProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const containerRef = useRef<HTMLDivElement>(null);
   const systemReduced = useReducedMotion();
   const isReduced = Boolean(quiet || (mounted && systemReduced));
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Scroll tracking inside the 380vh runway container
   const { scrollYProgress } = useScroll({

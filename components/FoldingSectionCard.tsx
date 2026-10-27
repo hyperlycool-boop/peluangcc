@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState, useEffect, type ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { FOLD_BREAKPOINTS } from '@/lib/folding';
+import { useHydrated } from '@/lib/use-hydrated';
 
 interface FoldingSectionCardProps {
   children: ReactNode;
@@ -19,14 +20,10 @@ export default function FoldingSectionCard({
   enabled = true,
   quiet = false,
 }: FoldingSectionCardProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const cardRef = useRef<HTMLDivElement>(null);
   const systemReduced = useReducedMotion();
   const isQuiet = Boolean(quiet || (mounted && systemReduced) || !enabled);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: cardRef,

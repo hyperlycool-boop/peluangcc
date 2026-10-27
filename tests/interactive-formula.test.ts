@@ -8,7 +8,6 @@ import {
   generateSlotReelNumbers,
   ROLLING_SPRING_DEFAULTS,
   OUTCOME_DOT_THEME,
-  type RollingDirection,
 } from '../lib/interactive-formula';
 import {
   dice,

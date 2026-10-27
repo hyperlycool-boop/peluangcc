@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { materials } from '@/lib/materials';
 import {
@@ -11,6 +11,7 @@ import {
   frequencyPoints,
   splitFrequencyPath,
 } from '@/lib/experiment-motion';
+import { useHydrated } from '@/lib/use-hydrated';
 import { RollingNumber } from './RollingNumber';
 
 interface ExperimentProps {
@@ -144,9 +145,8 @@ const experiments = [SampleExperiment, ComplementExperiment, FrequencyExperiment
  * The system preference is read only after mount so the first client render matches SSR.
  */
 function useExperimentQuiet(quiet?: boolean) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const reduced = useReducedMotion();
-  useEffect(() => setMounted(true), []);
   return Boolean(quiet || (mounted && reduced));
 }
 

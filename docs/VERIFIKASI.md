@@ -1,5 +1,17 @@
-# Verifikasi Phase 0 & Pertemuan 1
-Tanggal: 23 Oktober 2026.
+# Verifikasi
+
+## Pertemuan 4–5 — 27 Oktober 2026
+- `npm test`: 114 tes lulus pada 7 berkas. Tes isi (`tests/content.test.ts`) menghitung ulang ketiga jawaban latihan dengan enumerasi (15 bola, 52 kartu, 5.040 susunan duduk), memeriksa rumus wajib pada tiap materi, dan memastikan setiap sumber yang dikutip terdaftar.
+- `npm run typecheck` dan `npm run lint` lulus (0 galat; peringatan hanya dari skrip pihak ketiga di `.claude/skills`). `npm run build` lulus: 12 halaman statis (`/`, `/latihan`, `/referensi`, 5 rute `/materi/*`, `/prototype`, `/styleguide`).
+- `npm run test:final` pada build produksi (port 3200): 8 halaman × 3 lebar (1440, 768, 375) tanpa overflow mendatar dan tanpa galat render rumus; 19 tautan internal berstatus 200; 10 tautan berjangkar menemukan targetnya; `/materi/tidak-ada` mengembalikan 404; 0 galat JavaScript. Hasil mentah: `docs/pengujian-final.json`. Tangkapan layar: `docs/screenshots/final-*.png`.
+- Sumber diperiksa 27 Oktober 2026: halaman OpenStax 3.1 dan 3.2 dibuka dan dicocokkan dengan konsep yang dikutip; halaman repositori Kemendikbud diperiksa metadatanya. Halaman OpenStax 3.2 tidak memuat rumus penjumlahan saling lepas, sehingga bagian itu tidak dikreditkan ke OpenStax. Lembar guru memuat satu salah ketik (saling lepas ditulis n(A ∩ B) ≠ 0); situs memakai n(A ∩ B) = 0.
+
+### Batas verifikasi tahap ini
+- `tests/browser.mjs`, `tests/homepage.mjs`, dan `tests/prototype.mjs` sudah diperbarui untuk menu enam tautan tetapi belum dijalankan ulang: skrip itu memakai port 3000 (sedang dipakai proses lain) dan menimpa tangkapan layar tahap awal.
+- Hanya Chromium (Playwright) dan peramban dalam aplikasi, dengan ukuran layar lewat emulasi. Belum ada uji Safari, Firefox, perangkat fisik, atau pembaca layar.
+- Ejaan belum diperiksa sistematis. Isi PDF e-modul Kemendikbud belum dibaca penuh. Belum ada validasi guru atau uji coba dengan siswa.
+
+## Phase 0 & Pertemuan 1 — 23 Oktober 2026
 
 - `npm test`: 6 tes lulus, termasuk aturan gabungan pada seluruh 4.096 pasangan himpunan dadu, komplemen, input ilegal, dan metadata sitasi.
 - `npm run typecheck`: lulus. Pemeriksaan TypeScript juga lulus dalam build produksi.

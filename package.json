@@ -9,6 +9,7 @@
     "test": "vitest run",
     "test:prototype": "node tests/prototype.mjs",
     "test:e2e": "node tests/browser.mjs && node tests/homepage.mjs",
+    "test:final": "node tests/final.mjs",
     "validate:materi": "vitest run tests/math.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

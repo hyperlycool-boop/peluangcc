@@ -1,0 +1,344 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "date": "2026-10-27",
+  "pages": [
+    {
+      "path": "/",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Peluang bukansekadar angka.",
+      "overflow": false
+    },
+    {
+      "path": "/",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Peluang bukansekadar angka.",
+      "overflow": false
+    },
+    {
+      "path": "/",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Peluang bukansekadar angka.",
+      "overflow": false
+    },
+    {
+      "path": "/latihan",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 13,
+      "h1": "Latihan soal.",
+      "overflow": false
+    },
+    {
+      "path": "/latihan",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 13,
+      "h1": "Latihan soal.",
+      "overflow": false
+    },
+    {
+      "path": "/latihan",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 13,
+      "h1": "Latihan soal.",
+      "overflow": false
+    },
+    {
+      "path": "/referensi",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 0,
+      "h1": "Daftar referensi.",
+      "overflow": false
+    },
+    {
+      "path": "/referensi",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 0,
+      "h1": "Daftar referensi.",
+      "overflow": false
+    },
+    {
+      "path": "/referensi",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 0,
+      "h1": "Daftar referensi.",
+      "overflow": false
+    },
+    {
+      "path": "/materi/ruang-sampel",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Ruang sampel",
+      "overflow": false
+    },
+    {
+      "path": "/materi/ruang-sampel",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Ruang sampel",
+      "overflow": false
+    },
+    {
+      "path": "/materi/ruang-sampel",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Ruang sampel",
+      "overflow": false
+    },
+    {
+      "path": "/materi/peluang-komplemen",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Peluang & komplemen",
+      "overflow": false
+    },
+    {
+      "path": "/materi/peluang-komplemen",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Peluang & komplemen",
+      "overflow": false
+    },
+    {
+      "path": "/materi/peluang-komplemen",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Peluang & komplemen",
+      "overflow": false
+    },
+    {
+      "path": "/materi/frekuensi-kejadian",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Frekuensi kejadian",
+      "overflow": false
+    },
+    {
+      "path": "/materi/frekuensi-kejadian",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Frekuensi kejadian",
+      "overflow": false
+    },
+    {
+      "path": "/materi/frekuensi-kejadian",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Frekuensi kejadian",
+      "overflow": false
+    },
+    {
+      "path": "/materi/kejadian-majemuk",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Kejadian majemuk",
+      "overflow": false
+    },
+    {
+      "path": "/materi/kejadian-majemuk",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Kejadian majemuk",
+      "overflow": false
+    },
+    {
+      "path": "/materi/kejadian-majemuk",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Kejadian majemuk",
+      "overflow": false
+    },
+    {
+      "path": "/materi/bebas-bersyarat",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Bebas & bersyarat",
+      "overflow": false
+    },
+    {
+      "path": "/materi/bebas-bersyarat",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Bebas & bersyarat",
+      "overflow": false
+    },
+    {
+      "path": "/materi/bebas-bersyarat",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 3,
+      "h1": "Bebas & bersyarat",
+      "overflow": false
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "status": 200
+    },
+    {
+      "href": "/#lab",
+      "status": 200
+    },
+    {
+      "href": "/#materi",
+      "status": 200
+    },
+    {
+      "href": "/latihan",
+      "status": 200
+    },
+    {
+      "href": "/latihan#soal-1",
+      "status": 200
+    },
+    {
+      "href": "/latihan#soal-2",
+      "status": 200
+    },
+    {
+      "href": "/latihan#soal-3",
+      "status": 200
+    },
+    {
+      "href": "/materi/bebas-bersyarat",
+      "status": 200
+    },
+    {
+      "href": "/materi/frekuensi-kejadian",
+      "status": 200
+    },
+    {
+      "href": "/materi/kejadian-majemuk",
+      "status": 200
+    },
+    {
+      "href": "/materi/peluang-komplemen",
+      "status": 200
+    },
+    {
+      "href": "/materi/ruang-sampel",
+      "status": 200
+    },
+    {
+      "href": "/referensi",
+      "status": 200
+    },
+    {
+      "href": "/referensi#ilustrasi",
+      "status": 200
+    },
+    {
+      "href": "/referensi#kemdikbud-2019",
+      "status": 200
+    },
+    {
+      "href": "/referensi#lembar-guru",
+      "status": 200
+    },
+    {
+      "href": "/referensi#openstax-3-1",
+      "status": 200
+    },
+    {
+      "href": "/referensi#openstax-3-2",
+      "status": 200
+    },
+    {
+      "href": "/styleguide",
+      "status": 200
+    }
+  ],
+  "anchors": [
+    {
+      "href": "/#lab",
+      "present": true
+    },
+    {
+      "href": "/#materi",
+      "present": true
+    },
+    {
+      "href": "/latihan#soal-1",
+      "present": true
+    },
+    {
+      "href": "/latihan#soal-2",
+      "present": true
+    },
+    {
+      "href": "/latihan#soal-3",
+      "present": true
+    },
+    {
+      "href": "/referensi#ilustrasi",
+      "present": true
+    },
+    {
+      "href": "/referensi#kemdikbud-2019",
+      "present": true
+    },
+    {
+      "href": "/referensi#lembar-guru",
+      "present": true
+    },
+    {
+      "href": "/referensi#openstax-3-1",
+      "present": true
+    },
+    {
+      "href": "/referensi#openstax-3-2",
+      "present": true
+    }
+  ],
+  "notFound": 404,
+  "jsErrors": 0
+}

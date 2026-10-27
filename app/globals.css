@@ -2166,3 +2166,210 @@ html[data-motion='quiet']::view-transition-group(*) {
     animation-delay: 0s !important;
   }
 }
+
+/* Latihan, Referensi, formulas and source credits */
+nav .nav-pill-item[aria-current="page"] {
+  background: rgba(20, 20, 19, 0.06);
+  color: #141413;
+  font-weight: 500;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  order: 0;
+  width: auto;
+  overflow: visible;
+  padding-top: 0;
+  border-top: 0;
+  font-size: 13px;
+}
+
+.footer-links a {
+  padding: 6px 0;
+  color: #4a423c;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.formula-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 25px;
+}
+
+.formula-item {
+  padding: 16px 22px;
+  background: var(--lifted);
+  border-radius: 20px;
+}
+
+.formula-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #6f6863;
+}
+
+.lesson .formula-item .formula {
+  margin-top: 6px;
+}
+
+.lesson .exercise {
+  margin: 55px 0;
+}
+
+.lesson .exercise-note {
+  font-size: 17px;
+  color: #51463d;
+}
+
+.lesson .exercise-concept {
+  display: inline-block;
+  margin-top: 18px;
+}
+
+.lesson .exercise h2 {
+  margin: 10px 0 14px;
+}
+
+.solution-steps {
+  margin: 18px 0 0;
+  padding-left: 22px;
+  list-style: decimal;
+}
+
+.solution-steps li::marker {
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  color: #756d66;
+}
+
+.solution-steps li {
+  margin: 0 0 18px;
+  padding-left: 4px;
+}
+
+.lesson .solution-steps li p,
+.lesson .solution-answer {
+  font-size: 18px;
+  line-height: 1.65;
+  margin: 0 0 6px;
+}
+
+.lesson .solution-steps .formula,
+.lesson details > .formula {
+  font-size: 24px;
+}
+
+.lesson .source-credits {
+  margin: 60px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid #ddd5cc;
+}
+
+.lesson .source-credits h2 {
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+
+.source-credits ul,
+.tool-list,
+.practice-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.source-credits li,
+.tool-list li,
+.practice-links li {
+  margin: 0 0 10px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.lesson .source-credits p {
+  font-size: 15px;
+  color: #6c625b;
+}
+
+.source-status {
+  display: inline-block;
+  margin: 0 8px;
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: #e8e0d6;
+  color: #51463d;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.reference-list {
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: reference;
+}
+
+.reference-list > li {
+  counter-increment: reference;
+  position: relative;
+  margin: 0 0 40px;
+  padding-left: 44px;
+  scroll-margin-top: 24px;
+}
+
+.reference-list > li::before {
+  content: counter(reference, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 4px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: #756d66;
+}
+
+.lesson .reference-list p {
+  margin: 0 0 8px;
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.lesson .reference-list .reference-entry {
+  font-size: 19px;
+}
+
+.lesson .reference-list .reference-meta,
+.lesson .reference-list .reference-note,
+.lesson .reference-list .reference-used {
+  font-size: 15px;
+  color: #6c625b;
+}
+
+.reference-meta .source-status {
+  margin-left: 0;
+}
+
+@media (max-width: 760px) {
+  .lesson .exercise details {
+    padding: 16px 14px;
+  }
+  .solution-steps {
+    padding-left: 18px;
+  }
+  .lesson .solution-steps .formula,
+  .lesson details > .formula {
+    font-size: 16px;
+  }
+  .lesson .reference-list .reference-entry {
+    font-size: 17px;
+  }
+  .reference-list > li {
+    padding-left: 34px;
+  }
+}

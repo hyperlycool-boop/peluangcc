@@ -45,7 +45,7 @@ try {
     const navItems = await page.locator('nav[aria-label="Navigasi utama"] a').evaluateAll((els) =>
       els.map((e) => ({ text: e.textContent.trim(), href: e.getAttribute('href') }))
     );
-    assert.equal(navItems.length, 4, 'Expected 4 main navigation links');
+    assert.equal(navItems.length, 6, 'Expected 6 main navigation links');
     assert.equal(navItems[0].text, 'Beranda');
     assert.equal(navItems[1].text, 'Dadu 3D');
     assert.equal(navItems[1].href, '#dadu');

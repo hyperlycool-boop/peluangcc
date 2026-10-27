@@ -23,6 +23,7 @@ import {
   easeLuxury,
 } from '@/lib/math';
 import { useHydrated } from '@/lib/use-hydrated';
+import { SITE_PAGES } from '@/lib/site-pages';
 import {
   readDisplayMode,
   setDisplayMode,
@@ -32,6 +33,7 @@ import {
 import MaterialList from './MaterialList';
 import ScrollScene3D from './ScrollScene3D';
 import FoldingSectionCard from './FoldingSectionCard';
+import { FooterLinks } from './SiteChrome';
 
 export type { DisplayMode };
 export type Scenario = 'prime' | 'even';
@@ -273,6 +275,11 @@ export default function Experience({
               </a>
             );
           })}
+          {SITE_PAGES.map((page) => (
+            <Link key={page.id} href={page.href} className="nav-pill-item">
+              <span className="nav-pill-text">{page.label}</span>
+            </Link>
+          ))}
         </nav>
         <Link
           className="nav-go"
@@ -639,6 +646,7 @@ export default function Experience({
         <Link className="brand" href={prototype ? '/prototype' : '/'}>
           ruang peluang<span className="brand-dot">.</span>
         </Link>
+        {!prototype && <FooterLinks />}
         <span>
           {prototype
             ? 'Prototipe Visualisasi 3D — Ruang Peluang v0.1'

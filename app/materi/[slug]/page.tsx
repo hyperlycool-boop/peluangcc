@@ -8,8 +8,11 @@ import {
   lessonNavTypes,
   lessonTitleTransitionName,
 } from '@/lib/route-transition';
+import { exercisesForLesson } from '@/lib/exercises';
 import { LessonExperiment } from '@/components/LessonExperiments';
 import { Formula } from '@/components/Formula';
+import { SourceCredits } from '@/components/SourceCredits';
+import { SiteFooter, SubpageHeader } from '@/components/SiteChrome';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -30,15 +33,11 @@ export default async function Page({ params }: PageProps) {
   const currentStep = String(index + 1).padStart(2, '0');
   const totalSteps = String(materials.length).padStart(2, '0');
   const backHome = lessonNavTypes(index, HOME_INDEX);
+  const practice = exercisesForLesson(m.slug);
 
   return (
     <>
-      <header className="site-header">
-        <Link className="brand" href="/" transitionTypes={backHome}>
-          ruang peluang.
-        </Link>
-        <Link href="/#materi" transitionTypes={backHome}>← Semua materi</Link>
-      </header>
+      <SubpageHeader current="materi" homeTransitionTypes={backHome} />
       {/* key: moving between lessons is an exit/enter pair, not an in-place update. */}
       <ViewTransition key={m.slug} {...DIRECTIONAL_PAGE_TRANSITION}>
         <main className="lesson">
@@ -52,7 +51,14 @@ export default async function Page({ params }: PageProps) {
           <LessonExperiment key={m.slug} index={index} />
           <section>
             <h2>Hubungkan dengan rumus.</h2>
-            <Formula tex={m.tex} />
+            <div className="formula-list">
+              {m.formulas.map((f) => (
+                <div className="formula-item" key={f.tex}>
+                  <span className="formula-label">{f.label}</span>
+                  <Formula tex={f.tex} />
+                </div>
+              ))}
+            </div>
             <p>{m.example}</p>
           </section>
           <section>
@@ -63,6 +69,22 @@ export default async function Page({ params }: PageProps) {
               <p>{m.answer}</p>
             </details>
           </section>
+          {practice.length > 0 && (
+            <section>
+              <h2>Latihan untuk materi ini.</h2>
+              <ul className="practice-links">
+                {practice.map((e) => (
+                  <li key={e.id}>
+                    <Link href={`/latihan#${e.id}`}>{e.title} →</Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <SourceCredits
+            ids={m.sources}
+            note="Penjelasan dan contoh disusun untuk proyek ini berdasarkan sumber di atas."
+          />
           <nav className="lesson-nav" aria-label="Urutan materi">
             {index > 0 && (
               <Link
@@ -86,6 +108,7 @@ export default async function Page({ params }: PageProps) {
           </Link>
         </main>
       </ViewTransition>
+      <SiteFooter />
     </>
   );
 }

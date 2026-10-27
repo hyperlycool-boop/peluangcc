@@ -2,7 +2,7 @@
 
 import { useState, useId, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ArrowUpRight, MoveUpRight } from 'lucide-react';
 import { InteractiveProbabilityFormula } from './InteractiveProbabilityFormula';
 import {
@@ -176,6 +176,15 @@ export default function Experience({
 
   const quiet = (mounted && reduced) || mode !== 'full';
   const duration = quiet ? motionTokens.instant : motionTokens.diagram;
+  const pillTransition = quiet
+    ? { duration: 0 }
+    : ({ type: 'spring', stiffness: 380, damping: 30 } as const);
+  const answerSwap = {
+    initial: quiet ? false : { opacity: 0, y: 4 },
+    animate: { opacity: 1, y: 0 },
+    exit: quiet ? { opacity: 1 } : { opacity: 0, y: -4 },
+    transition: { duration: quiet ? 0 : 0.16, ease: 'easeOut' },
+  } as const;
 
   const points =
     scenario === 'prime'
@@ -433,12 +442,14 @@ export default function Experience({
                   S
                 </text>
                 <motion.circle
-                  initial={{ cx: scenario === 'prime' ? 220 : 150 }}
-                  animate={{ cx: scenario === 'prime' ? 220 : 150 }}
+                  initial={false}
+                  animate={{
+                    cx: scenario === 'prime' ? 220 : 150,
+                    fill: region === 'complement' ? '#ead5ce' : '#efb3a3',
+                  }}
                   transition={{ duration, ease: easeLuxury }}
                   cy="170"
                   r="105"
-                  fill={region === 'complement' ? '#ead5ce' : '#efb3a3'}
                 />
                 <motion.circle
                   initial={{ cx: scenario === 'prime' ? 340 : 400 }}
@@ -490,7 +501,15 @@ export default function Experience({
                     className={scenario === v ? 'active' : ''}
                     onClick={() => setScenario(v as Scenario)}
                   >
-                    {l}
+                    {scenario === v && (
+                      <motion.span
+                        layoutId="lab-scenario-pill"
+                        className="toggle-active-pill"
+                        transition={pillTransition}
+                        style={{ borderRadius: 999 }}
+                      />
+                    )}
+                    <span className="toggle-pill-text">{l}</span>
                   </button>
                 ))}
               </div>
@@ -509,19 +528,29 @@ export default function Experience({
                     className={region === v ? 'active' : ''}
                     onClick={() => setRegion(v as Region)}
                   >
-                    {l}
+                    {region === v && (
+                      <motion.span
+                        layoutId="lab-region-pill"
+                        className="toggle-active-pill"
+                        transition={pillTransition}
+                        style={{ borderRadius: 999 }}
+                      />
+                    )}
+                    <span className="toggle-pill-text">{l}</span>
                   </button>
                 ))}
               </div>
 
               <div className="answer" aria-live="polite">
-                <span>
-                  {region === 'union'
-                    ? 'GABUNGAN'
-                    : region === 'intersection'
-                    ? 'IRISAN'
-                    : 'KOMPLEMEN A'}
-                </span>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span key={region} {...answerSwap}>
+                    {region === 'union'
+                      ? 'GABUNGAN'
+                      : region === 'intersection'
+                      ? 'IRISAN'
+                      : 'KOMPLEMEN A'}
+                  </motion.span>
+                </AnimatePresence>
                 <InteractiveProbabilityFormula
                   eventNotation={
                     region === 'union'
@@ -534,15 +563,20 @@ export default function Experience({
                   denominator={dice.outcomes.length}
                   quiet={!!quiet}
                 />
-                <p>
-                  {region === 'union'
-                    ? `Ada ${combined.length} hasil yang termasuk A atau B. Irisan berisi ${shared.length} hasil; jangan dihitung dua kali.`
-                    : region === 'intersection'
-                    ? `${shared.length} hasil termasuk A dan B sekaligus: ${
-                        shared.length ? '{' + shared.join(', ') + '}' : '∅'
-                      }.`
-                    : 'Hasil yang bukan ganjil adalah {2, 4, 6}. Peluangnya 1 − 3/6 = 3/6.'}
-                </p>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.p
+                    key={region === 'complement' ? region : `${region}-${scenario}`}
+                    {...answerSwap}
+                  >
+                    {region === 'union'
+                      ? `Ada ${combined.length} hasil yang termasuk A atau B. Irisan berisi ${shared.length} hasil; jangan dihitung dua kali.`
+                      : region === 'intersection'
+                      ? `${shared.length} hasil termasuk A dan B sekaligus: ${
+                          shared.length ? '{' + shared.join(', ') + '}' : '∅'
+                        }.`
+                      : 'Hasil yang bukan ganjil adalah {2, 4, 6}. Peluangnya 1 − 3/6 = 3/6.'}
+                  </motion.p>
+                </AnimatePresence>
               </div>
 
               <button

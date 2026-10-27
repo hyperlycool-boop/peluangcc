@@ -460,9 +460,27 @@ section#materi,
 
 .segmented .active,
 .region-buttons .active {
-  background: #141413;
   color: white;
   border-color: #141413;
+}
+
+/* Lab toggles: one shared pill slides between options (layoutId), like the nav. */
+.segmented button,
+.region-buttons button {
+  position: relative;
+  isolation: isolate;
+}
+
+.toggle-active-pill {
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  background: #141413;
+  z-index: -1;
+}
+
+.toggle-pill-text {
+  position: relative;
 }
 
 .answer {
@@ -2048,9 +2066,9 @@ footer {
 .balance-ticks span + span { border-left: 2px solid var(--lifted); }
 .balance-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; }
 .frequency-chart, .venn-experiment { width: 100%; display: block; }
-.frequency-end { transition: transform 250ms var(--experiment-ease); }
 .frequency-chart text, .venn-experiment text { font-family: inherit; font-size: 13px; }
 .venn-experiment g, .venn-experiment > circle { transition: transform 250ms var(--experiment-ease); }
+.venn-experiment g circle, .venn-experiment g text { transition: fill 250ms var(--experiment-ease); }
 .coin-history { display: flex; flex-wrap: wrap; gap: 6px; min-height: 34px; margin: 12px 0; }
 .coin { width: 30px; height: 30px; display: grid; place-items: center; font-size: 12px; border-radius: 50%; background: #e5ded8; border: 1px solid #ccc0b7; }
 .coin-angka { background: #f6cf7b; border-color: #dab65e; }
@@ -2072,7 +2090,7 @@ footer {
 @media (max-width: 900px) { .experiment-grid { grid-template-columns: 1fr; } .prototype-header nav { flex-wrap: wrap; gap: 12px; } }
 @media (max-width: 600px) { .experiment-card { padding: 20px 16px; } .experiment-dice { gap: 5px; } .pip-face { width: 24px; height: 24px; } .ball-stage { gap: 16px; } .ball-bag { padding: 16px 12px; } .ball-bag > div { gap: 6px; } .probability-branches { grid-template-columns: 1fr; } .experiment-equation { font-size: 16px; } }
 @media (prefers-reduced-motion: reduce) {
-  .frequency-end, .experiment-dice button, .balance-fill, .venn-experiment g, .venn-experiment > circle { transition: none; }
+  .experiment-dice button, .balance-fill, .venn-experiment g, .venn-experiment > circle, .venn-experiment g circle, .venn-experiment g text { transition: none; }
   .experiment-dice button[aria-pressed="true"] { transform: none; }
   .experiment-arrive { animation: experiment-fade 150ms ease both !important; }
   @keyframes experiment-fade { from { opacity: .3; } to { opacity: 1; } }
@@ -2090,9 +2108,11 @@ footer {
 .result-die-roll { animation: lesson-die-roll 650ms var(--experiment-ease) both; }
 @keyframes lesson-die-roll { from { transform: translateY(-20px) rotateX(-180deg) rotateZ(-35deg); } to { transform: translateY(0) rotateX(0) rotateZ(0); } }
 .complement-focus { position: absolute; inset: 0; border: 3px solid #141413; border-radius: 8px; transform-origin: left; transition: transform 250ms var(--experiment-ease), opacity 200ms var(--experiment-ease); }
-.frequency-plot { animation: lesson-plot-reveal 650ms var(--experiment-ease) both; }
-@keyframes lesson-plot-reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 .ball-travel { animation: lesson-ball-travel 500ms var(--experiment-ease) both; }
+/* With replacement: ring on the bag ball that was drawn and put back. */
+.experiment-ball { position: relative; }
+.ball-returned { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--signal); pointer-events: none; animation: ball-returned 600ms var(--experiment-ease) both; }
+@keyframes ball-returned { from { opacity: 1; transform: scale(.85); } to { opacity: 0; transform: scale(1.35); } }
 @keyframes lesson-ball-travel { from { opacity: .2; transform: translate(-80px, -20px) rotate(-90deg); } to { opacity: 1; transform: translate(0, 0) rotate(0); } }
 /* Try the lesson animations directly from the main material list. */
 .material-experiment-actions { display: flex; justify-content: flex-end; padding: 0 0 16px; }
@@ -2102,7 +2122,8 @@ footer {
 .material-live-experiment .lesson-experiment { margin: 0 0 28px; padding: 0; }
 .material-live-experiment .experiment-card { max-width: 850px; margin-inline: auto; }
 .material-preview[hidden], .material-live-experiment[hidden] { display: none; }
-.material-live-experiment[data-quiet="true"] *, .material-live-experiment[data-quiet="true"] *::before, .material-live-experiment[data-quiet="true"] *::after { animation: none !important; transition: none !important; }
+.material-live-experiment[data-quiet="true"] *, .material-live-experiment[data-quiet="true"] *::before, .material-live-experiment[data-quiet="true"] *::after,
+.lesson-experiments[data-quiet="true"] *, .lesson-experiments[data-quiet="true"] *::before, .lesson-experiments[data-quiet="true"] *::after { animation: none !important; transition: none !important; }
 
 /* Outcome dot interactive hover & hit ergonomics */
 .outcome-dot-group {
@@ -2119,7 +2140,7 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .result-die-roll, .frequency-plot, .ball-travel, .die-pip-observed-pulse { animation: none !important; }
+  .result-die-roll, .ball-travel, .ball-returned, .die-pip-observed-pulse { animation: none !important; }
   .complement-focus { transition: opacity 150ms ease !important; }
   .folding-section-card { transform: none !important; }
   .folding-crease-overlay { opacity: 0 !important; display: none !important; }

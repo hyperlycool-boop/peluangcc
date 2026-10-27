@@ -69,7 +69,7 @@ export default function MaterialList({ quiet }: MaterialListProps) {
                   }
                   style={{ overflow: 'hidden' }}
                 >
-                  <LessonExperiment index={i} />
+                  <LessonExperiment index={i} quiet={quiet} />
                 </motion.div>
               )}
             </AnimatePresence>

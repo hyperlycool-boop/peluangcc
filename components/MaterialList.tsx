@@ -20,7 +20,6 @@ export default function MaterialList({ quiet }: MaterialListProps) {
     <section id="materi">
       <div className="section-title">
         <div>
-          <div className="eyebrow">PETA PERJALANAN BELAJAR</div>
           <h2>Mulai dari kemungkinan.</h2>
         </div>
         <p>Pilih materi untuk belajar, atau coba animasinya langsung di sini.</p>

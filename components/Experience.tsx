@@ -281,9 +281,6 @@ export default function Experience({
 
       <main id="main">
         <div className="topline">
-          <span>
-            <span className="status-dot" /> MATEMATIKA, DALAM PERSPEKTIF BARU
-          </span>
           <label>
             <span className="topline-label-text">Mode tampilan</span>
             <select
@@ -307,7 +304,6 @@ export default function Experience({
           >
             <section id="beranda" className={`hero ${!styleguide ? 'homepage-hero' : ''}`}>
               <div className="hero-copy">
-                <div className="eyebrow">RUANG UNTUK RASA INGIN TAHU</div>
                 <h1>
                   {styleguide ? 'Desain yang' : 'Peluang bukan'}
                   <br />
@@ -391,7 +387,6 @@ export default function Experience({
             <section id="dadu" className="scrolly-section-wrapper">
               <div className="section-title">
                 <div>
-                  <div className="eyebrow">DARI BENDA FISIK KE PELUANG</div>
                   <h2>Dadu yang Bergulir.</h2>
                 </div>
                 <p>
@@ -413,7 +408,6 @@ export default function Experience({
             <section id="lab" className="lab-section">
           <div className="section-title">
             <div>
-              <div className="eyebrow">SEDIKIT MENCOBA, BANYAK MEMAHAMI</div>
               <h2>
                 Satu dadu.
                 <br />
@@ -427,10 +421,6 @@ export default function Experience({
           </div>
           <div className="lab-grid">
             <div className="diagram">
-              <div className="diagram-head">
-                <span>RUANG SAMPEL · DADU ADIL</span>
-                <span className="mono">n(S) = {dice.outcomes.length}</span>
-              </div>
               <svg
                 viewBox="0 0 560 330"
                 role="img"
@@ -438,9 +428,6 @@ export default function Experience({
                   scenario === 'prime' ? 'prima' : 'genap'
                 }. Titik terpilih: ${selected.join(', ') || 'tidak ada'}.`}
               >
-                <text x="24" y="45" fill="#777" fontSize="20">
-                  S
-                </text>
                 <motion.circle
                   initial={false}
                   animate={{
@@ -478,13 +465,6 @@ export default function Experience({
                   />
                 ))}
               </svg>
-              <div className="legend">
-                <span>
-                  <i className="black-dot" />
-                  Termasuk kejadian terpilih
-                </span>
-                <span>Diagram menunjukkan keanggotaan, bukan skala luas.</span>
-              </div>
             </div>
 
             <div className="lab-controls">

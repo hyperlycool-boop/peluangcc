@@ -52,7 +52,7 @@ export function RollingNumber({
       <motion.span
         className="rolling-number-reel"
         aria-hidden="true"
-        animate={{ y: offset }}
+        animate={{ transform: `translateY(${offset})` }}
         initial={false}
         transition={
           isQuiet

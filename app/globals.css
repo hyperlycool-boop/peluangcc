@@ -968,18 +968,18 @@ footer > a:last-child {
 }
 
 .material-item .module {
-  transition: color 180ms var(--ease-out), padding-left 220ms var(--ease-out);
+  transition: color 180ms var(--ease-out), transform 160ms var(--ease-out);
 }
 
 .material-item.is-active .module {
   color: var(--signal);
-  padding-left: 15px;
+  transform: translateX(15px);
 }
 
 .material-preview {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 280ms var(--ease-drawer);
+  transition: grid-template-rows 200ms var(--ease-drawer);
 }
 
 .material-preview > div {
@@ -1018,22 +1018,22 @@ footer > a:last-child {
 }
 
 .sample-pop {
-  animation: sample-pop 0.6s both;
+  animation: sample-pop 300ms var(--ease-out) both;
 }
 
 .frequency-trace {
   stroke-dasharray: 800;
   stroke-dashoffset: 800;
-  animation: trace 1.6s ease forwards;
+  animation: trace 400ms var(--ease-out) forwards;
 }
 
 .venn-reveal {
-  animation: venn-in 1s ease both;
+  animation: venn-in 350ms var(--ease-out) both;
   transform-origin: center;
 }
 
 .complement-glow {
-  animation: complement-in 1s ease both;
+  animation: complement-in 300ms var(--ease-out) both;
 }
 
 @keyframes sample-pop {
@@ -1552,27 +1552,6 @@ footer {
   margin-bottom: 30px;
 }
 
-.hero-scroll-cue {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--signal);
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 10px;
-}
-
-.scroll-cue-arrow {
-  animation: cue-bounce 1.5s infinite ease-in-out;
-  font-size: 18px;
-}
-
-@keyframes cue-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-
 .scrolly-section-wrapper {
   margin: 40px 0 80px;
 }
@@ -2081,15 +2060,6 @@ footer {
 /* Outcome dot interactive hover & hit ergonomics */
 .outcome-dot-group {
   cursor: default;
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 160ms var(--ease-out);
-}
-.outcome-dot-group:hover {
-  transform: scale(1.12);
-}
-.outcome-dot-group:active {
-  transform: scale(0.94);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2103,10 +2073,7 @@ footer {
   .button:active,
   .experiment-controls button:active,
   .experiment-dice button:active,
-  .material-experiment-actions button:active,
-  .outcome-dot-group,
-  .outcome-dot-group:hover,
-  .outcome-dot-group:active {
+  .material-experiment-actions button:active {
     transform: none !important;
     transition: none !important;
   }

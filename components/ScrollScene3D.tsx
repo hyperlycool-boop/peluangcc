@@ -124,11 +124,11 @@ export default function ScrollScene3D({
     offset: ['start start', 'end end'],
   });
 
-  // Spring physics: calm stiffness caps rotational velocity for smooth 60fps
+  // Light spring: Lenis already smooths scroll, so this only takes the edge off without lagging behind it.
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 28,
-    damping: 24,
-    mass: 1.2,
+    stiffness: 120,
+    damping: 30,
+    mass: 1,
     restDelta: 0.0005,
   });
 

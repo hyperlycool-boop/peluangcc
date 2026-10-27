@@ -91,7 +91,8 @@ function OutcomeDot({
 
   return (
     <motion.g
-      animate={{ x, y }}
+      initial={false}
+      animate={{ transform: `translate(${x}px, ${y}px)` }}
       transition={{ duration, ease: easeLuxury }}
     >
       <g className="outcome-dot-group">
@@ -434,17 +435,19 @@ export default function Experience({
                 <motion.circle
                   initial={false}
                   animate={{
-                    cx: scenario === 'prime' ? 220 : 150,
+                    transform: `translateX(${scenario === 'prime' ? 0 : -70}px)`,
                     fill: region === 'complement' ? '#ead5ce' : '#efb3a3',
                   }}
                   transition={{ duration, ease: easeLuxury }}
+                  cx="220"
                   cy="170"
                   r="105"
                 />
                 <motion.circle
-                  initial={{ cx: scenario === 'prime' ? 340 : 400 }}
-                  animate={{ cx: scenario === 'prime' ? 340 : 400 }}
+                  initial={false}
+                  animate={{ transform: `translateX(${scenario === 'prime' ? 0 : 60}px)` }}
                   transition={{ duration, ease: easeLuxury }}
+                  cx="340"
                   cy="170"
                   r="105"
                   fill="#f6cf7b"

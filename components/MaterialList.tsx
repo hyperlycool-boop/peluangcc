@@ -9,6 +9,11 @@ import MaterialDiagram from './MaterialDiagram';
 import { LessonExperiment } from './LessonExperiments';
 import { HOME_INDEX, lessonNavTypes, lessonTitleTransitionName } from '@/lib/route-transition';
 
+/** Hover previews only for real pointers; touch fires mouseenter on tap. */
+function canHover() {
+  return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+}
+
 interface MaterialListProps {
   quiet: boolean;
 }
@@ -16,6 +21,15 @@ interface MaterialListProps {
 export default function MaterialList({ quiet }: MaterialListProps) {
   const [active, setActive] = useState<number | null>(null);
   const [experiment, setExperiment] = useState<number | null>(null);
+  // Items whose preview animation already played; later visits show the diagram at rest.
+  const [played, setPlayed] = useState<ReadonlySet<number>>(() => new Set());
+
+  const activate = (next: number | null) => {
+    if (active !== null && active !== next && !played.has(active)) {
+      setPlayed((prev) => new Set(prev).add(active));
+    }
+    setActive(next);
+  };
 
   return (
     <section id="materi">
@@ -25,16 +39,16 @@ export default function MaterialList({ quiet }: MaterialListProps) {
         </div>
         <p>Pilih materi untuk belajar, atau coba animasinya langsung di sini.</p>
       </div>
-      <div className="material-browser" onMouseLeave={() => setActive(null)}>
+      <div className="material-browser" onMouseLeave={() => activate(null)}>
         {materials.map((m, i) => (
           <div className={`material-item ${active === i ? 'is-active' : ''}`} key={m.slug}>
             <Link
               className="module"
               href={`/materi/${m.slug}`}
               transitionTypes={lessonNavTypes(HOME_INDEX, i)}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              onBlur={() => setActive(null)}
+              onMouseEnter={() => canHover() && activate(i)}
+              onFocus={() => activate(i)}
+              onBlur={() => activate(null)}
             >
               <span className="module-number">0{i + 1}</span>
               <ViewTransition name={lessonTitleTransitionName(m.slug)} share="morph" default="none">
@@ -78,7 +92,7 @@ export default function MaterialList({ quiet }: MaterialListProps) {
             </AnimatePresence>
             <div className="material-preview" hidden={experiment === i}>
               <div>
-                <MaterialDiagram index={i} quiet={quiet} />
+                <MaterialDiagram index={i} quiet={quiet || played.has(i)} />
                 <p>{m.caption}</p>
               </div>
             </div>

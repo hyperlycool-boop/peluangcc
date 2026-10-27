@@ -32,7 +32,7 @@ export default function MaterialDiagram({ index, quiet = false }: MaterialDiagra
         <>
           <ellipse cx="155" cy="115" rx="95" ry="72" fill="#efb3a3" />
           {[1, 3, 5, 2, 4, 6].map((n, i) => (
-            <g key={n} className="sample-pop" style={{ animationDelay: `${i * 80}ms` }}>
+            <g key={n} className="sample-pop" style={{ animationDelay: `${i * 50}ms` }}>
               <circle
                 cx={i < 3 ? 100 + i * 55 : 280}
                 cy={i < 3 ? 115 : 65 + (i - 3) * 50}

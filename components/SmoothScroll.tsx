@@ -17,13 +17,14 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     }
 
     const lenis = new Lenis({
-      duration: 1.6,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.6, // Limits scroll speed per wheel notch by 40% so animation never rushes
-      touchMultiplier: 0.85, // Controlled, weighted touch swipe velocity
+      // Native scroll distance per wheel notch / swipe: smoothing only, never slower than the hand.
+      wheelMultiplier: 1,
+      touchMultiplier: 1,
     });
 
     lenisRef.current = lenis;

@@ -13,6 +13,7 @@ import {
   splitFrequencyPath,
 } from '@/lib/experiment-motion';
 import { useHydrated } from '@/lib/use-hydrated';
+import { CompoundExerciseExperiment, SeatingExperiment } from './ExerciseExperiments';
 import { RollingNumber } from './RollingNumber';
 
 interface ExperimentProps {
@@ -32,21 +33,6 @@ function DiceChoices({ selected, onToggle }: { selected: number[]; onToggle: (n:
 function DieFace({ value }: { value: number }) {
   const pips = [[], [4], [0, 8], [0, 4, 8], [0, 2, 6, 8], [0, 2, 4, 6, 8], [0, 2, 3, 5, 6, 8]][value];
   return <span className="pip-face" aria-hidden="true">{Array.from({ length: 9 }, (_, p) => <i key={p} className={pips.includes(p) ? 'pip on' : 'pip'} />)}</span>;
-}
-
-function SampleExperiment({ quiet }: ExperimentProps) {
-  const [selected, setSelected] = useState([1, 3, 5]);
-  const [result, setResult] = useState<number | null>(null);
-  const [roll, setRoll] = useState(0);
-  return <>
-    <p>Pilih sisi untuk membentuk kejadian A, lalu lempar dadu. Semua enam hasil tetap berada di ruang sampel S.</p>
-    <DiceChoices selected={selected} onToggle={n => setSelected(s => s.includes(n) ? s.filter(x => x !== n) : [...s, n].sort())} />
-    <div className="die-result-stage" aria-hidden="true"><div key={roll} className={`result-die ${roll ? 'result-die-roll' : ''}`}><DieFace value={result ?? 1} /></div><span>{result === null ? 'Siap dilempar' : `Hasil lemparan: ${result}`}</span></div>
-    <div className="experiment-controls"><button onClick={() => setSelected([5, 6])}>Coba: angka lebih dari 4</button><button className="experiment-primary" onClick={() => { setResult(Math.floor(Math.random() * 6) + 1); setRoll(r => r + 1); }}>Lempar dadu ↗</button></div>
-    <div className="experiment-result" role="status"><span className="experiment-equation">A = {setText(selected)} · P(A) = <RollingNumber value={selected.length} quiet={quiet} />/6</span>
-      {result === null ? <span>Belum ada lemparan.</span> : <span key={roll} className="experiment-arrive">Hasil <strong>{result}</strong> {selected.includes(result) ? 'termasuk A.' : 'tidak termasuk A.'} S tetap = {'{1, 2, 3, 4, 5, 6}'}.</span>}
-    </div>
-  </>;
 }
 
 function ComplementExperiment({ quiet }: ExperimentProps) {
@@ -103,27 +89,6 @@ function FrequencyExperiment({ quiet }: ExperimentProps) {
   </>;
 }
 
-function CompoundExperiment({ quiet }: ExperimentProps) {
-  const [even, setEven] = useState(false);
-  const [operation, setOperation] = useState<'union' | 'intersection'>('union');
-  const a = [1, 3, 5], b = even ? [2, 4, 6] : [2, 3, 5];
-  const common = a.filter(n => b.includes(n));
-  const answer = operation === 'union' ? faces.filter(n => a.includes(n) || b.includes(n)) : common;
-  const positions: Record<number, [number, number]> = even ? { 1: [105, 90], 3: [120, 135], 5: [145, 170], 2: [360, 90], 4: [375, 135], 6: [345, 170] } : { 1: [125, 125], 3: [245, 100], 5: [245, 155], 2: [365, 125], 4: [435, 205], 6: [65, 205] };
-  return <>
-    <p>A berisi bilangan ganjil. Ganti anggota B, lalu bandingkan gabungan (atau) dengan irisan (dan). Hasil yang memenuhi operasi disorot jingga.</p>
-    <div className="experiment-controls"><button aria-pressed={!even} onClick={() => setEven(false)}>B = bilangan prima</button><button aria-pressed={even} onClick={() => setEven(true)}>B = bilangan genap</button></div>
-    <svg className="venn-experiment" viewBox="0 0 500 250" role="img" aria-label={`A ganjil, B ${even ? 'genap' : 'prima'}, ${operation === 'union' ? 'gabungan' : 'irisan'} ${setText(answer)}`}>
-      <rect x="5" y="5" width="490" height="240" rx="24" fill="#f3f0ee" /><text x="25" y="32">S</text>
-      <circle r="85" fill="#efb3a3" style={{ transform: `translate(${even ? 130 : 195}px, 125px)` }} /><circle r="85" fill="#f6cf7b" style={{ transform: `translate(${even ? 370 : 295}px, 125px)`, mixBlendMode: 'multiply' }} />
-      <text x={even ? 80 : 140} y="65">A</text><text x={even ? 395 : 350} y="65">B</text>
-      {faces.map(n => <g key={n} style={{ transform: `translate(${positions[n][0]}px, ${positions[n][1]}px)` }}><circle r="18" style={{ fill: answer.includes(n) ? '#cf4500' : '#fff' }} /><text y="6" textAnchor="middle" style={{ fill: answer.includes(n) ? '#fff' : '#141413' }}>{n}</text></g>)}
-    </svg>
-    <div className="experiment-controls"><button aria-pressed={operation === 'union'} onClick={() => setOperation('union')}>A ∪ B · atau</button><button aria-pressed={operation === 'intersection'} onClick={() => setOperation('intersection')}>A ∩ B · dan</button></div>
-    <div className="experiment-result" role="status"><span className="experiment-equation">{operation === 'union' ? 'A ∪ B' : 'A ∩ B'} = {setText(answer)} · P = <RollingNumber value={answer.length} quiet={quiet} />/6</span><span>{operation === 'union' ? `P(A ∪ B) = 3/6 + ${b.length}/6 − ${common.length}/6 = ${answer.length}/6.` : `Ada ${common.length} hasil yang termasuk A dan B sekaligus.`} {even ? 'Ganjil dan genap saling lepas.' : '3 dan 5 berada di irisan, sehingga dihitung hanya sekali.'}</span></div>
-  </>;
-}
-
 function ConditionalExperiment({ quiet }: ExperimentProps) {
   const [replacement, setReplacement] = useState(false);
   const [{ bag, draws }, setDraw] = useState(createDrawState);
@@ -145,7 +110,8 @@ function ConditionalExperiment({ quiet }: ExperimentProps) {
   </>;
 }
 
-const experiments = [SampleExperiment, ComplementExperiment, FrequencyExperiment, CompoundExperiment, ConditionalExperiment];
+// Lessons with practice problems (Ruang sampel, Kejadian majemuk) visualise those problems.
+const experiments = [SeatingExperiment, ComplementExperiment, FrequencyExperiment, CompoundExerciseExperiment, ConditionalExperiment];
 
 /**
  * Quiet when the caller asks (Tenang / Fokus ujian) or the system prefers reduced motion.

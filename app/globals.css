@@ -1997,10 +1997,8 @@ footer {
 .balance-ticks { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(6, 1fr); }
 .balance-ticks span + span { border-left: 2px solid var(--lifted); }
 .balance-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; }
-.frequency-chart, .venn-experiment { width: 100%; display: block; }
-.frequency-chart text, .venn-experiment text { font-family: inherit; font-size: 13px; }
-.venn-experiment g, .venn-experiment > circle { transition: transform 250ms var(--experiment-ease); }
-.venn-experiment g circle, .venn-experiment g text { transition: fill 250ms var(--experiment-ease); }
+.frequency-chart { width: 100%; display: block; }
+.frequency-chart text { font-family: inherit; font-size: 13px; }
 .coin-history { display: flex; flex-wrap: wrap; gap: 6px; min-height: 34px; margin: 12px 0; }
 .coin { width: 30px; height: 30px; display: grid; place-items: center; font-size: 12px; border-radius: 50%; background: #e5ded8; border: 1px solid #ccc0b7; }
 .coin-angka { background: #f6cf7b; border-color: #dab65e; }
@@ -2022,7 +2020,7 @@ footer {
 @media (max-width: 900px) { .experiment-grid { grid-template-columns: 1fr; } .prototype-header nav { flex-wrap: wrap; gap: 12px; } }
 @media (max-width: 600px) { .experiment-card { padding: 20px 16px; } .experiment-dice { gap: 5px; } .pip-face { width: 24px; height: 24px; } .ball-stage { gap: 16px; } .ball-bag { padding: 16px 12px; } .ball-bag > div { gap: 6px; } .probability-branches { grid-template-columns: 1fr; } .experiment-equation { font-size: 16px; } }
 @media (prefers-reduced-motion: reduce) {
-  .experiment-dice button, .balance-fill, .venn-experiment g, .venn-experiment > circle, .venn-experiment g circle, .venn-experiment g text { transition: none; }
+  .experiment-dice button, .balance-fill { transition: none; }
   .experiment-dice button[aria-pressed="true"] { transform: none; }
   .experiment-arrive { animation: experiment-fade 150ms ease both !important; }
   @keyframes experiment-fade { from { opacity: .3; } to { opacity: 1; } }
@@ -2033,12 +2031,7 @@ footer {
 .lesson .lesson-experiment h2 { font-size: clamp(24px, 4vw, 34px); margin: 12px 0; letter-spacing: -1px; }
 .lesson .lesson-experiment p { font-size: 16px; line-height: 1.65; }
 .lesson-experiment .experiment-dice { max-width: 520px; margin-inline: auto; }
-.lesson-experiment .frequency-chart, .lesson-experiment .venn-experiment { max-width: 650px; margin-inline: auto; }
-.die-result-stage { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 28px; min-height: 100px; font-size: 14px; color: #63584f; perspective: 600px; }
-.result-die { display: grid; place-items: center; width: 76px; height: 76px; background: white; border: 1px solid #d8cec5; border-radius: 18px; box-shadow: 0 6px 0 #e5ded8; color: var(--signal); }
-.result-die .pip-face { width: 44px; height: 44px; gap: 5px; }
-.result-die-roll { animation: lesson-die-roll 650ms var(--experiment-ease) both; }
-@keyframes lesson-die-roll { from { transform: translateY(-20px) rotateX(-180deg) rotateZ(-35deg); } to { transform: translateY(0) rotateX(0) rotateZ(0); } }
+.lesson-experiment .frequency-chart { max-width: 650px; margin-inline: auto; }
 .complement-focus { position: absolute; inset: 0; border: 3px solid #141413; border-radius: 8px; transform-origin: left; transition: transform 250ms var(--experiment-ease), opacity 200ms var(--experiment-ease); }
 .ball-travel { animation: lesson-ball-travel 500ms var(--experiment-ease) both; }
 /* With replacement: ring on the bag ball that was drawn and put back. */
@@ -2046,6 +2039,53 @@ footer {
 .ball-returned { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--signal); pointer-events: none; animation: ball-returned 600ms var(--experiment-ease) both; }
 @keyframes ball-returned { from { opacity: 1; transform: scale(.85); } to { opacity: 0; transform: scale(1.35); } }
 @keyframes lesson-ball-travel { from { opacity: .2; transform: translate(-80px, -20px) rotate(-90deg); } to { opacity: 1; transform: translate(0, 0) rotate(0); } }
+
+/* Practice-problem visualisations: round table (Soal 3), balls and cards (Soal 1, 2). */
+.seating-table { display: block; width: 100%; max-width: 380px; margin: 8px auto 0; overflow: visible; }
+.seating-table text { font-family: inherit; font-size: 13px; }
+.table-top { fill: #f3f0ee; }
+.seating-table .table-verdict { font-size: 12px; fill: #63584f; }
+.seat-spot { fill: none; stroke: #d8cec5; stroke-dasharray: 3 4; }
+.seat-link { stroke: #cfc3b9; stroke-width: 2; transition: stroke 200ms var(--experiment-ease); }
+.seat-link-ok { stroke: var(--signal); }
+.seat-link-clash { stroke: #b83b0b; stroke-dasharray: 5 4; }
+.seat-person { transition: transform 280ms var(--experiment-ease); }
+.seat-person circle { stroke-width: 2; }
+.seat-person text { font-weight: 650; }
+.seat-person.is-man circle { fill: #246b98; stroke: #1b5478; }
+.seat-person.is-man text { fill: #fff; }
+.seat-person.is-woman circle { fill: #f6cf7b; stroke: #dab65e; }
+.seat-person.is-woman text { fill: var(--ink); }
+.seating-table .seat-anchor { font-size: 11px; fill: #63584f; }
+.seat-blocks { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; max-width: 440px; margin: 4px auto 0; }
+.seat-block { position: relative; display: grid; place-items: center; height: 30px; border-radius: 6px; background: #ece6e1; color: #63584f; font-size: 12px; font-weight: 650; }
+.seat-block.is-event { background: var(--signal); color: #fff; }
+.seat-block-marker { position: absolute; right: 5px; bottom: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 2px var(--lifted); }
+.seat-block.is-event .seat-block-marker { background: #fff; box-shadow: 0 0 0 2px var(--signal); }
+.block-pulse { position: absolute; inset: -3px; border-radius: 9px; border: 2px solid var(--signal); pointer-events: none; animation: ball-returned 500ms var(--experiment-ease) both; }
+.lesson-experiments .experiment-card .seat-blocks-caption { max-width: 440px; margin: 12px auto 20px; font-size: 13px; line-height: 1.55; }
+.pick-grid { display: grid; max-width: 650px; margin: 24px auto; }
+.pick-bag { gap: 12px; max-width: 380px; padding: 16px; background: #f3f0ee; border-radius: 16px 16px 40px 40px; }
+.pick-bag .pick-row { display: flex; justify-content: center; gap: 8px; }
+/* Six balls share the row: shrink with the bag instead of overflowing it. */
+.pick-bag .pick-item { flex: 0 0 calc((100% - 40px) / 6); width: auto; height: auto; max-width: 44px; aspect-ratio: 1; }
+.pick-bag .pick-item::after { border-color: var(--ink); }
+.pick-deck { gap: 6px; }
+.pick-deck .pick-row { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; }
+.pick-item { position: relative; transition: transform 200ms var(--experiment-ease), opacity 200ms var(--experiment-ease); animation: pick-arrive 260ms var(--experiment-ease) backwards; }
+.pick-item::after { content: ''; position: absolute; inset: -3px; border-radius: inherit; border: 2px solid var(--signal); opacity: 0; transition: opacity 200ms var(--experiment-ease); pointer-events: none; }
+.pick-item[data-selected="false"] { opacity: .3; }
+.pick-item[data-selected="true"] { transform: translateY(-4px); }
+.pick-item[data-selected="true"]::after { opacity: 1; }
+@keyframes pick-arrive { from { opacity: 0; transform: translateY(8px); } }
+.experiment-ball.hijau { background: #2f7d4f; color: white; box-shadow: inset -5px -6px 0 #00000014; }
+.pick-card { display: grid; place-items: center; align-content: center; aspect-ratio: 3 / 4; border: 1px solid #d8cec5; border-radius: 6px; background: #fff; line-height: 1; font-size: clamp(10px, 1.8vw, 13px); }
+.pick-card b { font-weight: 700; }
+.pick-card i { font-style: normal; font-size: 1.15em; }
+.pick-card.suit-hati, .pick-card.suit-wajik { color: #b83b0b; }
+.pick-card.suit-sekop, .pick-card.suit-keriting { color: var(--ink); }
+.pick-double { position: absolute; top: -8px; right: -8px; z-index: 1; padding: 2px 5px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 10px; font-style: normal; font-weight: 700; line-height: 1.2; animation: pick-double-in 220ms var(--experiment-ease) both; }
+@keyframes pick-double-in { from { opacity: 0; transform: scale(.7); } }
 /* Try the lesson animations directly from the main material list. */
 .material-experiment-actions { display: flex; justify-content: flex-end; padding: 0 0 16px; }
 .material-experiment-actions button { display: flex; align-items: center; gap: 18px; min-height: 44px; border: 1px solid #d8cec5; border-radius: 999px; padding: 10px 18px; color: var(--signal); background: var(--lifted); font-size: 14px; transition: transform 140ms var(--ease-out), background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out); }
@@ -2063,7 +2103,11 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .result-die-roll, .ball-travel, .ball-returned, .die-pip-observed-pulse { animation: none !important; }
+  .ball-travel, .ball-returned, .block-pulse, .pick-double, .die-pip-observed-pulse { animation: none !important; }
+  /* Gentler, not none: movement goes, the opacity fade stays. Placed after the rules it overrides. */
+  .seat-person, .seat-link { transition: none; }
+  .pick-item { animation: none; transition: opacity 150ms ease; }
+  .pick-item[data-selected="true"] { transform: none; }
   .complement-focus { transition: opacity 150ms ease !important; }
   .folding-section-card { transform: none !important; }
   .folding-crease-overlay { opacity: 0 !important; display: none !important; }

@@ -259,9 +259,10 @@ Fitur yang dapat dicoba pada prototype: menu jangkar, lab Venn, pratinjau materi
 ## 5.1 Proses Pemeriksaan
 1. **Pembandingan dengan lembar materi guru.** Setiap butir lembar *Peluang Suatu Kejadian* (percobaan dan ruang sampel, peluang kejadian, komplemen, frekuensi relatif, frekuensi harapan, saling lepas, tidak saling lepas, saling bebas, bersyarat, tiga latihan) dicocokkan dengan isi lima materi (hasil di 5.3).
 2. **Pembandingan dengan sumber tepercaya.** Halaman OpenStax 3.1 dan 3.2 serta halaman repositori Kemendikbud dibuka pada 27 Oktober 2026 dan dicocokkan dengan konsep yang dikutip (status di 5.2).
-3. **Pemeriksaan otomatis** (`npm test`, 114 tes pada 7 berkas):
+3. **Pemeriksaan otomatis** (`npm test`, 141 tes pada 8 berkas):
    - aturan penjumlahan P(A ∪ B) = P(A) + P(B) − P(A ∩ B) dibuktikan untuk **semua 4.096 pasangan** himpunan bagian ruang sampel dadu;
    - ketiga jawaban latihan dihitung ulang **tanpa rumus**: mengenumerasi 15 bola, 52 kartu, dan 5.040 susunan duduk (dengan satu orang dikunci agar putaran tidak terhitung ganda), lalu hasilnya dibandingkan dengan 11/15, 2/13, dan 1/35;
+   - visualisasi soal latihan (`tests/exercise-visualization.test.ts`) menghitung semua angkanya dengan mencacah, mengenumerasi 5.040 susunan duduk, dan mengikat hasilnya ke jawaban di `lib/exercises.ts`;
    - rumus yang wajib ada pada tiap materi diperiksa teksnya, dan setiap sumber yang dikutip harus terdaftar;
    - contoh bersyarat (3/10) ÷ (3/5) = 2/4 diperiksa.
 4. **Pemeriksaan tampilan rumus**: semua rumus KaTeX pada tujuh halaman isi (beranda, lima materi, referensi) dirender tanpa galat (`npm run test:final`).
@@ -329,7 +330,7 @@ Untuk versi produksi: `npm run build`, kemudian `npm run start`.
 | Fitur | Jumlah / keterangan |
 |---|---|
 | Halaman | Beranda, 5 materi (memuat 3 soal latihan), Referensi (ditambah Styleguide dan Prototype untuk pengembang) |
-| Eksperimen interaktif | 5 (satu per materi), juga dapat dibuka dari daftar materi di beranda |
+| Eksperimen interaktif | 5 (satu per materi), juga dapat dibuka dari daftar materi di beranda. Pada materi yang memuat soal latihan, eksperimennya adalah gambar soal itu sendiri: meja bundar delapan kursi untuk Soal 3 (Ruang sampel), serta 15 bola, 52 kartu, dan kasus As atau Hati untuk Soal 1–2 (Kejadian majemuk) |
 | Lab Venn | 2 skenario × 3 daerah (gabungan, irisan, komplemen) |
 | Rumus berlabel | 13 rumus pada 5 materi, dirender KaTeX |
 | Latihan | 3 soal di halaman materi (2 di Kejadian majemuk, 1 di Ruang sampel), masing-masing dengan pembahasan langkah demi langkah |
@@ -350,7 +351,7 @@ Pengujian dijalankan pada build produksi (`npm run build`, lalu `npm run start`)
 | Tampilan | 7 halaman × 3 lebar (1440, 768, 375 px) = 21 kombinasi | Tidak ada *overflow* mendatar |
 | Rumus | Semua rumus KaTeX pada 7 halaman | Tidak ada galat render |
 | Galat JavaScript | Seluruh kunjungan halaman | 0 galat |
-| Materi | Perbandingan dengan lembar guru dan sumber (Bab V); 114 tes otomatis pada 7 berkas | Lulus |
+| Materi | Perbandingan dengan lembar guru dan sumber (Bab V); 141 tes otomatis pada 8 berkas | Lulus |
 | Kualitas kode | `npm run typecheck`, `npm run lint` | Lulus; 0 galat lint |
 | Build | `npm run build` | Lulus; 11 halaman statis dibuat |
 | Gambar | Situs tidak memuat berkas gambar; ilustrasi berupa SVG/CSS | Tidak ada gambar rusak |
@@ -438,7 +439,7 @@ Lihat 3.4. Sketsa tangan atau berkas desain asli: **[ISI: lampirkan jika ada]**.
 | 1. Perencanaan materi — kelas: **[ISI]**; pengerjaan: 23 Okt 2026 | Memilih topik, alasan, sasaran, tujuan, submateri, sumber awal | `DRAF_PERTEMUAN_1.md`, BAB I–II, fondasi Next.js/TypeScript, token desain, `/styleguide`, Venn dadu; 6 tes awal lulus | Identitas belum diberikan; audit isi sumber belum selesai → dilengkapi pada Pertemuan 4 |
 | 2. Konsep dan desain — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Nama, tujuan, pengguna, sitemap, wireframe, warna dan huruf, navigasi | BAB III: sitemap, wireframe, tabel desain visual, rancangan navigasi | Wireframe disusun setelah situs dibangun (bukan rancangan awal) → dicatat terbuka di Bab III |
 | 3. Prototype — kelas: **[ISI]**; pengerjaan: 23 Okt (revisi beranda) dan 27 Okt 2026 (riwayat Git) | Prototype dengan tangkapan layar dan daftar fitur | Beranda, lima rute materi, eksperimen, prototipe 3D, 7 komit; BAB IV dan tangkapan layar | Masukan guru belum tercatat; grafik pratinjau hanya ilustrasi → data nyata ada pada eksperimen |
-| 4. Validasi materi — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Memeriksa ketepatan, kejelasan, sumber; merevisi | Pembandingan dengan lembar guru dan sumber; 9 revisi; tes isi (114 tes); BAB V | Isi PDF Kemendikbud belum dibaca; belum ada validasi guru → saran 7.2 |
+| 4. Validasi materi — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Memeriksa ketepatan, kejelasan, sumber; merevisi | Pembandingan dengan lembar guru dan sumber; 9 revisi; tes isi (141 tes); BAB V | Isi PDF Kemendikbud belum dibaca; belum ada validasi guru → saran 7.2 |
 | 5. Final project — kelas: **[ISI]**; pengerjaan: 27 Okt 2026 | Menguji tautan, navigasi, tampilan, keterbacaan, fitur; menyusun laporan | `test:final`: 21 kombinasi tampilan, 15 tautan, 7 jangkar, 0 galat; BAB VI–VII | Ejaan belum diperiksa; belum dipublikasikan; Safari/Firefox belum diuji |
 
 ## Lampiran E — Checklist Sebelum Dikumpulkan
@@ -489,14 +490,16 @@ Semua berkas berada di `docs/screenshots/`.
 | `4d6e664` | 2026-10-27 | Halaman Referensi, rumus berlabel, kredit sumber, tiga latihan, tes isi |
 | `7db3708` | 2026-10-27 | Skrip pengujian final dan bukti pengujian |
 | `8feac6d` | 2026-10-27 | Laporan sampai Pertemuan 5 |
+| `4df96e2` | 2026-10-27 | Soal latihan dipindah ke halaman materinya; halaman `/latihan` dihapus |
+| `2b581d3` | 2026-10-27 | Visualisasi interaktif soal latihan pada materi Ruang sampel dan Kejadian majemuk (meja bundar, bola, kartu) |
 
-Pada cabang `feat/latihan-referensi-laporan`: `4d6e664` (halaman Referensi, rumus, sumber, tes isi), `7db3708` (`tests/final.mjs` dan bukti pengujian), `8feac6d` (laporan ini). Pemindahan soal latihan dari halaman terpisah ke halaman materi **belum di-commit** saat laporan disusun.
+Pada cabang `feat/latihan-referensi-laporan`: `4d6e664` (halaman Referensi, rumus, sumber, tes isi), `7db3708` (`tests/final.mjs` dan bukti pengujian), `8feac6d` (laporan ini). `4df96e2` memindahkan soal latihan ke halaman materi, dan `2b581d3` menambahkan visualisasi interaktif soal tersebut. Eksperimen dadu generik pada kedua materi itu digantikan oleh visualisasi soal. Laporan ini disinkronkan dengan keadaan sampai `2b581d3`.
 
 ## Lampiran J — Cara Menjalankan dan Menguji
 ```sh
 npm install
 npm run dev            # pengembangan: http://127.0.0.1:3000
-npm test               # 114 tes unit (7 berkas)
+npm test               # 141 tes unit (8 berkas)
 npm run typecheck
 npm run lint
 npm run build

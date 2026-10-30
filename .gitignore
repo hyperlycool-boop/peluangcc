@@ -11,3 +11,5 @@ work/
 !.env.example
 coverage/
 next-env.d.ts
+.claude/settings.local.json
+.claude/skills/impeccable/scripts/bin/

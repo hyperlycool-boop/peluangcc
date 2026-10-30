@@ -10,3 +10,4 @@ work/
 .env.*
 !.env.example
 coverage/
+next-env.d.ts

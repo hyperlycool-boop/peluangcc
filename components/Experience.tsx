@@ -23,6 +23,7 @@ import {
   easeLuxury,
 } from '@/lib/math';
 import { useHydrated } from '@/lib/use-hydrated';
+import { SITE_PAGES } from '@/lib/site-pages';
 import {
   readDisplayMode,
   setDisplayMode,
@@ -32,6 +33,7 @@ import {
 import MaterialList from './MaterialList';
 import ScrollScene3D from './ScrollScene3D';
 import FoldingSectionCard from './FoldingSectionCard';
+import { FooterLinks } from './SiteChrome';
 
 export type { DisplayMode };
 export type Scenario = 'prime' | 'even';
@@ -168,6 +170,19 @@ export default function Experience({
     return () => observer.disconnect();
   }, []);
 
+  // Keep the active link visible when the header nav scrolls sideways on narrow screens.
+  useEffect(() => {
+    const nav = document.querySelector<HTMLElement>('header nav');
+    const active = nav?.querySelector<HTMLElement>('.nav-pill-item.is-active');
+    if (!nav || !active || nav.scrollWidth <= nav.clientWidth) return;
+    const navBox = nav.getBoundingClientRect();
+    const box = active.getBoundingClientRect();
+    nav.scrollTo({
+      left: nav.scrollLeft + box.left - navBox.left - (navBox.width - box.width) / 2,
+      behavior: reduced ? 'auto' : 'smooth',
+    });
+  }, [activeNav, reduced]);
+
   const b = scenario === 'prime' ? prime : even;
   const shared = intersection(odd, b);
   const combined = union(odd, b);
@@ -273,14 +288,21 @@ export default function Experience({
               </a>
             );
           })}
+          {SITE_PAGES.map((page) => (
+            <Link key={page.id} href={page.href} className="nav-pill-item">
+              <span className="nav-pill-text">{page.label}</span>
+            </Link>
+          ))}
         </nav>
-        <Link
-          className="nav-go"
-          href={prototype ? '/' : '/styleguide'}
-          aria-label={prototype ? 'Kembali ke beranda utama' : 'Buka sistem desain'}
-        >
-          <ArrowUpRight size={20} />
-        </Link>
+        {(prototype || styleguide) && (
+          <Link
+            className="nav-go"
+            href={prototype ? '/' : '/styleguide'}
+            aria-label={prototype ? 'Kembali ke beranda utama' : 'Buka sistem desain'}
+          >
+            <ArrowUpRight size={20} />
+          </Link>
+        )}
       </header>
 
       <main id="main">
@@ -639,22 +661,25 @@ export default function Experience({
         <Link className="brand" href={prototype ? '/prototype' : '/'}>
           ruang peluang<span className="brand-dot">.</span>
         </Link>
+        {!prototype && <FooterLinks />}
         <span>
           {prototype
             ? 'Prototipe Visualisasi 3D — Ruang Peluang v0.1'
             : 'Lihat. Coba. Pahami.'}
         </span>
-        <Link href={prototype ? '/' : '/styleguide'}>
-          {prototype ? (
-            <>
-              ← Kembali ke Beranda Utama <ArrowUpRight size={14} />
-            </>
-          ) : (
-            <>
-              Sistem desain <MoveUpRight size={14} />
-            </>
-          )}
-        </Link>
+        {(prototype || styleguide) && (
+          <Link href={prototype ? '/' : '/styleguide'}>
+            {prototype ? (
+              <>
+                ← Kembali ke Beranda Utama <ArrowUpRight size={14} />
+              </>
+            ) : (
+              <>
+                Sistem desain <MoveUpRight size={14} />
+              </>
+            )}
+          </Link>
+        )}
       </footer>
     </div>
   );

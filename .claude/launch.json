@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ruang-peluang-copy",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "dev",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        "3100"
+      ],
+      "port": 3100
+    },
+    {
+      "name": "ruang-peluang-prod-3200",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3200",
+        "--hostname",
+        "127.0.0.1"
+      ],
+      "port": 3200
+    },
+    {
+      "name": "ruang-peluang-prod-3000",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3000",
+        "--hostname",
+        "127.0.0.1"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "ruang-peluang-html",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/serve-static.mjs",
+        "out",
+        "3300"
+      ],
+      "port": 3300
+    }
+  ]
+}

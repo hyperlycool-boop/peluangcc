@@ -16,11 +16,13 @@ try {
   await page.goto('http://127.0.0.1:3000', { waitUntil: 'networkidle' });
   await page.setViewportSize({ width: 1440, height: 1000 });
 
-  // 1. Verify Header navigation links order: Beranda -> Dadu 3D -> Lab Diagram -> Materi
+  // 1. Verify Header navigation links order: Beranda -> Dadu 3D -> Lab Diagram -> Materi -> Referensi
   const navItems = await page.locator('nav[aria-label="Navigasi utama"] a').evaluateAll((els) =>
     els.map((e) => ({ text: e.textContent.trim(), href: e.getAttribute('href') }))
   );
-  assert.equal(navItems.length, 4, 'Expected 4 main navigation links');
+  assert.equal(navItems.length, 5, 'Expected 5 main navigation links');
+  assert.equal(navItems[4].text, 'Referensi');
+  assert.equal(navItems[4].href, '/referensi');
   assert.equal(navItems[0].text, 'Beranda');
   assert.equal(navItems[1].text, 'Dadu 3D');
   assert.equal(navItems[1].href, '#dadu');
@@ -77,8 +79,10 @@ try {
   for (const url of urls) {
     await page.goto('http://127.0.0.1:3000' + url, { waitUntil: 'networkidle' });
     assert.equal(await page.locator('h1').count(), 1);
-    await page.locator('summary').click();
-    assert(await page.locator('details').getAttribute('open') !== null);
+    // The lesson question comes first; exercise cards below it have their own <details>.
+    const question = page.locator('details').first();
+    await question.locator('summary').click();
+    assert(await question.getAttribute('open') !== null);
   }
 
   // 7. Responsive check & screenshot across 360, 768, 1440 viewports

@@ -1,5 +1,6 @@
 node_modules/
 .next/
+out/
 playwright-report/
 test-results/
 *.tsbuildinfo
@@ -10,3 +11,6 @@ work/
 .env.*
 !.env.example
 coverage/
+next-env.d.ts
+.claude/settings.local.json
+.claude/skills/impeccable/scripts/bin/

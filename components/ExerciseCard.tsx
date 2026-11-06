@@ -3,15 +3,12 @@ import { Formula } from './Formula';
 
 interface ExerciseCardProps {
   exercise: Exercise;
-  /** 1-based position among the exercises shown on the page. */
-  number: number;
 }
 
 /** One practice problem with its worked solution hidden until the learner opens it. */
-export function ExerciseCard({ exercise, number }: ExerciseCardProps) {
+export function ExerciseCard({ exercise }: ExerciseCardProps) {
   return (
     <section id={exercise.id} className="exercise">
-      <div className="eyebrow">LATIHAN {String(number).padStart(2, '0')}</div>
       <h2>{exercise.title}</h2>
       <p>{exercise.question}</p>
       {exercise.prerequisite && (

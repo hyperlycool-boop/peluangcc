@@ -31,8 +31,6 @@ export default async function Page({ params }: PageProps) {
   }
 
   const m = materials[index];
-  const currentStep = String(index + 1).padStart(2, '0');
-  const totalSteps = String(materials.length).padStart(2, '0');
   const backHome = lessonNavTypes(index, HOME_INDEX);
   const practice = exercisesForLesson(m.slug);
 
@@ -42,9 +40,6 @@ export default async function Page({ params }: PageProps) {
       {/* key: moving between lessons is an exit/enter pair, not an in-place update. */}
       <ViewTransition key={m.slug} {...DIRECTIONAL_PAGE_TRANSITION}>
         <main className="lesson">
-          <div className="eyebrow">
-            MATERI {currentStep} / {totalSteps}
-          </div>
           <ViewTransition name={lessonTitleTransitionName(m.slug)} share="morph" default="none">
             <h1>{m.title}</h1>
           </ViewTransition>
@@ -70,8 +65,8 @@ export default async function Page({ params }: PageProps) {
               <p>{m.answer}</p>
             </details>
           </section>
-          {practice.map((exercise, i) => (
-            <ExerciseCard key={exercise.id} exercise={exercise} number={i + 1} />
+          {practice.map((exercise) => (
+            <ExerciseCard key={exercise.id} exercise={exercise} />
           ))}
           <SourceCredits
             ids={m.sources}

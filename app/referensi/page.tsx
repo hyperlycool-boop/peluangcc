@@ -26,7 +26,6 @@ export default function Page() {
       <SubpageHeader current="referensi" />
       <ViewTransition {...DIRECTIONAL_PAGE_TRANSITION}>
         <main className="lesson reference-page">
-          <div className="eyebrow">REFERENSI / {String(citations.length).padStart(2, '0')} SUMBER</div>
           <h1>Daftar referensi.</h1>
           <p className="lesson-intro">
             Sumber teks, rumus, dan soal di situs ini, diurutkan menurut nama penulis. Setiap sumber

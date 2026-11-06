@@ -10,8 +10,6 @@ web
 
 Primary (confirmed): a teacher demonstrating in class, probably on a projector or large screen, with students following along. Design for being read from the back of a room first, then for a student working alone.
 
-Secondary (from the project report, not re-confirmed): SMA/SMK students in grades X–XII, SMP grade IX students on the introductory materi, and graders reviewing the project.
-
 ## Product Purpose
 
 Ruang Peluang is an Indonesian-language mathematics learning site on **Peluang Suatu Kejadian dan Peluang Kejadian Majemuk** (probability of an event, and of compound events). It exists so a learner can see why a probability is what it is by working on the sample space itself, instead of memorising formulas. Success is a student who can state the sample space correctly, and a teacher who can run a lesson from the site.
@@ -29,7 +27,7 @@ Every counted outcome is a visible point in a set model that can be checked, so 
 
 ## Capabilities and Constraints
 
-- Next.js App Router with TypeScript strict; routes `/`, `/materi/[slug]` (5), `/latihan`, `/referensi`.
+- Next.js App Router with TypeScript strict; routes `/`, `/materi/[slug]` (5), `/referensi`; the three latihan live on their lesson pages (`/latihan` returns 404).
 - **Math stays verifiable (confirmed constraint):** every number, count and probability shown comes from the tested model in `lib/math.ts` and the content tests; no decorative or invented figures.
 - Scope is finite sample spaces; classical probability is used when elementary outcomes are equally likely.
 - Not yet published. Identity (names, class, teacher, school), teacher feedback and task division are still marked **[ISI]** in the report and must not be invented.
@@ -37,7 +35,7 @@ Every counted outcome is a visible point in a set model that can be checked, so 
 ## Evidence on Hand
 
 - Report with BAB I–VII, a Meeting 1 draft, architecture and verification docs in `docs/`.
-- 114 unit tests, final browser tests at three sizes, screenshots in `docs/screenshots/`.
+- 141 unit tests (8 files), final browser tests at three sizes, screenshots in `docs/screenshots/`.
 - Absent, and not to be fabricated: teacher feedback, user testing, rubric scores, a public URL.
 
 ## Product Principles

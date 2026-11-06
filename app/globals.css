@@ -742,6 +742,21 @@ footer > a:last-child {
     border-top: 1px solid #eee;
     gap: 22px;
   }
+  /* Header links scroll sideways when all five do not fit: no scrollbar over the active pill, and the cut-off edge fades. */
+  header nav {
+    gap: 8px;
+    padding-inline: 8px;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    mask-image: linear-gradient(to right, transparent, #000 8px, #000 calc(100% - 24px), transparent);
+  }
+  header nav::-webkit-scrollbar {
+    display: none;
+  }
+  header nav .nav-pill-item {
+    flex: none;
+    scroll-snap-align: center;
+  }
   main,
   footer {
     margin-left: 22px;
@@ -2415,5 +2430,22 @@ nav .nav-pill-item[aria-current="page"] {
   }
   .reference-list > li {
     padding-left: 34px;
+  }
+}
+
+/* Touch and projector-remote targets: 44px minimum where the pointer is coarse. */
+@media (pointer: coarse) {
+  .nav-pill-item,
+  .footer-links a,
+  .brand {
+    min-height: 44px;
+  }
+  .footer-links a {
+    display: inline-flex;
+    align-items: center;
+  }
+  .lesson summary {
+    padding-block: 10px;
+    min-height: 44px;
   }
 }

@@ -100,7 +100,7 @@ Ruang Peluang
 │   └── bebas-bersyarat
 ├── Referensi  (/referensi)   daftar pustaka, ilustrasi, perangkat lunak, arti status
 └── Halaman pengembang
-    ├── /styleguide           sistem desain (dari footer dan tombol panah di header)
+    ├── /styleguide           sistem desain (alamat langsung)
     └── /prototype            prototipe efek 3D (tidak ada di menu)
 ```
 
@@ -109,7 +109,7 @@ Ruang Peluang
 | Beranda | Pengantar, dadu 3D, lab Venn, daftar materi | Semua halaman (logo) |
 | Materi (5) | Eksperimen, rumus, contoh, pertanyaan, latihan soal (materi 1 dan 4), sumber | Daftar materi di beranda; tombol sebelumnya/berikutnya antar materi |
 | Referensi | Daftar pustaka dan status pemeriksaan | Header, footer, dan blok "Sumber" di setiap materi |
-| Styleguide, Prototype | Dokumentasi desain dan prototipe | Footer / tombol header (styleguide); alamat langsung (prototype) |
+| Styleguide, Prototype | Dokumentasi desain dan prototipe | Alamat langsung (tidak ada di menu sejak 6 November 2026) |
 
 Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan (kerjakan latihan pada materi 1 dan 4) → Referensi.
 
@@ -118,7 +118,7 @@ Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan (kerjakan
 **Beranda (desktop)**
 ```
 +--------------------------------------------------------------------------+
-| (●●) ruang peluang.  [Beranda] Dadu 3D  Lab Diagram  Materi  Referensi  [↗] |
+| (●●) ruang peluang.  [Beranda] Dadu 3D  Lab Diagram  Materi  Referensi      |
 +--------------------------------------------------------------------------+
 |                                            Mode tampilan [Interaktif penuh ▾]|
 |  Peluang bukan                                                           |
@@ -138,7 +138,7 @@ Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan (kerjakan
 |  01 Ruang sampel        deskripsi singkat     Pelajari ↗  [Coba animasi +]|
 |  02 … 05                                                                  |
 +--------------------------------------------------------------------------+
-|  ruang peluang.   Materi  Referensi   Lihat. Coba. Pahami.  Sistem desain ↗ |
+|  ruang peluang.   Materi  Referensi   Lihat. Coba. Pahami.                  |
 +--------------------------------------------------------------------------+
 ```
 
@@ -147,19 +147,19 @@ Jalur belajar yang disarankan: Beranda → Materi 1 sampai 5 berurutan (kerjakan
 +-----------------------------------------------+
 | ruang peluang.      Materi  Referensi |
 +-----------------------------------------------+
-| MATERI 04 / 05                                |
 | Kejadian majemuk                              |
 | [paragraf pengantar]                          |
 | +-------------------------------------------+ |
-| | COBA SENDIRI / VISUALISASI INTERAKTIF     | |
-| | [tombol B = prima | genap] [diagram Venn] | |
-| | [A ∪ B | A ∩ B]   hasil: {…}  P = …/6     | |
+| | Jadikan konsepnya terlihat.               | |
+| | [Soal 1 · bola | Soal 2 · kartu | As/Hati]| |
+| | [15 bola / 52 kartu, hasil tersorot]      | |
+| | [A ∪ B · atau | A ∩ B · dan]  n(…)  P = … | |
 | +-------------------------------------------+ |
 | Hubungkan dengan rumus.                        |
 | [ label  ] [ rumus ]  ×  jumlah rumus materi   |
 | [contoh]                                       |
 | Coba pikirkan.  [pertanyaan] ▸ Lihat pembahasan|
-| LATIHAN 01  [soal] ▸ Lihat pembahasan          |
+| [judul soal]  [soal] ▸ Lihat pembahasan        |
 | Sumber  [daftar] [status] [catatan]            |
 | ← materi sebelumnya          materi berikutnya →|
 +-----------------------------------------------+
@@ -339,12 +339,12 @@ Untuk versi produksi: `npm run build`, kemudian `npm run start`.
 | Responsif | Diuji pada 1440, 768, dan 375 px |
 
 ## 6.4 Hasil Pengujian
-Pengujian dijalankan pada build produksi (`npm run build`, lalu `npm run start`) dengan `npm run test:final`; hasil mentah tersimpan di `docs/pengujian-final.json`. Tanggal pengujian: 27 Oktober 2026.
+Pengujian dijalankan pada build produksi (`npm run build`, lalu `npm run start`) dengan `npm run test:final`; hasil mentah tersimpan di `docs/pengujian-final.json`. Tanggal pengujian: 27 Oktober 2026, diulang 6 November 2026 setelah perubahan header, footer, dan kartu latihan; tabel di bawah memuat hasil 6 November.
 
 | Aspek | Cara uji | Hasil |
 |---|---|---|
 | Navigasi | Semua tautan menu header dan footer pada 7 halaman isi | Lulus |
-| Tautan | 15 tautan internal unik dibuka | Semua berstatus 200 |
+| Tautan | 14 tautan internal unik dibuka (sebelumnya 15; tautan `/styleguide` dihapus dari header dan footer) | Semua berstatus 200 |
 | Jangkar | 7 tautan berjangkar (`/#lab`, `/#materi`, `/referensi#…`) diperiksa keberadaan targetnya | Semua ada |
 | Latihan | Soal 1–3 ada di halaman materinya dan memiliki pembahasan; `/latihan` tidak ada | Lulus (404 untuk `/latihan`) |
 | Halaman tidak ada | `/materi/tidak-ada` | 404 sesuai harapan |
@@ -353,12 +353,12 @@ Pengujian dijalankan pada build produksi (`npm run build`, lalu `npm run start`)
 | Galat JavaScript | Seluruh kunjungan halaman | 0 galat |
 | Materi | Perbandingan dengan lembar guru dan sumber (Bab V); 141 tes otomatis pada 8 berkas | Lulus |
 | Kualitas kode | `npm run typecheck`, `npm run lint` | Lulus; 0 galat lint |
-| Build | `npm run build` | Lulus; 11 halaman statis dibuat |
+| Build | `npm run build` | Lulus; 12 rute statis dibuat (termasuk `/icon.svg` dan halaman 404) |
 | Gambar | Situs tidak memuat berkas gambar; ilustrasi berupa SVG/CSS | Tidak ada gambar rusak |
 | **Ejaan** | — | **Belum diperiksa secara sistematis.** **[ISI: hasil baca ulang ejaan oleh anggota/guru]** |
 | Peramban dan perangkat | Chromium (Playwright) dan peramban dalam aplikasi, ukuran layar lewat emulasi | Safari, Firefox, dan perangkat fisik **belum** diuji |
 
-Skrip Playwright tahap awal (`tests/browser.mjs`, `tests/homepage.mjs`, `tests/prototype.mjs`) sudah diperbarui untuk menu lima tautan tetapi **belum dijalankan ulang** pada tahap ini; tahap awal mencatat lulus (lihat `docs/VERIFIKASI.md`).
+Skrip Playwright tahap awal (`tests/browser.mjs`, `tests/homepage.mjs`, `tests/prototype.mjs`) dijalankan ulang pada 6 November 2026 dan ketiganya lulus. `tests/homepage.mjs` sempat gagal karena pemilih `summary` kini menemukan dua elemen (pertanyaan dan pembahasan latihan); pemilihnya dipersempit ke pertanyaan materi. Tangkapan layar tahap awal yang ditimpa skrip itu dikembalikan ke versi aslinya agar tetap menjadi bukti Pertemuan 1–3 (lihat `docs/VERIFIKASI.md`).
 
 ## 6.5 Dokumentasi
 Tangkapan layar halaman final (halaman penuh, *reduced motion*). Ukuran tablet 768 px tersedia di Lampiran G. Pada beranda 1440 px, ruang kosong lebar di sekitar dadu terjadi karena bagian dadu 3D bersifat *sticky* dan tampil utuh hanya saat digulir.
@@ -381,7 +381,6 @@ Tangkapan layar halaman final (halaman penuh, *reduced motion*). Ukuran tablet 7
 - Isi PDF e-modul Kemendikbud belum dibaca penuh; sumber itu masih rujukan pembanding.
 - Belum ada masukan, validasi, atau persetujuan guru yang tercatat, dan belum ada uji coba dengan siswa.
 - Ejaan belum diperiksa sistematis; pengujian peramban baru Chromium, belum Safari, Firefox, atau perangkat fisik.
-- Skrip Playwright tahap awal belum dijalankan ulang setelah penambahan halaman.
 - Belum ada kuis berskor, pencarian, atau tautan menu ke unduhan laporan.
 - Belum dipublikasikan; sebagian informasi identitas masih kosong.
 - Wireframe disusun setelah situs dibangun, bukan sebagai rancangan awal.
@@ -399,7 +398,7 @@ Proyek menghasilkan website pembelajaran peluang yang terencana, mudah dinavigas
 3. Tambahkan kuis berskor dengan alasan jawaban, lalu uji dengan beberapa siswa.
 4. Publikasikan website dan jalankan ulang `npm run test:final` pada alamat publikasi.
 5. Uji pada Safari, Firefox, dan ponsel fisik; periksa ejaan seluruh halaman.
-6. Tambahkan tautan unduhan laporan pada menu dan jalankan ulang skrip Playwright tahap awal.
+6. Tambahkan tautan unduhan laporan pada menu.
 
 ---
 

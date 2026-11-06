@@ -12,7 +12,11 @@ export function SubpageHeader({ current, homeTransitionTypes }: SubpageHeaderPro
   return (
     <header className="site-header">
       <Link className="brand" href="/" transitionTypes={homeTransitionTypes}>
-        ruang peluang.
+        <span className="brand-symbol" aria-hidden="true">
+          <i />
+          <i />
+        </span>
+        ruang peluang<span className="brand-dot">.</span>
       </Link>
       <nav aria-label="Navigasi halaman">
         <Link

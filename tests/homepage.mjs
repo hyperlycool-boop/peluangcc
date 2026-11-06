@@ -79,8 +79,10 @@ try {
   for (const url of urls) {
     await page.goto('http://127.0.0.1:3000' + url, { waitUntil: 'networkidle' });
     assert.equal(await page.locator('h1').count(), 1);
-    await page.locator('summary').click();
-    assert(await page.locator('details').getAttribute('open') !== null);
+    // The lesson question comes first; exercise cards below it have their own <details>.
+    const question = page.locator('details').first();
+    await question.locator('summary').click();
+    assert(await question.getAttribute('open') !== null);
   }
 
   // 7. Responsive check & screenshot across 360, 768, 1440 viewports

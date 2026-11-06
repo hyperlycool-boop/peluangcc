@@ -129,7 +129,6 @@ export function LessonExperiment({ index, quiet }: { index: number; quiet?: bool
   if (!Experiment) return null;
   return <section className="lesson-experiments lesson-experiment" data-quiet={isQuiet} aria-label={`Eksperimen interaktif: ${materials[index].title}`}>
     <div className="experiment-card">
-      <div className="eyebrow">COBA SENDIRI / VISUALISASI INTERAKTIF</div>
       <h2>Jadikan konsepnya terlihat.</h2>
       <Experiment quiet={isQuiet} />
     </div>

@@ -12,9 +12,9 @@ Sumber resmi: docs/LAPORAN_PROYEK_WEBSITE_PEMBELAJARAN.md. public/laporan-awal.m
 ## Inventaris animasi
 | Visual | Lokasi | Pemicu | Token | Mode tenang/fokus/reduced motion |
 |---|---|---|---|---|
-| Jalur orbit hero | components/Experience.tsx, motion.path | Halaman dimuat | orbit 1,2 s | Langsung lengkap; hero disembunyikan di Fokus |
-| Lingkaran Venn | components/Experience.tsx, motion.circle | Pilih skenario | diagram 0,65 s | Langsung ke posisi akhir |
-| Titik sampel | components/Experience.tsx, motion.g | Pilih skenario | diagram 0,65 s | Langsung ke posisi akhir |
-| Sorotan kejadian dan formula | components/Experience.tsx | Pilih A ∪ B, A ∩ B, Aᶜ | instant | Tetap interaktif tanpa animasi |
+| Jalur orbit hero | components/home/HeroSection.tsx, motion.path | Halaman dimuat | orbit 1,2 s | Langsung lengkap; hero disembunyikan di Fokus |
+| Lingkaran Venn | components/home/VennLab.tsx, motion.circle | Pilih skenario | diagram 0,65 s | Langsung ke posisi akhir |
+| Titik sampel | components/home/VennLab.tsx, motion.g | Pilih skenario | diagram 0,65 s | Langsung ke posisi akhir |
+| Sorotan kejadian dan formula | components/home/VennLab.tsx | Pilih A ∪ B, A ∩ B, Aᶜ | instant | Tetap interaktif tanpa animasi |
 
 Tidak ada gerak ambient berulang. Orbit dekoratif menegaskan hubungan dua himpunan; animasi titik menunjukkan pengelompokan ulang dan tidak mengubah nilai probabilitas. Kontrol seluruhnya tombol keyboard. GSAP/Lenis belum diperlukan untuk fondasi; scrollytelling baru dibuat pada tahap prototipe.

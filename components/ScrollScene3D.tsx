@@ -27,14 +27,14 @@ interface ScrollScene3DProps {
   quiet?: boolean;
 }
 
-interface StepItem {
+export interface StepItem {
   num: number;
   title: string;
   desc: string;
   formula: string | null;
 }
 
-const STAGES: readonly StepItem[] = [
+export const STAGES: readonly StepItem[] = [
   {
     num: 1,
     title: 'Dadu Seimbang',

@@ -64,7 +64,7 @@ try {
 
     // Verify floating stage text elements exist
     const floatingItemsCount = await page.locator('.floating-stage-item').count();
-    assert.equal(floatingItemsCount, 4, 'Expected 4 .floating-stage-item elements to exist for scrolly stages');
+    assert.equal(floatingItemsCount, 6, 'Expected 6 .floating-stage-item elements to exist for film stages');
 
     // Verify 4 3D folding section cards exist on prototype (Hero, Dadu, Lab, Materi)
     const sectionCards = page.locator('.folding-section-card');
@@ -113,7 +113,11 @@ try {
 
     // 5. Scroll into the 3D scrollytelling runway (directly after Hero)
     const scrollyRunway = page.locator('.scrolly-canvas-runway');
-    await scrollyRunway.scrollIntoViewIfNeeded();
+    // The runway is taller than the viewport, so scroll explicitly to a point where the stage is pinned.
+    await scrollyRunway.evaluate((el) => {
+      const top = window.scrollY + el.getBoundingClientRect().top;
+      window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.02, behavior: 'instant' });
+    });
     await page.waitForTimeout(400);
 
     // Take screenshot at mid-scrolly fold
@@ -174,17 +178,20 @@ try {
       return { top: window.scrollY + rect.top, height: el.offsetHeight };
     });
 
-    // Scroll to Stage 3 (~70% of runway) to verify die face highlight
-    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + runwayInfo.height * 0.70);
+    const pinnedDistance = runwayInfo.height - viewportHeight;
+
+    // Scroll to Stage 3 (film progress 0.38) to verify die face highlight
+    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + pinnedDistance * 0.38);
     const highlightedFace = page.locator('.die-face-highlighted');
     await highlightedFace.waitFor({ state: 'attached', timeout: 3000 });
     assert(await highlightedFace.count() >= 1, 'Expected face 3 to be highlighted during Stage 3 landing');
 
-    // Scroll to Stage 4 (~95% of runway) to verify formula visibility
-    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + runwayInfo.height * 0.95);
-    const formulaStage4 = page.locator('.stage-4 .floating-stage-formula');
-    await formulaStage4.waitFor({ state: 'attached', timeout: 3000 });
-    assert(await formulaStage4.count() >= 1, 'Expected formula element in Stage 4');
+    // Scroll to Stage 6 (film progress 0.95) to verify the worked probability is shown
+    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + pinnedDistance * 0.95);
+    // The formula is in the DOM from page load, so wait for the stage to become the active one.
+    const formulaStage6 = page.locator('.stage-6.is-active-stage .floating-stage-formula');
+    await formulaStage6.waitFor({ state: 'visible', timeout: 3000 });
+    assert(await formulaStage6.count() >= 1, 'Expected formula element in Stage 6');
 
     // 6. Scroll down to Card 02: Venn Diagram Lab (#lab) and test interactivity
     const labCard = page.locator('#lab');

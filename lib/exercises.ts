@@ -1,4 +1,4 @@
-export interface SolutionStep {
+interface SolutionStep {
   text: string;
   tex?: string;
 }

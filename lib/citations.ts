@@ -1,4 +1,4 @@
-export interface Citation {
+interface Citation {
   id: string;
   author: string;
   /** Absent when the source gives no year (for example a teacher's handout). */

@@ -5,7 +5,8 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { FILM_STAGE_COUNT, FILM_STOPS, filmScrollTop, type FilmStage } from '@/lib/film';
 import { getLenis } from '@/lib/smooth-scroll';
 
-const JUMP_SECONDS = 1;
+// Under 300 ms: a keyboard-driven stage change should feel immediate.
+const JUMP_SECONDS = 0.3;
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;

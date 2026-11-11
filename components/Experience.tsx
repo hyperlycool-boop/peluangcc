@@ -13,12 +13,17 @@ import {
 } from '@/lib/display-mode';
 import MaterialList from './MaterialList';
 import ScrollScene3D from './ScrollScene3D';
+import FilmScene from './prototype/FilmScene';
 import FoldingSectionCard from './FoldingSectionCard';
 import { FooterLinks } from './SiteChrome';
 import ExperienceHeader from './home/ExperienceHeader';
 import HeroSection from './home/HeroSection';
 import StyleguideTokens from './home/StyleguideTokens';
 import VennLab from './home/VennLab';
+import FrequencyLab from './home/FrequencyLab';
+import LearningPath from './home/LearningPath';
+import RhythmBand from './home/RhythmBand';
+import SideProgress from './home/SideProgress';
 
 interface ExperienceProps {
   styleguide?: boolean;
@@ -30,16 +35,18 @@ function SectionWrapper({
   prototype,
   enabled,
   quiet,
+  className,
   children,
 }: {
   prototype: boolean;
   enabled: boolean;
   quiet: boolean;
+  className?: string;
   children: React.ReactNode;
 }) {
   if (!prototype) return <>{children}</>;
   return (
-    <FoldingSectionCard enabled={enabled} quiet={quiet}>
+    <FoldingSectionCard enabled={enabled} quiet={quiet} className={className}>
       {children}
     </FoldingSectionCard>
   );
@@ -66,6 +73,7 @@ export default function Experience({
       </a>
 
       <ExperienceHeader styleguide={styleguide} prototype={prototype} quiet={quiet} />
+      <SideProgress />
 
       <main id="main">
         <div className="topline">
@@ -90,7 +98,8 @@ export default function Experience({
           </SectionWrapper>
 
           {/* CARD 01: 3D DICE SCROLLYTELLING */}
-          <SectionWrapper {...cardProps}>
+          {/* The film card stays flat: folding about its top edge would tilt the pinned stage. */}
+          <SectionWrapper {...cardProps} enabled={false} className="is-film">
             <section id="dadu" className="scrolly-section-wrapper">
               <div className="section-title">
                 <div>
@@ -102,14 +111,24 @@ export default function Experience({
                 </p>
               </div>
 
-              <ScrollScene3D quiet={quiet} />
+              {prototype ? <FilmScene quiet={quiet} /> : <ScrollScene3D quiet={quiet} />}
             </section>
           </SectionWrapper>
+
+          {/* Pause: the range every probability lives in. Not a folding card, so the card count stays 4. */}
+          <RhythmBand variant="range" quiet={quiet} />
+
+          {/* Hands-on: roll the die many times and watch the frequency settle. */}
+          <FrequencyLab quiet={quiet} />
 
           {/* CARD 02: VENN DIAGRAM LAB */}
           <SectionWrapper {...cardProps}>
             <VennLab quiet={quiet} />
           </SectionWrapper>
+
+          <RhythmBand variant="complement" quiet={quiet} />
+
+          <LearningPath />
 
           {/* CARD 03: CURRICULUM MATERIAL LIST */}
           <SectionWrapper {...cardProps}>

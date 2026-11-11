@@ -34,13 +34,13 @@ export interface ScenarioItem {
   tone: string;
 }
 
-export interface ScenarioEvent {
+interface ScenarioEvent {
   /** Plain-language name, e.g. "bola merah". */
   label: string;
   ids: readonly string[];
 }
 
-export interface CompoundScenario {
+interface CompoundScenario {
   id: CompoundScenarioId;
   /** The practice problem this scenario shows; null for the extra non-disjoint case. */
   exerciseId: string | null;
@@ -108,7 +108,7 @@ export function compoundScenario(id: CompoundScenarioId): CompoundScenario {
   return found;
 }
 
-export interface CompoundResult {
+interface CompoundResult {
   nS: number;
   nA: number;
   nB: number;
@@ -151,7 +151,7 @@ export function evaluateCompound(scenario: CompoundScenario, operation: Compound
 
 /* ---------- Ruang sampel: Soal 3, meja bundar ---------- */
 
-export type Gender = 'L' | 'P';
+type Gender = 'L' | 'P';
 
 export interface Person {
   id: string;

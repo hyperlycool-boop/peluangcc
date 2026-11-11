@@ -10,7 +10,7 @@ import {
   type RollingDirection,
 } from '../lib/interactive-formula';
 
-export interface RollingNumberProps {
+interface RollingNumberProps {
   value: number;
   max?: number;
   quiet?: boolean;

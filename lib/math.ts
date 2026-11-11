@@ -1,22 +1,15 @@
 export type Outcome = string;
 
-export interface SampleSpace {
+interface SampleSpace {
   id: string;
   outcomes: readonly Outcome[];
   equallyLikely: true;
 }
 
-export interface ProbabilityEvent {
+interface ProbabilityEvent {
   id: string;
   label: string;
   members: readonly Outcome[];
-}
-
-export interface SimulationState {
-  seed: number;
-  trials: number;
-  successes: number;
-  history: { trial: number; frequency: number }[];
 }
 
 export function probability(space: SampleSpace, event: ProbabilityEvent): number {

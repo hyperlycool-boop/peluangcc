@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence, type Transition } from 'motion/react';
 import { InteractiveProbabilityFormula } from '../InteractiveProbabilityFormula';
 import { getOutcomeDotAnimation } from '@/lib/interactive-formula';
+import { POINTS } from '@/lib/film';
 import {
   dice,
   odd,
@@ -40,25 +41,6 @@ const REGION_NOTATION: Record<Region, string> = {
   union: 'A\\cup B',
   intersection: 'A\\cap B',
   complement: 'A^c',
-};
-
-const POINTS: Record<Scenario, readonly { v: string; x: number; y: number }[]> = {
-  prime: [
-    { v: '1', x: 175, y: 165 },
-    { v: '3', x: 280, y: 145 },
-    { v: '5', x: 280, y: 193 },
-    { v: '2', x: 380, y: 165 },
-    { v: '4', x: 430, y: 282 },
-    { v: '6', x: 475, y: 282 },
-  ],
-  even: [
-    { v: '1', x: 145, y: 140 },
-    { v: '3', x: 125, y: 185 },
-    { v: '5', x: 175, y: 185 },
-    { v: '2', x: 395, y: 140 },
-    { v: '4', x: 375, y: 185 },
-    { v: '6', x: 425, y: 185 },
-  ],
 };
 
 function describeRegion(region: Region, combined: readonly string[], shared: readonly string[]) {

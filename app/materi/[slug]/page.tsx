@@ -12,6 +12,7 @@ import { exercisesForLesson } from '@/lib/exercises';
 import { LessonExperiment } from '@/components/LessonExperiments';
 import { Formula } from '@/components/Formula';
 import { SourceCredits } from '@/components/SourceCredits';
+import LessonVisit from '@/components/LessonVisit';
 import { ExerciseCard } from '@/components/ExerciseCard';
 import { SiteFooter, SubpageHeader } from '@/components/SiteChrome';
 
@@ -40,6 +41,7 @@ export default async function Page({ params }: PageProps) {
       {/* key: moving between lessons is an exit/enter pair, not an in-place update. */}
       <ViewTransition key={m.slug} {...DIRECTIONAL_PAGE_TRANSITION}>
         <main className="lesson">
+          <LessonVisit slug={m.slug} />
           <ViewTransition name={lessonTitleTransitionName(m.slug)} share="morph" default="none">
             <h1>{m.title}</h1>
           </ViewTransition>

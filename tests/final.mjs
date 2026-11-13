@@ -97,6 +97,20 @@ try {
   }
   assert.equal((await page.request.get(`${BASE}/latihan`)).status(), 404);
 
+  // 4b. Each lesson page has its quiz (3 questions); answering one shows feedback.
+  report.quizzes = [];
+  for (const slug of LESSONS) {
+    await page.goto(`${BASE}/materi/${slug}`, { waitUntil: 'networkidle' });
+    const questions = await page.locator('.lesson-quiz fieldset').count();
+    assert.equal(questions, 3, `/materi/${slug} should show 3 quiz questions, found ${questions}`);
+    const first = page.locator('.lesson-quiz fieldset').first();
+    await first.locator('.quiz-option').first().click();
+    await first.getByRole('button', { name: 'Periksa' }).click();
+    const feedback = (await first.locator('.quiz-feedback').textContent()) ?? '';
+    assert.match(feedback, /Benar\.|Belum tepat\./, `/materi/${slug}: no quiz feedback after Periksa`);
+    report.quizzes.push({ lesson: slug, questions, feedback: true });
+  }
+
   // 5. Unknown lesson returns 404.
   report.notFound = (await page.request.get(`${BASE}/materi/tidak-ada`)).status();
   assert.equal(report.notFound, 404);

@@ -35,7 +35,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/coverage-v8": "^5.0.5",
-    "eslint": "^9.39.5",
+    "eslint": "^10.15.0",
     "eslint-config-next": "^16.4.2",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0",

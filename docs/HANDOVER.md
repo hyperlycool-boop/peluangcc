@@ -1,10 +1,36 @@
-# Handover: scroll film on `/prototype`
+# Handover: scroll film on the homepage
 
-Last updated 10 November 2026. Branch `feat/latihan-referensi-laporan`, based on commit `3c22995`.
+Last updated 24 November 2026. Branch `feat/latihan-referensi-laporan`, based on commit `f8c8396`.
 
-## Status
+## Update, 24 November: the film is on the homepage
 
-The film is built and working on `/prototype`. It is not committed, and learners cannot see it yet, because `PRODUCT.md` treats `/prototype` as a developer page. The homepage still uses the older die scene.
+`/` now renders `<Experience prototype folding />`, the same design as `/prototype`. This work is not committed yet.
+
+- **Props.** `prototype` switches the design: full-screen hero, six-stage film, folding cards. The new `prototypePage` prop only switches the page furniture: the `/prototype` brand link, the button back to `/`, and the "Prototipe … v0.1" footer. On `/`, the logo links to `/`, and the footer has Materi, Referensi and "Lihat. Coba. Pahami.".
+- **Hero.** The hero is unboxed (`enabled={false}`, `.is-open`). With `intro`, it fills the first screen (`.hero.is-intro`) and its copy fades out over the first 60% of its exit range.
+- **Die.** The die moves only while the page scrolls. The time-driven tumble loop and the `useSpring` are gone. `scrollTumble` in `lib/film.ts` derives the angles from the scroll position. The die rises in as the hero leaves.
+- **Folding cards.** Cards now tilt their bottom edge away on exit, ending at −10°. Before, they tilted toward the viewer, ending at +14°, which magnified tall cards on narrow screens.
+- **Removed.** These homepage sections are deleted:
+  - the "Coba sendiri" frequency lab (`FrequencyLab.tsx`) and the "Peta belajar" learning path (`LearningPath.tsx`)
+  - the per-lesson visit marker (`LessonVisit.tsx`, `lib/learning-progress.ts` and its test)
+  - the `range` rhythm band
+
+  `lib/frequency.ts` stays: `lib/playground.ts` uses its `Rng` type.
+- **UI audit fixes (critical and high).**
+  - New `--muted` and `--signal-text` tokens for contrast.
+  - 44px header tap targets on touch screens.
+  - The mobile nav wraps onto a second row.
+  - The subpage header lists Beranda, Materi, Taman bermain and Referensi, and marks `/playground` as the current page.
+  - Hover styles apply only to fine pointers.
+- **Tests.**
+  - `tests/homepage.mjs` expects 6 film stages.
+  - `tests/prototype.mjs` checks three things: the hero alone fills the first screen, the hero fades, and the die stays still when the page is still.
+
+The status table and the sections below describe the film as it stood on 10 November. The "Separate component" decision and "Moving it to the homepage" no longer apply.
+
+## Status (10 November)
+
+The film is built and working on `/prototype`. At that point it was not committed, and the homepage still used the older die scene.
 
 | Area | State |
 |---|---|
@@ -84,6 +110,13 @@ Small edits to shared files:
 
 | Date | Check | Result |
 |---|---|---|
+| 24 Nov | `npm run typecheck` | Pass |
+| 24 Nov | `npm test` | 431 tests pass in 24 files |
+| 24 Nov | `npm run lint` | Project code clean. The exit code is non-zero only because ESLint also scans `.claude/worktrees` (279 errors) and `.claude/skills` (94 warnings) |
+| 24 Nov | `npm run build` | Pass, 13 static pages. The first run stopped on a Next.js 16.4.2 security-advisory notice, and the retry passed |
+| 24 Nov | `test:prototype`, `test:e2e`, `test:final` | Pass, production server on port 3000. `test:final`: 21 page/width combinations, 15 links, 7 anchors, same results as 13 Nov |
+| 24 Nov | `build:html` then `eval:export` | Export written, eval passes: 13 HTML files, 5 lesson pages, 312 links and assets. `build:html` still exits 1, because the same advisory notice fires after the export |
+| 24 Nov | `/` in the browser at 1440×900 and 375×812 | `#dadu` starts below the fold, the hero fades, the die stays still when the page is still, all four side-rail ids resolve, no overflow. `/styleguide` renders with no console errors |
 | 10 Nov | `npm run typecheck` | Pass |
 | 10 Nov | `npm test` | 158 tests pass in 9 files |
 | 10 Nov | `npm run lint` | 0 errors, 94 warnings, the same count `docs/VERIFIKASI.md` attributes to `.claude/skills/impeccable/scripts` |

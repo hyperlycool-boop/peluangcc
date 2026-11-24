@@ -20,15 +20,16 @@ import ExperienceHeader from './home/ExperienceHeader';
 import HeroSection from './home/HeroSection';
 import StyleguideTokens from './home/StyleguideTokens';
 import VennLab from './home/VennLab';
-import FrequencyLab from './home/FrequencyLab';
-import LearningPath from './home/LearningPath';
 import RhythmBand from './home/RhythmBand';
 import SideProgress from './home/SideProgress';
 
 interface ExperienceProps {
   styleguide?: boolean;
+  /** The design: full-screen hero, six-stage dice film, folding section cards. Used by / and /prototype. */
   prototype?: boolean;
   folding?: boolean;
+  /** Chrome for the /prototype page itself: its own brand link, a way back to /, and the prototype footer. */
+  prototypePage?: boolean;
 }
 
 function SectionWrapper({
@@ -56,6 +57,7 @@ export default function Experience({
   styleguide = false,
   prototype = false,
   folding: initialFolding,
+  prototypePage = false,
 }: ExperienceProps) {
   const mounted = useHydrated();
   // Saved for the session and mirrored on <html data-motion> so page transitions respect it too.
@@ -72,7 +74,7 @@ export default function Experience({
         Lewati navigasi
       </a>
 
-      <ExperienceHeader styleguide={styleguide} prototype={prototype} quiet={quiet} />
+      <ExperienceHeader styleguide={styleguide} prototype={prototypePage} quiet={quiet} />
       <SideProgress />
 
       <main id="main">
@@ -93,8 +95,9 @@ export default function Experience({
 
         <div className={prototype ? 'folding-sections-container' : 'prototype-sections-wrap'}>
           {/* CARD 00: HERO */}
-          <SectionWrapper {...cardProps}>
-            <HeroSection styleguide={styleguide} quiet={quiet} />
+          {/* Unboxed and flat: the hero reads as the page itself, not as one card among the rest. */}
+          <SectionWrapper {...cardProps} enabled={false} className="is-open">
+            <HeroSection styleguide={styleguide} quiet={quiet} intro={prototype} />
           </SectionWrapper>
 
           {/* CARD 01: 3D DICE SCROLLYTELLING */}
@@ -115,20 +118,12 @@ export default function Experience({
             </section>
           </SectionWrapper>
 
-          {/* Pause: the range every probability lives in. Not a folding card, so the card count stays 4. */}
-          <RhythmBand variant="range" quiet={quiet} />
-
-          {/* Hands-on: roll the die many times and watch the frequency settle. */}
-          <FrequencyLab quiet={quiet} />
-
           {/* CARD 02: VENN DIAGRAM LAB */}
           <SectionWrapper {...cardProps}>
             <VennLab quiet={quiet} />
           </SectionWrapper>
 
           <RhythmBand variant="complement" quiet={quiet} />
-
-          <LearningPath />
 
           {/* CARD 03: CURRICULUM MATERIAL LIST */}
           <SectionWrapper {...cardProps}>
@@ -139,19 +134,19 @@ export default function Experience({
         {styleguide && <StyleguideTokens />}
       </main>
 
-      <footer className={prototype ? 'prototype-footer' : ''}>
-        <Link className="brand" href={prototype ? '/prototype' : '/'}>
+      <footer className={prototypePage ? 'prototype-footer' : ''}>
+        <Link className="brand" href={prototypePage ? '/prototype' : '/'}>
           ruang peluang<span className="brand-dot">.</span>
         </Link>
-        {!prototype && <FooterLinks />}
+        {!prototypePage && <FooterLinks />}
         <span>
-          {prototype
+          {prototypePage
             ? 'Prototipe Visualisasi 3D — Ruang Peluang v0.1'
             : 'Lihat. Coba. Pahami.'}
         </span>
-        {(prototype || styleguide) && (
-          <Link href={prototype ? '/' : '/styleguide'}>
-            {prototype ? (
+        {(prototypePage || styleguide) && (
+          <Link href={prototypePage ? '/' : '/styleguide'}>
+            {prototypePage ? (
               <>
                 ← Kembali ke Beranda Utama <ArrowUpRight size={14} />
               </>

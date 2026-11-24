@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { SITE_PAGES, type SitePageId } from '@/lib/site-pages';
 
 interface SubpageHeaderProps {
-  current?: 'materi' | SitePageId;
+  current?: 'materi' | 'playground' | SitePageId;
   /** View-transition types for links that go back to the homepage. */
   homeTransitionTypes?: string[];
 }
 
-/** Header for every page except the homepage: brand plus the three places a learner goes next. */
+/** Header for every page except the homepage: brand plus the places a learner goes next. */
 export function SubpageHeader({ current, homeTransitionTypes }: SubpageHeaderProps) {
   return (
     <header className="site-header">
@@ -19,6 +19,10 @@ export function SubpageHeader({ current, homeTransitionTypes }: SubpageHeaderPro
         ruang peluang<span className="brand-dot">.</span>
       </Link>
       <nav aria-label="Navigasi halaman">
+        {/* Beranda too, not only the logo: the way home should look like a way home. */}
+        <Link className="nav-pill-item" href="/" transitionTypes={homeTransitionTypes}>
+          Beranda
+        </Link>
         <Link
           className={`nav-pill-item ${current === 'materi' ? 'is-active' : ''}`}
           href="/#materi"
@@ -26,6 +30,13 @@ export function SubpageHeader({ current, homeTransitionTypes }: SubpageHeaderPro
           transitionTypes={homeTransitionTypes}
         >
           Materi
+        </Link>
+        <Link
+          className={`nav-pill-item ${current === 'playground' ? 'is-active' : ''}`}
+          href="/playground"
+          aria-current={current === 'playground' ? 'page' : undefined}
+        >
+          Taman bermain
         </Link>
         {SITE_PAGES.map((page) => (
           <Link

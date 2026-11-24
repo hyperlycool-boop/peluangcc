@@ -1,22 +1,43 @@
 "use client";
 
-import { useId } from 'react';
-import { motion } from 'motion/react';
+import { useId, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { motionTokens } from '@/lib/math';
 
 export default function HeroSection({
   styleguide,
   quiet,
+  intro = false,
 }: {
   styleguide: boolean;
   quiet: boolean;
+  /** / and /prototype: the hero fills the first screen and fades away as the page scrolls. */
+  intro?: boolean;
 }) {
   const grainId = useId();
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  // Pass-through transform: opts out of Motion's native scroll-timeline acceleration, which drops the
+  // fade once the hero is past its range. See FilmScene for the same fix.
+  const leaving = useTransform(heroScroll, (value) => value);
+  const fades = intro && !quiet;
+  const copyOpacity = useTransform(leaving, [0, 0.6], [1, 0]);
+  const copyY = useTransform(leaving, [0, 0.6], [0, -48]);
 
   return (
-    <section id="beranda" className={`hero ${!styleguide ? 'homepage-hero' : ''}`}>
-      <div className="hero-copy">
+    <section
+      ref={sectionRef}
+      id="beranda"
+      className={`hero ${!styleguide ? 'homepage-hero' : ''}${intro ? ' is-intro' : ''}`}
+    >
+      <motion.div
+        className="hero-copy"
+        style={fades ? { opacity: copyOpacity, y: copyY } : undefined}
+      >
         <h1>
           {styleguide ? 'Desain yang' : 'Peluang bukan'}
           <br />
@@ -31,7 +52,7 @@ export default function HeroSection({
         <a className="button primary" href="#dadu">
           Mulai bereksplorasi <ArrowUpRight size={20} />
         </a>
-      </div>
+      </motion.div>
 
       {styleguide && (
         <div className="hero-art">

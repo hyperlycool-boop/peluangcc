@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-  type MotionValue,
-} from 'motion/react';
+import { motion, useMotionValue, useScroll, useTransform, type MotionValue } from 'motion/react';
 import Die3D from '@/components/Die3D';
 import { Formula } from '@/components/Formula';
 import { STAGES, type StepItem } from '@/components/ScrollScene3D';
@@ -20,11 +12,11 @@ import {
   FILM_TEXT_WINDOWS,
   OBSERVED_OUTCOME,
   getFilmStage,
-  settleTumbleAngle,
+  scrollTumble,
   toDieProgress,
   type FilmStage,
 } from '@/lib/film';
-import { DIE_KINEMATICS_BREAKPOINTS, TUMBLE_CONFIG, calculateDecelerationFactor } from '@/lib/scrolly';
+import { DIE_KINEMATICS_BREAKPOINTS, calculateDecelerationFactor } from '@/lib/scrolly';
 import FilmStepper from './FilmStepper';
 import SampleSpaceLayer from './SampleSpaceLayer';
 
@@ -84,90 +76,55 @@ function FilmText({
 
 function RunningFilm() {
   const runwayRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
+  // No spring on top: Lenis already smooths the scroll, and a spring would keep the die moving
+  // after the page stops. Every motion below is a pure function of this scroll position.
+  const { scrollYProgress: runwayProgress } = useScroll({
     target: runwayRef,
     offset: ['start start', 'end end'],
   });
-  // Light spring: Lenis already smooths scroll, so this only takes the edge off without lagging behind it.
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 1,
-    restDelta: 0.0005,
+  // 0 while the runway is still below the fold, 1 once it pins: the die rises in as the hero leaves.
+  const { scrollYProgress: runwayArrival } = useScroll({
+    target: runwayRef,
+    offset: ['start end', 'start start'],
   });
+  // Pass-through transforms on purpose: they opt out of Motion's native scroll-timeline acceleration,
+  // which mapped the stage text windows to the wrong scroll positions (stage 1 text came back after
+  // it had faded). Every value below is then computed from the real scroll progress on each frame.
+  const progress = useTransform(runwayProgress, (value) => value);
+  const arrival = useTransform(runwayArrival, (value) => value);
 
-  const dieProgress = useTransform(smooth, toDieProgress);
+  const dieProgress = useTransform(progress, toDieProgress);
   const rotateX = useDieChannel(dieProgress, DIE_KINEMATICS_BREAKPOINTS.rotateX);
   const rotateY = useDieChannel(dieProgress, DIE_KINEMATICS_BREAKPOINTS.rotateY);
   const rotateZ = useDieChannel(dieProgress, DIE_KINEMATICS_BREAKPOINTS.rotateZ);
   const translateY = useDieChannel(dieProgress, DIE_KINEMATICS_BREAKPOINTS.translateY);
   const shadowScale = useDieChannel(dieProgress, DIE_KINEMATICS_BREAKPOINTS.shadowScale);
   const shadowOpacity = useDieChannel(dieProgress, DIE_KINEMATICS_BREAKPOINTS.shadowOpacity);
-  const dieOpacity = useTransform(smooth, DIE_EXIT.progress, DIE_EXIT.opacity);
-  const dieScale = useTransform(smooth, DIE_EXIT.progress, DIE_EXIT.scale);
+  const exitOpacity = useTransform(progress, DIE_EXIT.progress, DIE_EXIT.opacity);
+  const exitScale = useTransform(progress, DIE_EXIT.progress, DIE_EXIT.scale);
+  const dieOpacity = useTransform([arrival, exitOpacity], ([a, o]: number[]) => Math.min(1, a / 0.7) * o);
+  const dieScale = useTransform([arrival, exitScale], ([a, s]: number[]) => (0.92 + 0.08 * a) * s);
+  const dieRise = useTransform(arrival, [0, 1], [60, 0]);
+
+  // Tumble from scroll position alone (lib/film.ts scrollTumble): still whenever the page is still.
+  const tumble = (axis: 'x' | 'y' | 'z') => (p: number) =>
+    scrollTumble(p, calculateDecelerationFactor(p))[axis];
+  const tumbleX = useTransform(dieProgress, tumble('x'));
+  const tumbleY = useTransform(dieProgress, tumble('y'));
+  const tumbleZ = useTransform(dieProgress, tumble('z'));
 
   const [stage, setStage] = useState<FilmStage>(1);
-  // The tumble ends where its deceleration factor reaches 0, which is slightly inside stage 3.
-  const [airborne, setAirborne] = useState(true);
-  useEffect(
-    () =>
-      smooth.on('change', (value) => {
-        setStage(getFilmStage(value));
-        setAirborne(toDieProgress(value) < TUMBLE_CONFIG.DECEL_END);
-      }),
-    [smooth]
-  );
-
-  const tumbleX = useMotionValue(0);
-  const tumbleY = useMotionValue(0);
-  const tumbleZ = useMotionValue(0);
-  const angleXRef = useRef(0);
-  const angleYRef = useRef(0);
-  const isInView = useInView(runwayRef, { margin: '100px 0px 100px 0px' });
-
-  // Airborne tumble: runs only while the runway is on screen and the die has not landed.
-  useEffect(() => {
-    if (!isInView || !airborne) {
-      tumbleX.set(0);
-      tumbleY.set(0);
-      tumbleZ.set(0);
-      return;
-    }
-
-    let lastTime = performance.now();
-    let frameId: number;
-
-    const tick = (now: number) => {
-      // Cap the step so returning to the tab does not jump the die.
-      const step = Math.min(now - lastTime, 35) / 1000;
-      lastTime = now;
-      const factor = calculateDecelerationFactor(dieProgress.get());
-
-      // Time spins the die only in free tumble. While it slows down, scroll alone unwinds the angle.
-      if (factor >= 1) {
-        angleXRef.current += TUMBLE_CONFIG.SPEED_X * step;
-        angleYRef.current += TUMBLE_CONFIG.SPEED_Y * step;
-      }
-      tumbleX.set(settleTumbleAngle(angleXRef.current, factor));
-      tumbleY.set(settleTumbleAngle(angleYRef.current, factor));
-      tumbleZ.set(Math.sin((now / 1000) * 2) * 20 * factor);
-
-      frameId = requestAnimationFrame(tick);
-    };
-
-    frameId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frameId);
-  }, [isInView, airborne, dieProgress, tumbleX, tumbleY, tumbleZ]);
+  useEffect(() => progress.on('change', (value) => setStage(getFilmStage(value))), [progress]);
 
   return (
     <div ref={runwayRef} className="scrolly-canvas-runway">
       <div className="scrolly-stage-pinned">
         <div className="film-diagram-stage">
-          <SampleSpaceLayer progress={smooth} />
+          <SampleSpaceLayer progress={progress} />
         </div>
 
         <motion.div className="scrolly-die-center-stage" style={{ opacity: dieOpacity }}>
-          <motion.div style={{ scale: dieScale }}>
+          <motion.div style={{ scale: dieScale, y: dieRise }}>
             <Die3D
               size={170}
               rotateX={rotateX}
@@ -186,7 +143,7 @@ function RunningFilm() {
 
         <div className="scrolly-floating-narrative">
           {FILM_STAGES.map((item) => (
-            <FilmText key={item.num} item={item} progress={smooth} isActive={stage === item.num} />
+            <FilmText key={item.num} item={item} progress={progress} isActive={stage === item.num} />
           ))}
         </div>
 

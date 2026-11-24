@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <SubpageHeader />
+      <SubpageHeader current="playground" />
       <ViewTransition {...DIRECTIONAL_PAGE_TRANSITION}>
         <main className="lesson playground-page">
           <h1>Taman bermain.</h1>

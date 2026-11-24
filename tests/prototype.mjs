@@ -70,6 +70,42 @@ try {
     const sectionCards = page.locator('.folding-section-card');
     assert.equal(await sectionCards.count(), 4, 'Expected 4 .folding-section-card elements (Hero, Dadu, Lab, Materi)');
 
+    // Intro: only the hero fills the first screen; the film starts below the fold.
+    const daduTop = await page.evaluate(() => document.getElementById('dadu').getBoundingClientRect().top);
+    assert(daduTop >= 950 - 1, `Expected only the hero on the first screen at width ${width}, #dadu top was ${daduTop}px`);
+
+    // Scrolling away fades the hero out.
+    // Halfway through the hero's own exit range ('start start' to 'end start').
+    await page.evaluate(() => {
+      const hero = document.getElementById('beranda');
+      const top = hero.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, Math.round(top + hero.offsetHeight * 0.45));
+    });
+    await page.waitForTimeout(500);
+    const heroOpacity = await page.evaluate(() =>
+      Number(getComputedStyle(document.querySelector('#beranda .hero-copy')).opacity)
+    );
+    assert(heroOpacity < 0.6, `Expected the hero to fade while scrolling away at width ${width}, opacity was ${heroOpacity}`);
+
+    // The die moves only with the scroll: mid-tumble, a still page keeps a still die.
+    await page.evaluate(() => {
+      const runway = document.querySelector('.film-scene .scrolly-canvas-runway');
+      const top = runway.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, top + (runway.offsetHeight - window.innerHeight) * 0.22);
+    });
+    await page.waitForTimeout(800);
+    const dieTransforms = () =>
+      page.evaluate(() =>
+        Array.from(document.querySelectorAll('.film-scene .die-stage, .film-scene .die-stage *'))
+          .map((el) => getComputedStyle(el).transform)
+          .join('|')
+      );
+    const dieBefore = await dieTransforms();
+    await page.waitForTimeout(1000);
+    assert.equal(await dieTransforms(), dieBefore, `Expected the die to stay still without scrolling at width ${width}`);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
+
     // Verify page-level folding sections container exists
     const foldingSectionsContainer = page.locator('.folding-sections-container');
     assert.equal(await foldingSectionsContainer.count() >= 1, true, 'Expected .folding-sections-container to exist');

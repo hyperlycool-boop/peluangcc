@@ -5,9 +5,7 @@ import { useEffect, useState } from 'react';
 export const PAGE_MARKS = [
   { id: 'beranda', label: 'Awal' },
   { id: 'dadu', label: 'Dadu' },
-  { id: 'coba', label: 'Coba sendiri' },
   { id: 'lab', label: 'Lab diagram' },
-  { id: 'peta', label: 'Peta belajar' },
   { id: 'materi', label: 'Materi' },
 ] as const;
 

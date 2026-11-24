@@ -32,6 +32,42 @@ export function settleTumbleAngle(angle: number, factor: number): number {
   return signed * factor;
 }
 
+/** Where the scroll-driven tumble starts and stops gathering spin, in die progress. */
+export const SCROLL_TUMBLE = {
+  /** The die rests through stage 1 and takes off as stage 2 begins. */
+  START: FILM_STAGE_ENDS[0] / DIE_SPAN,
+  /** Free tumble ends where the deceleration in lib/scrolly.ts begins. */
+  SPIN_END: 0.5,
+  /** Turns gathered over the free tumble. Not whole numbers, so the slow-down is visible. */
+  TURNS_X: 2.6,
+  TURNS_Y: 3.3,
+  /** Side-to-side rock while airborne, in degrees and in swings over the free tumble. */
+  ROCK_Z: 20,
+  ROCK_CYCLES: 3,
+} as const;
+
+export interface TumbleAngles {
+  x: number;
+  y: number;
+  z: number;
+}
+
+/**
+ * Tumble from scroll position alone: the same position always gives the same angles, so the die
+ * moves only while the page scrolls. `factor` is the deceleration factor for this die progress
+ * (1 in free tumble, easing to 0 on landing); the spin stops growing before it drops below 1.
+ */
+export function scrollTumble(dieProgress: number, factor: number): TumbleAngles {
+  const p = clamp01(dieProgress);
+  const span = SCROLL_TUMBLE.SPIN_END - SCROLL_TUMBLE.START;
+  const t = clamp01((p - SCROLL_TUMBLE.START) / span);
+  // Smoothstep: the spin gathers and fades gently instead of starting at full speed.
+  const eased = t * t * (3 - 2 * t);
+  const turn = (turns: number) => settleTumbleAngle(eased * turns * 360, factor);
+  const rock = Math.sin(t * Math.PI * 2 * SCROLL_TUMBLE.ROCK_CYCLES) * SCROLL_TUMBLE.ROCK_Z * factor;
+  return { x: turn(SCROLL_TUMBLE.TURNS_X), y: turn(SCROLL_TUMBLE.TURNS_Y), z: rock };
+}
+
 export function getFilmStage(progress: number): FilmStage {
   const p = clamp01(progress);
   const index = FILM_STAGE_ENDS.findIndex((end) => p < end);

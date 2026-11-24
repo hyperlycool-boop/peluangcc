@@ -5,10 +5,10 @@ Website pembelajaran matematika berbahasa Indonesia: **Peluang Suatu Kejadian da
 npm install
 npm run dev
 ```
-Buka http://127.0.0.1:3000. Halaman: `/` (beranda), `/materi/[slug]` (5 materi; tiga soal latihan ada di materi Ruang sampel dan Kejadian majemuk), `/referensi`, serta `/styleguide` dan `/prototype` untuk pengembang.
+Buka http://127.0.0.1:3000. Halaman: `/` (beranda: hero layar penuh, film dadu enam tahap, lab diagram Venn, daftar materi), `/materi/[slug]` (5 materi; tiga soal latihan ada di materi Ruang sampel dan Kejadian majemuk, uji pemahaman di setiap materi), `/playground` (taman bermain: dadu, koin, spinner), `/referensi`, serta `/styleguide` dan `/prototype` untuk pengembang. `/prototype` memakai desain yang sama dengan beranda, hanya kepala dan kaki halamannya yang berbeda.
 
 ```sh
-npm test               # 141 tes unit (Vitest, 8 berkas)
+npm test               # 431 tes unit (Vitest, 24 berkas)
 npm run typecheck
 npm run lint
 npm run build
@@ -22,7 +22,7 @@ npm run build
 npx next start -p 3200 --hostname 127.0.0.1
 BASE_URL=http://127.0.0.1:3200 npm run test:final
 ```
-Hasil tersimpan di `docs/pengujian-final.json` dan `docs/screenshots/final-*.png`. Skrip `test:e2e` dan `test:prototype` memakai port 3000 dan menimpa tangkapan layar tahap awal (`foundation-*`, `homepage-*`, `prototype-3d-folding-*`, `styleguide-1440`); kembalikan berkas itu dengan `git checkout -- docs/screenshots` setelah menjalankannya. Terakhir dijalankan 6 November 2026: lulus.
+Hasil tersimpan di `docs/pengujian-final.json` dan `docs/screenshots/final-*.png`. Skrip `test:e2e` dan `test:prototype` memakai port 3000 dan menimpa tangkapan layar tahap awal (`foundation-*`, `homepage-*`, `prototype-3d-folding-*`, `styleguide-1440`); kembalikan berkas itu dengan `git checkout -- docs/screenshots` setelah menjalankannya. Terakhir dijalankan 24 November 2026: `test:e2e`, `test:prototype`, dan `test:final` lulus.
 
 Versi HTML statis (tanpa server Node; untuk hosting statis yang menyajikan situs dari akar domain):
 ```sh

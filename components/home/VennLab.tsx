@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence, type Transition } from 'motion/react';
 import { InteractiveProbabilityFormula } from '../InteractiveProbabilityFormula';
 import { getOutcomeDotAnimation } from '@/lib/interactive-formula';
@@ -304,6 +305,11 @@ export default function VennLab({ quiet }: { quiet: boolean }) {
           </button>
         </div>
       </div>
+
+      <p className="lab-more">
+        Ingin mencoba koin, spinner, atau kejadianmu sendiri?{' '}
+        <Link href="/playground">Buka taman bermain</Link>
+      </p>
     </section>
   );
 }

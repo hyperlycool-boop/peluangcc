@@ -40,9 +40,9 @@ describe('3D Folding Kinematics Engine', () => {
     expect(entry.creaseOpacity).toBeCloseTo(0.22, 2);
   });
 
-  it('folds forward on top exit (p = 1.0)', () => {
+  it('tilts away on top exit (p = 1.0)', () => {
     const exit = calculateFoldValues(1, false);
-    expect(exit.rotateX).toBe(14);
+    expect(exit.rotateX).toBe(-10);
     expect(exit.translateZ).toBe(-25);
     expect(exit.scale).toBe(0.98);
     expect(exit.creaseOpacity).toBeCloseTo(0.18, 2);
@@ -58,7 +58,7 @@ describe('3D Folding Kinematics Engine', () => {
 
   it('interpolates smoothly during exit transition (p = 0.75)', () => {
     const midExit = calculateFoldValues(0.75, false);
-    expect(midExit.rotateX).toBe(6);
+    expect(midExit.rotateX).toBe(-4);
     expect(midExit.translateZ).toBe(-8);
     expect(midExit.scale).toBe(0.99);
     expect(midExit.creaseOpacity).toBeCloseTo(0.06, 2);
@@ -70,7 +70,7 @@ describe('3D Folding Kinematics Engine', () => {
     expect(belowZero.scale).toBe(0.97);
 
     const aboveOne = calculateFoldValues(1.5, false);
-    expect(aboveOne.rotateX).toBe(14);
+    expect(aboveOne.rotateX).toBe(-10);
     expect(aboveOne.scale).toBe(0.98);
 
     const nanVal = calculateFoldValues(NaN, false);
@@ -80,7 +80,7 @@ describe('3D Folding Kinematics Engine', () => {
 
   it('exports standard breakpoints array for motion/react useTransform', () => {
     expect(FOLD_BREAKPOINTS.progress).toEqual([0, 0.25, 0.35, 0.65, 0.75, 1]);
-    expect(FOLD_BREAKPOINTS.rotateX).toEqual([-16, -4, 0, 0, 6, 14]);
+    expect(FOLD_BREAKPOINTS.rotateX).toEqual([-16, -4, 0, 0, -4, -10]);
     expect(FOLD_BREAKPOINTS.translateZ).toEqual([-30, -8, 0, 0, -8, -25]);
     expect(FOLD_BREAKPOINTS.scale).toEqual([0.97, 0.99, 1, 1, 0.99, 0.98]);
     expect(FOLD_BREAKPOINTS.creaseOpacity).toEqual([0.22, 0.06, 0, 0, 0.06, 0.18]);

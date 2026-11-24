@@ -10,14 +10,21 @@ import {
   filmScrollTop,
   getDotColorTrack,
   getDotTrack,
+  SCROLL_TUMBLE,
   getFilmStage,
+  scrollTumble,
   settleTumbleAngle,
   toDieProgress,
   type FilmStage,
 } from '../lib/film';
 import { OUTCOME_DOT_THEME } from '../lib/interactive-formula';
 import { dice, odd } from '../lib/math';
-import { SCROLLY_STAGE_THRESHOLDS, getScrollyStage } from '../lib/scrolly';
+import {
+  SCROLLY_STAGE_THRESHOLDS,
+  TUMBLE_CONFIG,
+  calculateDecelerationFactor,
+  getScrollyStage,
+} from '../lib/scrolly';
 
 describe('film stages', () => {
   it('switches stage exactly at each boundary', () => {
@@ -73,6 +80,31 @@ describe('die mapping', () => {
     expect(settleTumbleAngle(200, 0)).toBeCloseTo(0);
     // Free tumble: the wrap is a full turn, which shows the same orientation.
     expect(Math.abs(settleTumbleAngle(180.5, 1) - settleTumbleAngle(179.5, 1))).toBeCloseTo(359);
+  });
+
+  it('keeps the die still before the toss and after landing', () => {
+    expect(scrollTumble(0, 1)).toEqual({ x: 0, y: 0, z: 0 });
+    expect(scrollTumble(SCROLL_TUMBLE.START, 1)).toEqual({ x: 0, y: 0, z: 0 });
+    const landed = scrollTumble(TUMBLE_CONFIG.DECEL_END, calculateDecelerationFactor(TUMBLE_CONFIG.DECEL_END));
+    expect(Math.abs(landed.x)).toBeCloseTo(0);
+    expect(Math.abs(landed.y)).toBeCloseTo(0);
+    expect(Math.abs(landed.z)).toBeCloseTo(0);
+  });
+
+  it('gives the same angles for the same scroll position', () => {
+    const p = (SCROLL_TUMBLE.START + SCROLL_TUMBLE.SPIN_END) / 2;
+    expect(scrollTumble(p, 1)).toEqual(scrollTumble(p, 1));
+  });
+
+  it('slows down without a jump between free tumble and landing', () => {
+    // From the end of the spin on, the angle only unwinds toward rest.
+    let previous = scrollTumble(SCROLL_TUMBLE.SPIN_END, 1);
+    for (let p = SCROLL_TUMBLE.SPIN_END + 0.001; p <= TUMBLE_CONFIG.DECEL_END + 0.001; p += 0.001) {
+      const next = scrollTumble(p, calculateDecelerationFactor(p));
+      expect(Math.abs(next.x - previous.x)).toBeLessThan(15);
+      expect(Math.abs(next.y - previous.y)).toBeLessThan(15);
+      previous = next;
+    }
   });
 
   it('clamps to the die domain', () => {

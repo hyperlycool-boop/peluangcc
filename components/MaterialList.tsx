@@ -82,7 +82,7 @@ export default function MaterialList({ quiet }: MaterialListProps) {
                   transition={
                     quiet
                       ? { duration: 0 }
-                      : { duration: 0.38, ease: [0.16, 1, 0.3, 1] }
+                      : { duration: 0.24, ease: [0.32, 0.72, 0, 1] }
                   }
                   style={{ overflow: 'hidden' }}
                 >

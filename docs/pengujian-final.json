@@ -1,13 +1,13 @@
 {
   "base": "http://127.0.0.1:3200",
-  "date": "2026-11-06",
+  "date": "2026-11-13",
   "pages": [
     {
       "path": "/",
       "width": 1440,
       "scrollWidth": 1440,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 4,
       "h1": "Peluang bukansekadar angka.",
       "overflow": false
     },
@@ -16,7 +16,7 @@
       "width": 768,
       "scrollWidth": 768,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 4,
       "h1": "Peluang bukansekadar angka.",
       "overflow": false
     },
@@ -25,7 +25,7 @@
       "width": 375,
       "scrollWidth": 375,
       "formulaErrors": 0,
-      "formulas": 2,
+      "formulas": 4,
       "h1": "Peluang bukansekadar angka.",
       "overflow": false
     },
@@ -226,6 +226,10 @@
       "status": 200
     },
     {
+      "href": "/playground",
+      "status": 200
+    },
+    {
       "href": "/referensi",
       "status": 200
     },
@@ -296,6 +300,33 @@
       "lesson": "ruang-sampel",
       "id": "soal-3",
       "hasSolution": true
+    }
+  ],
+  "quizzes": [
+    {
+      "lesson": "ruang-sampel",
+      "questions": 3,
+      "feedback": true
+    },
+    {
+      "lesson": "peluang-komplemen",
+      "questions": 3,
+      "feedback": true
+    },
+    {
+      "lesson": "frekuensi-kejadian",
+      "questions": 3,
+      "feedback": true
+    },
+    {
+      "lesson": "kejadian-majemuk",
+      "questions": 3,
+      "feedback": true
+    },
+    {
+      "lesson": "bebas-bersyarat",
+      "questions": 3,
+      "feedback": true
     }
   ],
   "jsErrors": 0

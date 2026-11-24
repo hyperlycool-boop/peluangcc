@@ -9,7 +9,9 @@ interface FoldValues {
 
 export const FOLD_BREAKPOINTS = {
   progress: [0, 0.25, 0.35, 0.65, 0.75, 1] as const,
-  rotateX: [-16, -4, 0, 0, 6, 14] as const,
+  // Exit tilts the bottom edge away (negative), like the entry. Tilting it toward the viewer magnified
+  // tall cards by up to ~1.4x on narrow screens and clipped their edges.
+  rotateX: [-16, -4, 0, 0, -4, -10] as const,
   translateZ: [-30, -8, 0, 0, -8, -25] as const,
   scale: [0.97, 0.99, 1, 1, 0.99, 0.98] as const,
   creaseOpacity: [0.22, 0.06, 0, 0, 0.06, 0.18] as const,

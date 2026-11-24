@@ -57,8 +57,8 @@ try {
   );
   assert.equal(
     await page.locator('.floating-stage-item').count(),
-    4,
-    'Expected 4 .floating-stage-item elements to exist for scrolly stages'
+    6,
+    'Expected 6 .floating-stage-item elements: the homepage now runs the six-stage film'
   );
 
   // 5. Verify Material items & hover previews

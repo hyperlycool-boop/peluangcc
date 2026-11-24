@@ -25,7 +25,7 @@ export default function FilmStepper({
   const pendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const jump = useCallback(
-    (direction: -1 | 1) => {
+    (direction: -1 | 1, immediate = false) => {
       const runway = runwayRef.current;
       if (!runway) return;
 
@@ -45,7 +45,8 @@ export default function FilmStepper({
         window.innerHeight
       );
       const lenis = getLenis();
-      if (lenis) lenis.scrollTo(top, { duration: JUMP_SECONDS });
+      // Keyboard jumps land at once: a key pressed again and again should never wait on motion.
+      if (lenis) lenis.scrollTo(top, immediate ? { immediate: true } : { duration: JUMP_SECONDS });
       else window.scrollTo({ top });
     },
     [runwayRef, stage]
@@ -64,7 +65,7 @@ export default function FilmStepper({
       event.preventDefault();
       // A held key would otherwise race to the last stage.
       if (event.repeat) return;
-      jump(event.key === 'ArrowLeft' ? -1 : 1);
+      jump(event.key === 'ArrowLeft' ? -1 : 1, true);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);

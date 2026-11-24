@@ -63,8 +63,8 @@ try {
 
   // 5. Verify Material items & hover previews
   const links = page.locator('.material-item .module');
-  assert.equal(await links.count(), 5);
-  for (let i = 0; i < 5; i++) {
+  assert.equal(await links.count(), 6);
+  for (let i = 0; i < 6; i++) {
     await links.nth(i).hover();
     assert.equal(await page.locator('.material-item.is-active').count(), 1);
     await page.waitForTimeout(400);

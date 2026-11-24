@@ -152,6 +152,34 @@ export const quizzes: readonly QuizQuestion[] = [
     id: 'kuis-frekuensi-kejadian-2',
     lessonSlug: 'frekuensi-kejadian',
     prompt:
+      'Koin dilempar 10 kali dan hasilnya dicatat berurutan: A, G, G, A, A, G, A, G, G, G (A = angka, G = gambar). Berapa frekuensi relatif munculnya gambar?',
+    options: ['2/5', '1/2', '3/5', '6'],
+    correctIndex: 2,
+    explanation:
+      'Gambar muncul pada lemparan {ke-2, ke-3, ke-6, ke-8, ke-9, ke-10}, jadi f = 6 dan n = 10. Fr = 6/10 = 3/5.',
+    tex: 'F_r=\\frac{f}{n}=\\frac{6}{10}=\\frac{3}{5}',
+    space: ['ke-1', 'ke-2', 'ke-3', 'ke-4', 'ke-5', 'ke-6', 'ke-7', 'ke-8', 'ke-9', 'ke-10'],
+    counted: ['ke-2', 'ke-3', 'ke-6', 'ke-8', 'ke-9', 'ke-10'],
+  },
+  {
+    id: 'kuis-frekuensi-kejadian-3',
+    lessonSlug: 'frekuensi-kejadian',
+    prompt:
+      'Spinner diputar 8 kali dan hasilnya dicatat berurutan: merah, biru, merah, merah, hijau, merah, biru, merah. Berapa frekuensi relatif munculnya warna merah?',
+    options: ['1/3', '3/8', '5/8', '5'],
+    correctIndex: 2,
+    explanation:
+      'Merah muncul pada putaran {ke-1, ke-3, ke-4, ke-6, ke-8}, jadi f = 5 dan n = 8. Fr = 5/8. Spinner tidak harus seimbang; frekuensi relatif hanya mencatat hasil percobaan.',
+    tex: 'F_r=\\frac{f}{n}=\\frac{5}{8}',
+    space: ['ke-1', 'ke-2', 'ke-3', 'ke-4', 'ke-5', 'ke-6', 'ke-7', 'ke-8'],
+    counted: ['ke-1', 'ke-3', 'ke-4', 'ke-6', 'ke-8'],
+  },
+
+  // frekuensi-harapan
+  {
+    id: 'kuis-frekuensi-harapan-1',
+    lessonSlug: 'frekuensi-harapan',
+    prompt:
       'Dadu adil dilempar 90 kali. Berapa frekuensi harapan muncul angka yang kurang dari 3?',
     options: ['2 kali', '15 kali', '30 kali', '60 kali'],
     correctIndex: 2,
@@ -162,8 +190,8 @@ export const quizzes: readonly QuizQuestion[] = [
     counted: ['1', '2'],
   },
   {
-    id: 'kuis-frekuensi-kejadian-3',
-    lessonSlug: 'frekuensi-kejadian',
+    id: 'kuis-frekuensi-harapan-2',
+    lessonSlug: 'frekuensi-harapan',
     prompt:
       'Roda undian terbagi menjadi 8 sektor sama besar: 3 sektor hadiah (H1, H2, H3) dan 5 sektor kosong (Z1 sampai Z5). Roda diputar 200 kali. Berapa frekuensi harapan roda berhenti di sektor hadiah?',
     options: ['3 kali', '75 kali', '125 kali', '600 kali'],
@@ -173,6 +201,19 @@ export const quizzes: readonly QuizQuestion[] = [
     tex: 'F_h(A)=P(A)\\times n=\\frac{3}{8}\\times 200=75',
     space: ['H1', 'H2', 'H3', 'Z1', 'Z2', 'Z3', 'Z4', 'Z5'],
     counted: ['H1', 'H2', 'H3'],
+  },
+  {
+    id: 'kuis-frekuensi-harapan-3',
+    lessonSlug: 'frekuensi-harapan',
+    prompt:
+      'Tiga koin adil dilempar bersamaan sebanyak 80 kali. Berapa frekuensi harapan muncul tiga angka (AAA)?',
+    options: ['8 kali', '10 kali', '20 kali', '30 kali'],
+    correctIndex: 1,
+    explanation:
+      'Ruang sampel tiga koin berisi 8 hasil yang sama mungkin. Kejadian A = {AAA}, jadi n(A) = 1 dan n(S) = 8. P(A) = 1/8. Fh(A) = 1/8 × 80 = 10 kali.',
+    tex: 'F_h(A)=P(A)\\times n=\\frac{1}{8}\\times 80=10',
+    space: ['AAA', 'AAG', 'AGA', 'AGG', 'GAA', 'GAG', 'GGA', 'GGG'],
+    counted: ['AAA'],
   },
 
   // kejadian-majemuk

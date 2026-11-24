@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:3200",
-  "date": "2026-11-13",
+  "date": "2026-11-24",
   "pages": [
     {
       "path": "/",
@@ -115,8 +115,8 @@
       "width": 1440,
       "scrollWidth": 1440,
       "formulaErrors": 0,
-      "formulas": 3,
-      "h1": "Frekuensi kejadian",
+      "formulas": 2,
+      "h1": "Frekuensi relatif",
       "overflow": false
     },
     {
@@ -124,8 +124,8 @@
       "width": 768,
       "scrollWidth": 768,
       "formulaErrors": 0,
-      "formulas": 3,
-      "h1": "Frekuensi kejadian",
+      "formulas": 2,
+      "h1": "Frekuensi relatif",
       "overflow": false
     },
     {
@@ -133,8 +133,35 @@
       "width": 375,
       "scrollWidth": 375,
       "formulaErrors": 0,
-      "formulas": 3,
-      "h1": "Frekuensi kejadian",
+      "formulas": 2,
+      "h1": "Frekuensi relatif",
+      "overflow": false
+    },
+    {
+      "path": "/materi/frekuensi-harapan",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Frekuensi harapan",
+      "overflow": false
+    },
+    {
+      "path": "/materi/frekuensi-harapan",
+      "width": 768,
+      "scrollWidth": 768,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Frekuensi harapan",
+      "overflow": false
+    },
+    {
+      "path": "/materi/frekuensi-harapan",
+      "width": 375,
+      "scrollWidth": 375,
+      "formulaErrors": 0,
+      "formulas": 2,
+      "h1": "Frekuensi harapan",
       "overflow": false
     },
     {
@@ -207,6 +234,10 @@
     },
     {
       "href": "/materi/bebas-bersyarat",
+      "status": 200
+    },
+    {
+      "href": "/materi/frekuensi-harapan",
       "status": 200
     },
     {
@@ -315,6 +346,11 @@
     },
     {
       "lesson": "frekuensi-kejadian",
+      "questions": 3,
+      "feedback": true
+    },
+    {
+      "lesson": "frekuensi-harapan",
       "questions": 3,
       "feedback": true
     },

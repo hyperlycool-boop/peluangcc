@@ -152,7 +152,7 @@ export default function Playground() {
               <li key={outcome} className={members.includes(outcome) ? 'in-event' : ''}>
                 <span className="pg-bar-count mono">{tally[outcome]}</span>
                 <span className="pg-bar-track">
-                  <span className="pg-bar-fill" style={{ height: `${(tally[outcome] / tallest) * 100}%` }} />
+                  <span className="pg-bar-fill" style={{ transform: `scaleY(${tally[outcome] / tallest})` }} />
                 </span>
                 <span className="pg-bar-label mono">{outcome}</span>
               </li>

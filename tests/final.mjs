@@ -7,7 +7,7 @@ import fs from 'node:fs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:3200';
 const WIDTHS = [1440, 768, 375];
-const LESSONS = ['ruang-sampel', 'peluang-komplemen', 'frekuensi-kejadian', 'kejadian-majemuk', 'bebas-bersyarat'];
+const LESSONS = ['ruang-sampel', 'peluang-komplemen', 'frekuensi-kejadian', 'frekuensi-harapan', 'kejadian-majemuk', 'bebas-bersyarat'];
 const SHOTS = [
   { name: 'beranda', path: '/' },
   { name: 'materi', path: '/materi/kejadian-majemuk', openDetails: true },

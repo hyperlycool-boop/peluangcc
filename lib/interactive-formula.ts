@@ -1,6 +1,6 @@
 export type RollingDirection = 'up' | 'down' | 'none';
 
-export interface SpringPhysicsConfig {
+interface SpringPhysicsConfig {
   stiffness: number;
   damping: number;
   mass: number;
@@ -25,15 +25,15 @@ export const OUTCOME_DOT_THEME = {
   stroke: '#141413',
 } as const;
 
-export interface OutcomeDotAnimationParams {
+interface OutcomeDotAnimationParams {
   isSelected: boolean;
   wasSelected?: boolean;
   quiet: boolean;
 }
 
-export type MotionEasing = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
+type MotionEasing = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
 
-export interface OutcomeDotAnimationResult {
+interface OutcomeDotAnimationResult {
   scale: number | number[];
   fill: string;
   textColor: string;
@@ -172,7 +172,7 @@ export function formatProbabilityAriaLabel(
   return `P(${eventSpoken}) = ${safeNum} per ${safeDen}`;
 }
 
-export const PIP_PULSE_CONFIG = {
+const PIP_PULSE_CONFIG = {
   DURATION_MS: 1400,
   STAGGER_MS: 80,
 } as const;

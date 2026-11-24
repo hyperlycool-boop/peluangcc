@@ -64,11 +64,47 @@ try {
 
     // Verify floating stage text elements exist
     const floatingItemsCount = await page.locator('.floating-stage-item').count();
-    assert.equal(floatingItemsCount, 4, 'Expected 4 .floating-stage-item elements to exist for scrolly stages');
+    assert.equal(floatingItemsCount, 6, 'Expected 6 .floating-stage-item elements to exist for film stages');
 
     // Verify 4 3D folding section cards exist on prototype (Hero, Dadu, Lab, Materi)
     const sectionCards = page.locator('.folding-section-card');
     assert.equal(await sectionCards.count(), 4, 'Expected 4 .folding-section-card elements (Hero, Dadu, Lab, Materi)');
+
+    // Intro: only the hero fills the first screen; the film starts below the fold.
+    const daduTop = await page.evaluate(() => document.getElementById('dadu').getBoundingClientRect().top);
+    assert(daduTop >= 950 - 1, `Expected only the hero on the first screen at width ${width}, #dadu top was ${daduTop}px`);
+
+    // Scrolling away fades the hero out.
+    // Halfway through the hero's own exit range ('start start' to 'end start').
+    await page.evaluate(() => {
+      const hero = document.getElementById('beranda');
+      const top = hero.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, Math.round(top + hero.offsetHeight * 0.45));
+    });
+    await page.waitForTimeout(500);
+    const heroOpacity = await page.evaluate(() =>
+      Number(getComputedStyle(document.querySelector('#beranda .hero-copy')).opacity)
+    );
+    assert(heroOpacity < 0.6, `Expected the hero to fade while scrolling away at width ${width}, opacity was ${heroOpacity}`);
+
+    // The die moves only with the scroll: mid-tumble, a still page keeps a still die.
+    await page.evaluate(() => {
+      const runway = document.querySelector('.film-scene .scrolly-canvas-runway');
+      const top = runway.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, top + (runway.offsetHeight - window.innerHeight) * 0.22);
+    });
+    await page.waitForTimeout(800);
+    const dieTransforms = () =>
+      page.evaluate(() =>
+        Array.from(document.querySelectorAll('.film-scene .die-stage, .film-scene .die-stage *'))
+          .map((el) => getComputedStyle(el).transform)
+          .join('|')
+      );
+    const dieBefore = await dieTransforms();
+    await page.waitForTimeout(1000);
+    assert.equal(await dieTransforms(), dieBefore, `Expected the die to stay still without scrolling at width ${width}`);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
 
     // Verify page-level folding sections container exists
     const foldingSectionsContainer = page.locator('.folding-sections-container');
@@ -113,7 +149,11 @@ try {
 
     // 5. Scroll into the 3D scrollytelling runway (directly after Hero)
     const scrollyRunway = page.locator('.scrolly-canvas-runway');
-    await scrollyRunway.scrollIntoViewIfNeeded();
+    // The runway is taller than the viewport, so scroll explicitly to a point where the stage is pinned.
+    await scrollyRunway.evaluate((el) => {
+      const top = window.scrollY + el.getBoundingClientRect().top;
+      window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.02, behavior: 'instant' });
+    });
     await page.waitForTimeout(400);
 
     // Take screenshot at mid-scrolly fold
@@ -174,17 +214,20 @@ try {
       return { top: window.scrollY + rect.top, height: el.offsetHeight };
     });
 
-    // Scroll to Stage 3 (~70% of runway) to verify die face highlight
-    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + runwayInfo.height * 0.70);
+    const pinnedDistance = runwayInfo.height - viewportHeight;
+
+    // Scroll to Stage 3 (film progress 0.38) to verify die face highlight
+    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + pinnedDistance * 0.38);
     const highlightedFace = page.locator('.die-face-highlighted');
     await highlightedFace.waitFor({ state: 'attached', timeout: 3000 });
     assert(await highlightedFace.count() >= 1, 'Expected face 3 to be highlighted during Stage 3 landing');
 
-    // Scroll to Stage 4 (~95% of runway) to verify formula visibility
-    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + runwayInfo.height * 0.95);
-    const formulaStage4 = page.locator('.stage-4 .floating-stage-formula');
-    await formulaStage4.waitFor({ state: 'attached', timeout: 3000 });
-    assert(await formulaStage4.count() >= 1, 'Expected formula element in Stage 4');
+    // Scroll to Stage 6 (film progress 0.95) to verify the worked probability is shown
+    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), runwayInfo.top + pinnedDistance * 0.95);
+    // The formula is in the DOM from page load, so wait for the stage to become the active one.
+    const formulaStage6 = page.locator('.stage-6.is-active-stage .floating-stage-formula');
+    await formulaStage6.waitFor({ state: 'visible', timeout: 3000 });
+    assert(await formulaStage6.count() >= 1, 'Expected formula element in Stage 6');
 
     // 6. Scroll down to Card 02: Venn Diagram Lab (#lab) and test interactivity
     const labCard = page.locator('#lab');

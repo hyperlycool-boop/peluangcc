@@ -25,13 +25,16 @@ const types = {
   '.ttf': 'font/ttf',
 };
 
-async function resolveFile(urlPath) {
-  const safe = normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, '');
+async function resolveFile(decodedPath) {
+  const safe = normalize(decodedPath).replace(/^(\.\.[/\\])+/, '');
   const target = join(root, safe);
   if (!target.startsWith(root)) return null;
-  for (const candidate of [target, join(target, 'index.html'), `${target}.html`]) {
+  const directoryIndex = join(target, 'index.html');
+  for (const candidate of [target, directoryIndex, `${target}.html`]) {
     try {
-      if ((await stat(candidate)).isFile()) return candidate;
+      if ((await stat(candidate)).isFile()) {
+        return { file: candidate, isDirectoryIndex: candidate === directoryIndex };
+      }
     } catch {
       // try next candidate
     }
@@ -40,12 +43,26 @@ async function resolveFile(urlPath) {
 }
 
 createServer(async (req, res) => {
-  const { pathname } = new URL(req.url ?? '/', 'http://localhost');
-  const file = await resolveFile(pathname);
-  const path = file ?? join(root, '404.html');
+  let url;
+  let decodedPath;
+  try {
+    url = new URL(req.url ?? '/', 'http://localhost');
+    decodedPath = decodeURIComponent(url.pathname);
+  } catch {
+    res.writeHead(400).end('Bad request');
+    return;
+  }
+  const found = await resolveFile(decodedPath);
+  // Static hosts redirect a directory URL to its trailing-slash form.
+  if (found?.isDirectoryIndex && !decodedPath.endsWith('/')) {
+    const location = `${url.pathname.replace(/^\/+/, '/')}/${url.search}`;
+    res.writeHead(301, { Location: location }).end();
+    return;
+  }
+  const path = found?.file ?? join(root, '404.html');
   try {
     const body = await readFile(path);
-    res.writeHead(file ? 200 : 404, {
+    res.writeHead(found ? 200 : 404, {
       'Content-Type': types[extname(path)] ?? 'application/octet-stream',
     });
     res.end(body);

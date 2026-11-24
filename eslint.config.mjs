@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     'playwright-report/**',
     'test-results/**',
     'work/**',
+    // Agent tooling: skills scripts and full app copies in agent worktrees.
+    '.claude/**',
   ]),
 ]);
 

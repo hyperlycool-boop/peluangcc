@@ -1,4 +1,4 @@
-export interface LabeledFormula {
+interface LabeledFormula {
   label: string;
   tex: string;
 }

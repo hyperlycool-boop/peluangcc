@@ -1,4 +1,4 @@
-export type BallColor = 'merah' | 'biru';
+type BallColor = 'merah' | 'biru';
 
 export interface Ball {
   id: string;
@@ -7,12 +7,12 @@ export interface Ball {
   sourceId?: string;
 }
 
-export interface DrawState {
+interface DrawState {
   bag: Ball[];
   draws: Ball[];
 }
 
-export const MAX_DRAWS = 2;
+const MAX_DRAWS = 2;
 
 export const INITIAL_BAG: readonly Ball[] = [
   { id: 'm1', color: 'merah' },

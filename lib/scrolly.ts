@@ -1,3 +1,5 @@
+import { interpolatePiecewise } from './interpolate';
+
 export const SCROLLY_STAGE_THRESHOLDS = {
   STAGE_1_MAX: 0.24,
   STAGE_2_MAX: 0.56,
@@ -30,28 +32,6 @@ export interface CenteredDieKinematics {
   shadowScale: number;
   shadowOpacity: number;
   highlightFace: number | null;
-}
-
-function lerp(a: number, b: number, t: number): number {
-  return a + (b - a) * t;
-}
-
-function interpolatePiecewise(val: number, inRange: readonly number[], outRange: readonly number[]): number {
-  if (val <= inRange[0]) return outRange[0];
-  const lastIdx = inRange.length - 1;
-  if (val >= inRange[lastIdx]) return outRange[lastIdx];
-
-  for (let i = 0; i < lastIdx; i++) {
-    const x0 = inRange[i];
-    const x1 = inRange[i + 1];
-    if (val >= x0 && val <= x1) {
-      const span = x1 - x0;
-      const t = span === 0 ? 0 : (val - x0) / span;
-      return lerp(outRange[i], outRange[i + 1], t);
-    }
-  }
-
-  return outRange[lastIdx];
 }
 
 export function calculateCenteredDieKinematics(
@@ -139,72 +119,9 @@ export function calculateFloatingTextState(
     };
   }
 
-  let opacity = 0;
-  let translateY = 0;
-
-  if (stageNum === 1) {
-    if (p <= 0.16) {
-      opacity = 1;
-      translateY = 0;
-    } else if (p < 0.24) {
-      const t = (p - 0.16) / (0.24 - 0.16);
-      opacity = 1 - t;
-      translateY = -20 * t;
-    } else {
-      opacity = 0;
-      translateY = -20;
-    }
-  } else if (stageNum === 2) {
-    if (p < 0.20) {
-      opacity = 0;
-      translateY = 20;
-    } else if (p < 0.28) {
-      const t = (p - 0.20) / (0.28 - 0.20);
-      opacity = t;
-      translateY = 20 * (1 - t);
-    } else if (p <= 0.48) {
-      opacity = 1;
-      translateY = 0;
-    } else if (p < 0.56) {
-      const t = (p - 0.48) / (0.56 - 0.48);
-      opacity = 1 - t;
-      translateY = -20 * t;
-    } else {
-      opacity = 0;
-      translateY = -20;
-    }
-  } else if (stageNum === 3) {
-    if (p < 0.52) {
-      opacity = 0;
-      translateY = 20;
-    } else if (p < 0.60) {
-      const t = (p - 0.52) / (0.60 - 0.52);
-      opacity = t;
-      translateY = 20 * (1 - t);
-    } else if (p <= 0.72) {
-      opacity = 1;
-      translateY = 0;
-    } else if (p < 0.80) {
-      const t = (p - 0.72) / (0.80 - 0.72);
-      opacity = 1 - t;
-      translateY = -20 * t;
-    } else {
-      opacity = 0;
-      translateY = -20;
-    }
-  } else if (stageNum === 4) {
-    if (p < 0.76) {
-      opacity = 0;
-      translateY = 20;
-    } else if (p < 0.84) {
-      const t = (p - 0.76) / (0.84 - 0.76);
-      opacity = t;
-      translateY = 20 * (1 - t);
-    } else {
-      opacity = 1;
-      translateY = 0;
-    }
-  }
+  const stage = FLOATING_STAGE_BREAKPOINTS[stageNum as keyof typeof FLOATING_STAGE_BREAKPOINTS];
+  let opacity = stage ? interpolatePiecewise(p, stage.progress, stage.opacity) : 0;
+  let translateY = stage ? interpolatePiecewise(p, stage.progress, stage.translateY) : 0;
 
   // Clamp and round cleanly
   opacity = Math.max(0, Math.min(1, Math.round(opacity * 1000) / 1000));

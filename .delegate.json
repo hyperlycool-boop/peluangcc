@@ -1,0 +1,11 @@
+{
+  "build": "npm run build",
+  "test": "npm test",
+  "log": ".delegate/log.jsonl",
+  "linkDirs": ["node_modules"],
+  "risky": ["lib/", "tests/", "package.json", "package-lock.json", "next.config.ts", "tsconfig.json"],
+  "rules": "Before writing Next.js code, read the relevant guide in node_modules/next/dist/docs/ (AGENTS.md). Do not run npm run test:prototype or test:e2e without restoring docs/screenshots afterwards with git restore --worktree -- docs/screenshots.",
+  "reviewMaxLines": 400,
+  "agy": { "model": "gemini-3.8-flash-high", "timeout": "30m", "allow": [] },
+  "codex": { "model": "gpt-5.6-luna", "baseUrl": "https://chatgpt.com/backend-api/codex" }
+}

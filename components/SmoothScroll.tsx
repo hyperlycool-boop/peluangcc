@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
+import { setLenis } from '@/lib/smooth-scroll';
 
 interface SmoothScrollProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     });
 
     lenisRef.current = lenis;
+    setLenis(lenis);
 
     let frameId: number;
     function raf(time: number) {
@@ -40,6 +42,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       cancelAnimationFrame(frameId);
       lenis.destroy();
       lenisRef.current = null;
+      setLenis(null);
     };
   }, []);
 

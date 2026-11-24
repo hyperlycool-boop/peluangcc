@@ -204,7 +204,7 @@ Mode disimpan di `sessionStorage` dan ditandai `data-motion="quiet"` pada `<html
 ## 10. Arsitektur Teknis
 
 ### 10.1 Teknologi
-Next.js 16 App Router, React 19, TypeScript *strict*, Tailwind CSS 4 + token CSS, KaTeX, Motion, Lenis, lucide-react. Pengujian: Vitest, ESLint, Playwright. Seluruh situs statis (12 rute dibangun saat build, termasuk `/icon.svg` dan halaman 404); tidak ada *backend*.
+Next.js 16 App Router, React 19, TypeScript *strict*, Tailwind CSS 4 + token CSS, KaTeX, Motion, Lenis, lucide-react. Pengujian: Vitest, ESLint, Playwright. Seluruh situs statis (12 rute dibangun saat build, termasuk `/icon.svg` dan halaman 404); tidak ada *backend*. Situs yang sama dapat diekspor sebagai HTML statis untuk hosting di akar domain tanpa server Node; perintah dan batasnya ada di `README.md`.
 
 ### 10.2 Lapisan
 
@@ -277,9 +277,10 @@ Total saat ini: 141 tes unit pada 8 berkas. Semua lapisan di atas terakhir dijal
 | `PRODUCT.md` menyebut 114 tes unit | Diubah menjadi 141 tes pada 8 berkas |
 | Wireframe laporan (3.4) masih memuat "MATERI 04 / 05", "LATIHAN 01", eksperimen lama, dan tautan Sistem desain | Wireframe, peta situs, dan tabel halaman diperbarui; `public/laporan-awal.md` disinkronkan |
 | Tangkapan layar final dibuat sebelum perubahan header dan latihan | `npm run test:final` dijalankan ulang; `docs/pengujian-final.json` dan `docs/screenshots/final-*.png` diperbarui; jumlah tautan 15 → 14 dicatat di laporan 6.4 |
+| Belum ada versi yang dapat diunggah ke hosting statis | `npm run build:html` dan `npm run preview:html` ditambahkan; `npm run test:final` lulus pada hasil ekspor |
 | Skrip Playwright tahap awal belum dijalankan ulang | Ketiganya dijalankan dan lulus; pemilih `summary` di `tests/homepage.mjs` dipersempit; tangkapan layar tahap awal dikembalikan ke versi asli |
 
-Yang masih terbuka: semua perubahan di atas belum di-commit.
+Semua perubahan kode dan bukti di atas sudah di-commit (terakhir pada komit `55f2254`).
 
 ## 14. Rencana Lanjutan
 

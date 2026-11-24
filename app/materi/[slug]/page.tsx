@@ -9,10 +9,12 @@ import {
   lessonTitleTransitionName,
 } from '@/lib/route-transition';
 import { exercisesForLesson } from '@/lib/exercises';
+import { quizForLesson } from '@/lib/quizzes';
 import { LessonExperiment } from '@/components/LessonExperiments';
 import { Formula } from '@/components/Formula';
 import { SourceCredits } from '@/components/SourceCredits';
 import { ExerciseCard } from '@/components/ExerciseCard';
+import { LessonQuiz } from '@/components/LessonQuiz';
 import { SiteFooter, SubpageHeader } from '@/components/SiteChrome';
 
 interface PageProps {
@@ -33,6 +35,7 @@ export default async function Page({ params }: PageProps) {
   const m = materials[index];
   const backHome = lessonNavTypes(index, HOME_INDEX);
   const practice = exercisesForLesson(m.slug);
+  const quiz = quizForLesson(m.slug);
 
   return (
     <>
@@ -65,6 +68,7 @@ export default async function Page({ params }: PageProps) {
               <p>{m.answer}</p>
             </details>
           </section>
+          {quiz.length > 0 && <LessonQuiz questions={quiz} />}
           {practice.map((exercise) => (
             <ExerciseCard key={exercise.id} exercise={exercise} />
           ))}

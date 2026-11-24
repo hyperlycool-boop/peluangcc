@@ -5,7 +5,7 @@ import { Formula } from './Formula';
 import { RollingNumber } from './RollingNumber';
 import { formatProbabilityAriaLabel } from '../lib/interactive-formula';
 
-export interface InteractiveProbabilityFormulaProps {
+interface InteractiveProbabilityFormulaProps {
   eventNotation: string;
   numerator: number;
   denominator?: number;

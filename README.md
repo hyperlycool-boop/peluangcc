@@ -8,7 +8,7 @@ npm run dev
 Buka http://127.0.0.1:3000. Halaman: `/` (beranda: hero layar penuh, film dadu enam tahap, lab diagram Venn, daftar materi), `/materi/[slug]` (5 materi; tiga soal latihan ada di materi Ruang sampel dan Kejadian majemuk, uji pemahaman di setiap materi), `/playground` (taman bermain: dadu, koin, spinner), `/referensi`, serta `/styleguide` dan `/prototype` untuk pengembang. `/prototype` memakai desain yang sama dengan beranda, hanya kepala dan kaki halamannya yang berbeda.
 
 ```sh
-npm test               # 431 tes unit (Vitest, 24 berkas)
+npm test               # 422 tes unit (Vitest, 23 berkas)
 npm run typecheck
 npm run lint
 npm run build

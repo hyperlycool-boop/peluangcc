@@ -15,7 +15,7 @@ Last updated 24 November 2026. Branch `feat/latihan-referensi-laporan`, based on
   - the per-lesson visit marker (`LessonVisit.tsx`, `lib/learning-progress.ts` and its test)
   - the `range` rhythm band
 
-  `lib/frequency.ts` stays: `lib/playground.ts` uses its `Rng` type.
+  `lib/frequency.ts` and its test are deleted too. Its `Rng` type moved to `lib/playground.ts`.
 - **UI audit fixes (critical and high).**
   - New `--muted` and `--signal-text` tokens for contrast.
   - 44px header tap targets on touch screens.
@@ -111,11 +111,11 @@ Small edits to shared files:
 | Date | Check | Result |
 |---|---|---|
 | 24 Nov | `npm run typecheck` | Pass |
-| 24 Nov | `npm test` | 431 tests pass in 24 files |
-| 24 Nov | `npm run lint` | Project code clean. The exit code is non-zero only because ESLint also scans `.claude/worktrees` (279 errors) and `.claude/skills` (94 warnings) |
-| 24 Nov | `npm run build` | Pass, 13 static pages. The first run stopped on a Next.js 16.4.2 security-advisory notice, and the retry passed |
+| 24 Nov | `npm test` | 422 tests pass in 23 files |
+| 24 Nov | `npm run lint` | Pass, 0 problems. `.claude/**` is now in the ESLint ignores |
+| 24 Nov | `npm run build` | Pass, 13 static pages. Next.js 16.4.2 stopped builds on a security-advisory notice, so `next` is now 16.4.6 |
 | 24 Nov | `test:prototype`, `test:e2e`, `test:final` | Pass, production server on port 3000. `test:final`: 21 page/width combinations, 15 links, 7 anchors, same results as 13 Nov |
-| 24 Nov | `build:html` then `eval:export` | Export written, eval passes: 13 HTML files, 5 lesson pages, 312 links and assets. `build:html` still exits 1, because the same advisory notice fires after the export |
+| 24 Nov | `build:html` then `eval:export` | Pass on 16.4.6: 13 HTML files, 5 lesson pages, 312 links and assets |
 | 24 Nov | `/` in the browser at 1440×900 and 375×812 | `#dadu` starts below the fold, the hero fades, the die stays still when the page is still, all four side-rail ids resolve, no overflow. `/styleguide` renders with no console errors |
 | 10 Nov | `npm run typecheck` | Pass |
 | 10 Nov | `npm test` | 158 tests pass in 9 files |

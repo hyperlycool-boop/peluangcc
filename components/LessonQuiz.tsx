@@ -1,7 +1,7 @@
 'use client';
 
 import './LessonQuiz.css';
-import { useReducer } from 'react';
+import { useReducer, useRef } from 'react';
 import { Formula } from '@/components/Formula';
 import type { QuizQuestion } from '@/lib/quizzes';
 import { initialQuizState, isCorrect, quizReducer, score } from '@/lib/quiz-state';
@@ -21,12 +21,15 @@ function optionState(question: QuizQuestion, index: number, selected: number | n
 /** Quick self-check: pick an answer, press "Periksa", read the explanation. State lives only in memory. */
 export function LessonQuiz({ questions }: LessonQuizProps) {
   const [state, dispatch] = useReducer(quizReducer, questions.length, initialQuizState);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const result = score(questions, state);
   const allChecked = result.total > 0 && result.checked === result.total;
 
   return (
     <section className="lesson-quiz" aria-labelledby="uji-pemahaman">
-      <h2 id="uji-pemahaman">Uji pemahaman.</h2>
+      <h2 id="uji-pemahaman" ref={headingRef} tabIndex={-1}>
+        Uji pemahaman.
+      </h2>
       <p className="lesson-quiz-intro">Pilih satu jawaban, lalu periksa.</p>
       {questions.map((question, q) => {
         const entry = state[q];
@@ -107,7 +110,15 @@ export function LessonQuiz({ questions }: LessonQuizProps) {
           <p className="quiz-score">
             {result.correct} dari {result.total} benar.
           </p>
-          <button type="button" className="quiz-reset quiz-secondary" onClick={() => dispatch({ type: 'reset' })}>
+          <button
+            type="button"
+            className="quiz-reset quiz-secondary"
+            onClick={() => {
+              dispatch({ type: 'reset' });
+              // This button unmounts with the summary; send focus back to the quiz heading, not <body>.
+              headingRef.current?.focus();
+            }}
+          >
             Ulangi kuis
           </button>
         </div>

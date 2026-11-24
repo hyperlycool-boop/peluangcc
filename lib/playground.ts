@@ -1,5 +1,7 @@
 import { dice, probability, type Outcome } from './math';
-import type { Rng } from './frequency';
+
+/** Random source returning a number in [0, 1), like Math.random. */
+export type Rng = () => number;
 
 export interface PlaygroundTool {
   id: 'dadu' | 'koin' | 'spinner';

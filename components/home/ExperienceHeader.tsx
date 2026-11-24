@@ -23,11 +23,18 @@ function useActiveNavSection() {
       { id: 'materi', el: document.getElementById('materi') },
     ];
 
+    // A callback only lists the sections that changed, so keep every section's latest state and
+    // rank all of them. Ranking the batch alone kept a section active after it had left the zone.
+    const latest = new Map<string, IntersectionObserverEntry>();
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
+        entries.forEach((entry) => latest.set(entry.target.id, entry));
+        const visible = Array.from(latest.values())
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0];
+          .sort(
+            (a, b) =>
+              Math.abs(a.target.getBoundingClientRect().top) - Math.abs(b.target.getBoundingClientRect().top)
+          )[0];
         if (visible?.target?.id) {
           setActiveNav(resolveActiveNavSection(visible.target.id));
         }

@@ -1,11 +1,11 @@
 # Ruang Peluang
-Website pembelajaran matematika berbahasa Indonesia: **Peluang Suatu Kejadian dan Peluang Kejadian Majemuk**. Next.js App Router + TypeScript strict. Cakupan saat ini: Pertemuan 1–5 (lima materi, tiga latihan dengan visualisasi interaktif, daftar referensi, laporan).
+Website pembelajaran matematika berbahasa Indonesia: **Peluang Suatu Kejadian dan Peluang Kejadian Majemuk**. Next.js App Router + TypeScript strict. Cakupan saat ini: Pertemuan 1–5 (enam materi, tiga latihan dengan visualisasi interaktif, daftar referensi, laporan).
 
 ```sh
 npm install
 npm run dev
 ```
-Buka http://127.0.0.1:3000. Halaman: `/` (beranda: hero layar penuh, film dadu enam tahap, lab diagram Venn, daftar materi), `/materi/[slug]` (5 materi; tiga soal latihan ada di materi Ruang sampel dan Kejadian majemuk, uji pemahaman di setiap materi), `/playground` (taman bermain: dadu, koin, spinner), `/referensi`, serta `/styleguide` dan `/prototype` untuk pengembang. `/prototype` memakai desain yang sama dengan beranda, hanya kepala dan kaki halamannya yang berbeda.
+Buka http://127.0.0.1:3000. Halaman: `/` (beranda: hero layar penuh, film dadu enam tahap, lab diagram Venn, daftar materi), `/materi/[slug]` (6 materi; tiga soal latihan ada di materi Ruang sampel dan Kejadian majemuk, uji pemahaman di setiap materi), `/playground` (taman bermain: dadu, koin, spinner), `/referensi`, serta `/styleguide` dan `/prototype` untuk pengembang. `/prototype` memakai desain yang sama dengan beranda, hanya kepala dan kaki halamannya yang berbeda.
 
 ```sh
 npm test               # 422 tes unit (Vitest, 23 berkas)

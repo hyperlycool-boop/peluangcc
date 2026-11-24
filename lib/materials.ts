@@ -58,22 +58,40 @@ export const materials: readonly Material[] = [
   },
   {
     slug: 'frekuensi-kejadian',
-    title: 'Frekuensi kejadian',
+    title: 'Frekuensi relatif',
     description: 'Saat percobaan bertemu perkiraan.',
     caption: 'Frekuensi relatif berfluktuasi di sekitar peluang teori.',
     intro:
-      'Frekuensi relatif adalah perbandingan banyak kejadian yang teramati (f) dengan banyak seluruh percobaan (n), dan dapat dinyatakan dalam persen. Frekuensi harapan adalah perkiraan banyak kemunculan kejadian A dari n percobaan berdasarkan peluang teori. Hasil nyata dapat berbeda dari nilai harapan.',
+      'Frekuensi relatif adalah perbandingan banyak kejadian yang teramati (f) dengan banyak seluruh percobaan (n), dan dapat dinyatakan dalam persen. Nilainya berasal dari percobaan yang benar-benar dilakukan, jadi bisa berbeda dari peluang teori. Makin banyak percobaan, frekuensi relatif cenderung makin dekat ke peluang teori.',
     formulas: [
       { label: 'Frekuensi relatif', tex: 'F_r=\\frac{f}{n}' },
       { label: 'Frekuensi relatif dalam persen', tex: 'F_r=\\frac{f}{n}\\times 100\\%' },
-      { label: 'Frekuensi harapan', tex: 'F_h(A)=P(A)\\times n' },
     ],
     example:
-      'Koin adil dilempar 100 kali dan sisi angka muncul 47 kali. Frekuensi relatifnya 47/100 = 0,47 atau 47%, sedangkan frekuensi harapannya 0,5 × 100 = 50. Perbedaan ini wajar pada percobaan acak.',
+      'Koin adil dilempar 100 kali dan sisi angka muncul 47 kali. Frekuensi relatifnya 47/100 = 0,47 atau 47%. Peluang teorinya 0,5; selisih kecil ini wajar pada percobaan acak.',
+    question:
+      'Sebuah paku payung dilempar 50 kali dan jatuh dengan ujung ke atas sebanyak 18 kali. Berapa frekuensi relatif ujung ke atas?',
+    answer:
+      'Fr = 18/50 = 0,36 atau 36%. Paku payung tidak simetris, jadi peluangnya hanya bisa diperkirakan lewat percobaan seperti ini.',
+    sources: ['lembar-guru', 'openstax-3-1'],
+  },
+  {
+    slug: 'frekuensi-harapan',
+    title: 'Frekuensi harapan',
+    description: 'Memperkirakan hasil sebelum mencoba.',
+    caption: 'Hasil percobaan berada di sekitar frekuensi harapan, jarang tepat sama.',
+    intro:
+      'Frekuensi harapan adalah perkiraan banyak kemunculan kejadian A jika percobaan dilakukan n kali. Nilainya dihitung dari peluang teori, sebelum percobaan dilakukan. Hasil nyata biasanya berada di sekitar frekuensi harapan, tetapi tidak wajib sama persis.',
+    formulas: [
+      { label: 'Frekuensi harapan', tex: 'F_h(A)=P(A)\\times n' },
+      { label: 'Dengan ruang sampel sama mungkin', tex: 'F_h(A)=\\frac{n(A)}{n(S)}\\times n' },
+    ],
+    example:
+      'Dadu adil dilempar 120 kali. Kejadian A = muncul angka genap = {2, 4, 6}, jadi P(A) = 3/6 = 1/2. Frekuensi harapannya 1/2 × 120 = 60 kali. Jika ternyata angka genap muncul 57 kali, percobaan tetap wajar.',
     question: 'Jika dadu adil dilempar 60 kali, berapa frekuensi harapan angka 6?',
     answer:
       'Fh = (1/6) × 60 = 10 kali. Angka 6 tidak wajib muncul tepat 10 kali.',
-    sources: ['lembar-guru', 'openstax-3-1'],
+    sources: ['lembar-guru'],
   },
   {
     slug: 'kejadian-majemuk',

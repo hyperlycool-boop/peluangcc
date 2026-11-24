@@ -100,6 +100,24 @@ const recompute: Record<string, (q: QuizQuestion) => string> = {
     return simplest(sixes.length, results.length);
   },
   'kuis-frekuensi-kejadian-2': (q) => {
+    const results = ['A', 'G', 'G', 'A', 'A', 'G', 'A', 'G', 'G', 'G'];
+    expect(q.prompt).toContain(results.join(', '));
+    const space = results.map((_, i) => `ke-${i + 1}`);
+    expect(q.space).toEqual(space);
+    const tails = space.filter((_, i) => results[i] === 'G');
+    expect(q.counted).toEqual(tails);
+    return simplest(tails.length, results.length);
+  },
+  'kuis-frekuensi-kejadian-3': (q) => {
+    const results = ['merah', 'biru', 'merah', 'merah', 'hijau', 'merah', 'biru', 'merah'];
+    expect(q.prompt).toContain(results.join(', '));
+    const space = results.map((_, i) => `ke-${i + 1}`);
+    expect(q.space).toEqual(space);
+    const reds = space.filter((_, i) => results[i] === 'merah');
+    expect(q.counted).toEqual(reds);
+    return simplest(reds.length, results.length);
+  },
+  'kuis-frekuensi-harapan-1': (q) => {
     const n = 90;
     expect(q.prompt).toContain(`${n} kali`);
     expect(q.space).toEqual(dice.outcomes);
@@ -110,12 +128,23 @@ const recompute: Record<string, (q: QuizQuestion) => string> = {
     expect(expected).toBeCloseTo(Math.round(expected));
     return `${Math.round(expected)} kali`;
   },
-  'kuis-frekuensi-kejadian-3': (q) => {
+  'kuis-frekuensi-harapan-2': (q) => {
     const n = 200;
     expect(q.prompt).toContain(`${n} kali`);
     const space = ['H1', 'H2', 'H3', ...Array.from({ length: 5 }, (_, i) => `Z${i + 1}`)];
     expect(q.space).toEqual(space);
     const a = space.filter((x) => x.startsWith('H'));
+    expect(q.counted).toEqual(a);
+    const expected = probabilityOf(q, a) * n;
+    expect(expected).toBeCloseTo(Math.round(expected));
+    return `${Math.round(expected)} kali`;
+  },
+  'kuis-frekuensi-harapan-3': (q) => {
+    const n = 80;
+    expect(q.prompt).toContain(`${n} kali`);
+    const space = cartesian([['A', 'G'], ['A', 'G'], ['A', 'G']]);
+    expect(q.space).toEqual(space);
+    const a = space.filter((x) => x === 'AAA');
     expect(q.counted).toEqual(a);
     const expected = probabilityOf(q, a) * n;
     expect(expected).toBeCloseTo(Math.round(expected));
@@ -206,8 +235,8 @@ const recompute: Record<string, (q: QuizQuestion) => string> = {
 };
 
 describe('Kuis: struktur dan data', () => {
-  it('setiap materi punya tepat 3 soal dan total 15', () => {
-    expect(quizzes).toHaveLength(15);
+  it('setiap materi punya tepat 3 soal dan total 18', () => {
+    expect(quizzes).toHaveLength(18);
     for (const m of materials) expect(quizForLesson(m.slug)).toHaveLength(3);
   });
 

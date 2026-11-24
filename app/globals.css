@@ -1061,12 +1061,27 @@ footer > a:last-child {
 .frequency-trace {
   stroke-dasharray: 800;
   stroke-dashoffset: 800;
-  animation: trace 400ms var(--ease-out) forwards;
+  animation: trace 300ms var(--ease-out) forwards;
 }
 
 .venn-reveal {
   animation: venn-in 350ms var(--ease-out) both;
   transform-origin: center;
+}
+
+.bar-grow {
+  animation: bar-grow 300ms var(--ease-out) both;
+  transform-box: fill-box;
+  transform-origin: left;
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .complement-glow {
@@ -1282,7 +1297,6 @@ footer {
   transform-style: preserve-3d;
   position: relative;
   will-change: transform;
-  transition: filter 0.25s ease;
 }
 
 .die-is-tossing {
@@ -1696,7 +1710,8 @@ footer {
 .experiment-dice { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
 .experiment-dice button { display: flex; flex-direction: column; align-items: center; gap: 9px; min-width: 0; padding: 12px 4px 8px; border: 1px solid #d8cec5; border-radius: 12px; background: white; font-size: 12px; color: var(--ink); transition: transform 200ms var(--experiment-ease); }
 .experiment-dice button[aria-pressed="true"] { background: var(--signal); color: white; border-color: var(--signal); transform: translateY(-4px); }
-.experiment-dice button:active { transform: scale(0.94); }
+.experiment-dice button:active { transform: scale(0.97); }
+.experiment-dice button[aria-pressed="true"]:active { transform: translateY(-4px) scale(0.97); }
 .pip-face { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: 28px; height: 28px; }
 .pip { border-radius: 50%; background: transparent; }
 .pip.on { background: currentColor; }
@@ -1715,6 +1730,14 @@ footer {
 .balance-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; }
 .frequency-chart { width: 100%; display: block; }
 .frequency-chart text { font-family: inherit; font-size: 13px; }
+.expected-bars { display: grid; gap: 12px; margin: 22px 0 0; }
+.expected-row { display: grid; grid-template-columns: 76px minmax(0, 1fr) 48px; align-items: center; gap: 12px; font-size: 14px; }
+.expected-row b { text-align: right; font-variant-numeric: tabular-nums; }
+.expected-track { height: 18px; border-radius: 999px; background: #f3f0ee; overflow: hidden; }
+.expected-fill { height: 100%; transform-origin: left; transition: transform 250ms var(--experiment-ease); }
+.expected-fill.is-expected { background: repeating-linear-gradient(135deg, var(--signal) 0 6px, #e8875c 6px 12px); }
+.expected-fill.is-observed { background: var(--ink); }
+[data-quiet="true"] .expected-fill { transition: none; }
 .coin-history { display: flex; flex-wrap: wrap; gap: 6px; min-height: 34px; margin: 12px 0; }
 .coin { width: 30px; height: 30px; display: grid; place-items: center; font-size: 12px; border-radius: 50%; background: #e5ded8; border: 1px solid #ccc0b7; }
 .coin-angka { background: #f6cf7b; border-color: #dab65e; }
@@ -1856,11 +1879,11 @@ footer {
 .homepage-hero .hero-copy > :nth-child(2) { animation-delay: 110ms; }
 .homepage-hero .hero-copy > :nth-child(3) { animation-delay: 200ms; }
 
-.lesson > * { animation: page-rise 600ms var(--ease-luxury) backwards; animation-delay: 240ms; }
+.lesson > * { animation: page-rise 300ms var(--ease-out) backwards; animation-delay: 160ms; }
 .lesson > :nth-child(1) { animation-delay: 0ms; }
-.lesson > :nth-child(2) { animation-delay: 60ms; }
-.lesson > :nth-child(3) { animation-delay: 120ms; }
-.lesson > :nth-child(4) { animation-delay: 180ms; }
+.lesson > :nth-child(2) { animation-delay: 40ms; }
+.lesson > :nth-child(3) { animation-delay: 80ms; }
+.lesson > :nth-child(4) { animation-delay: 120ms; }
 
 html[data-navigated] .homepage-hero .hero-copy > *,
 html[data-navigated] .lesson > * { animation: none; }
@@ -1885,7 +1908,7 @@ html[data-navigated] .lesson > * { animation: none; }
   .lesson details::details-content {
     block-size: 0;
     overflow-y: clip;
-    transition: block-size 320ms var(--ease-drawer), content-visibility 320ms allow-discrete;
+    transition: block-size 240ms var(--ease-drawer), content-visibility 240ms allow-discrete;
   }
   .lesson details[open]::details-content { block-size: auto; }
 }
@@ -1909,10 +1932,10 @@ html[data-navigated] .lesson > * { animation: none; }
 
 @keyframes vt-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes vt-slide { from { translate: var(--vt-offset); } to { translate: 0; } }
-::view-transition-old(.nav-forward) { --vt-offset: -60px; animation: 150ms var(--ease-out) both vt-fade reverse, 400ms var(--ease-in-out) both vt-slide reverse; }
-::view-transition-new(.nav-forward) { --vt-offset: 60px; animation: 210ms ease-out 150ms both vt-fade, 400ms var(--ease-in-out) both vt-slide; }
-::view-transition-old(.nav-back) { --vt-offset: 60px; animation: 150ms var(--ease-out) both vt-fade reverse, 400ms var(--ease-in-out) both vt-slide reverse; }
-::view-transition-new(.nav-back) { --vt-offset: -60px; animation: 210ms ease-out 150ms both vt-fade, 400ms var(--ease-in-out) both vt-slide; }
+::view-transition-old(.nav-forward) { --vt-offset: -60px; animation: 150ms var(--ease-out) both vt-fade reverse, 300ms var(--ease-in-out) both vt-slide reverse; }
+::view-transition-new(.nav-forward) { --vt-offset: 60px; animation: 210ms var(--ease-out) 90ms both vt-fade, 300ms var(--ease-in-out) both vt-slide; }
+::view-transition-old(.nav-back) { --vt-offset: 60px; animation: 150ms var(--ease-out) both vt-fade reverse, 300ms var(--ease-in-out) both vt-slide reverse; }
+::view-transition-new(.nav-back) { --vt-offset: -60px; animation: 210ms var(--ease-out) 90ms both vt-fade, 300ms var(--ease-in-out) both vt-slide; }
 
 /* Tenang / Fokus ujian (lib/display-mode.ts sets html[data-motion]) also calm page transitions. */
 html[data-motion='quiet']::view-transition-old(*),
@@ -2273,7 +2296,7 @@ html:has(.is-film) {
   cursor: default;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .film-stepper button:hover:not([aria-disabled="true"]) {
     background: var(--ink);
     color: var(--lifted);
@@ -2528,7 +2551,7 @@ html:has(.is-film) {
     transform: none;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .side-progress a:hover .side-progress-label {
       opacity: 1;
       transform: none;
@@ -2622,7 +2645,7 @@ html:has(.is-film) {
 
 @keyframes pg-pop {
   from {
-    transform: scale(0.86);
+    transform: scale(0.95);
   }
 }
 
@@ -2784,8 +2807,10 @@ html:has(.is-film) {
 
 .pg-bar-fill {
   width: 100%;
+  height: 100%;
   background: #b9b1a9;
-  transition: height 260ms var(--ease-out);
+  transform-origin: bottom;
+  transition: transform 200ms var(--ease-out);
 }
 
 .pg-bars .in-event .pg-bar-fill {

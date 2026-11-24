@@ -178,11 +178,12 @@ export default function VennLab({ quiet }: { quiet: boolean }) {
   const pillTransition: Transition = quiet
     ? { duration: 0 }
     : { type: 'spring', stiffness: 380, damping: 30 };
+  // Old text leaves instantly so `mode="wait"` costs nothing; only the new text eases in.
   const answerSwap = {
-    initial: quiet ? false : { opacity: 0, y: 4 },
-    animate: { opacity: 1, y: 0 },
-    exit: quiet ? { opacity: 1 } : { opacity: 0, y: -4 },
-    transition: { duration: quiet ? 0 : 0.16, ease: 'easeOut' },
+    initial: quiet ? false : { opacity: 0, transform: 'translateY(4px)' },
+    animate: { opacity: 1, transform: 'translateY(0px)' },
+    exit: { opacity: 0, transition: { duration: 0 } },
+    transition: { duration: quiet ? 0 : 0.16, ease: motionTokens.easeLuxury },
   } as const;
 
   return (

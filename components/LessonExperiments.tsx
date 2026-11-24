@@ -85,7 +85,33 @@ function FrequencyExperiment({ quiet }: ExperimentProps) {
     <div className="coin-history" aria-label="Hasil 12 lemparan terakhir">{tosses.slice(-12).map((s, i) => <span key={coinBase + i} className={`coin coin-flip ${s ? 'coin-angka' : ''}`} style={{ animationDelay: `${flipDelays[coinBase + i] ?? 0}ms` }}>{s ? 'A' : 'G'}</span>)}</div>
     <small>A = angka · G = gambar · menampilkan maksimal 12 hasil terakhir</small>
     <div className="experiment-controls"><button className="experiment-primary" disabled={tosses.length >= 1000} onClick={() => add(1)}>Lempar 1 kali</button><button disabled={tosses.length > 990} onClick={() => add(10)}>+10 lemparan</button><button disabled={tosses.length > 900} onClick={() => add(100)}>+100 lemparan</button><button onClick={() => setRun(r => ({ tosses: [], prevCount: 0, batch: r.batch + 1, flipDelays: [] }))}>Ulangi</button></div>
-    <div className="experiment-result" role="status"><span className="experiment-equation">{tosses.length ? `Frekuensi relatif = ${successes}/${tosses.length} = ${(successes / tosses.length).toFixed(3)}` : 'Belum ada data percobaan.'}</span><span>Angka teramati: {successes} · Frekuensi harapan: 0,5 × {tosses.length} = {tosses.length / 2}. Hasil nyata tidak harus sama dengan harapan.</span></div>
+    <div className="experiment-result" role="status"><span className="experiment-equation">{tosses.length ? `Frekuensi relatif = ${successes}/${tosses.length} = ${(successes / tosses.length).toFixed(3)}` : 'Belum ada data percobaan.'}</span><span>Angka teramati: {successes} dari {tosses.length} lemparan · peluang teori 0,5. Frekuensi relatif tidak harus sama dengan peluang teori.</span></div>
+  </>;
+}
+
+const TRIAL_COUNTS = [30, 60, 120, 600];
+
+function ExpectedFrequencyExperiment({ quiet }: ExperimentProps) {
+  const [selected, setSelected] = useState([6]);
+  const [n, setN] = useState(60);
+  const [rolls, setRolls] = useState<number[]>([]);
+  const expected = selected.length / 6 * n;
+  const observed = rolls.filter(r => selected.includes(r)).length;
+  const gap = observed - expected;
+  const thrown = rolls.length > 0;
+  const chooseN = (next: number) => { setN(next); setRolls([]); };
+  const roll = () => setRolls(Array.from({ length: n }, () => 1 + Math.floor(Math.random() * 6)));
+  const bar = (value: number) => ({ transform: `scaleX(${n ? value / n : 0})` });
+  return <>
+    <p>Pilih hasil untuk kejadian A dan banyak lemparan n. Frekuensi harapan dihitung sebelum dadu dilempar; lalu bandingkan dengan hasil percobaanmu.</p>
+    <DiceChoices selected={selected} onToggle={f => setSelected(s => s.includes(f) ? s.filter(x => x !== f) : [...s, f].sort())} />
+    <div className="experiment-controls" role="group" aria-label="Banyak lemparan">{TRIAL_COUNTS.map(c => <button key={c} type="button" aria-pressed={n === c} onClick={() => chooseN(c)}>n = {c}</button>)}</div>
+    <div className="expected-bars" role="img" aria-label={`Frekuensi harapan ${expected} dari ${n} lemparan${thrown ? `, hasil teramati ${observed}` : ''}`}>
+      <div className="expected-row"><span>Harapan</span><div className="expected-track"><div className="expected-fill is-expected" style={bar(expected)} /></div><b>{expected}</b></div>
+      <div className="expected-row"><span>Teramati</span><div className="expected-track"><div className="expected-fill is-observed" style={bar(thrown ? observed : 0)} /></div><b>{thrown ? observed : '–'}</b></div>
+    </div>
+    <div className="experiment-controls"><button type="button" className="experiment-primary" onClick={roll}>{thrown ? `Lempar ulang ${n} kali` : `Lempar ${n} kali`}</button>{thrown && <button type="button" onClick={() => setRolls([])}>Hapus hasil</button>}</div>
+    <div className="experiment-result" role="status"><span className="experiment-equation">F<sub>h</sub>(A) = <RollingNumber value={selected.length} quiet={quiet} />/6 × {n} = {expected}</span><span>A = {setText(selected)}. {thrown ? `Hasil percobaan: A muncul ${observed} kali, selisih ${gap > 0 ? '+' : ''}${gap} dari harapan. Hasil nyata tidak harus sama dengan harapan.` : 'Lempar dadu untuk melihat seberapa dekat hasil nyata dengan harapan.'}</span></div>
   </>;
 }
 
@@ -111,7 +137,7 @@ function ConditionalExperiment({ quiet }: ExperimentProps) {
 }
 
 // Lessons with practice problems (Ruang sampel, Kejadian majemuk) visualise those problems.
-const experiments = [SeatingExperiment, ComplementExperiment, FrequencyExperiment, CompoundExerciseExperiment, ConditionalExperiment];
+const experiments = [SeatingExperiment, ComplementExperiment, FrequencyExperiment, ExpectedFrequencyExperiment, CompoundExerciseExperiment, ConditionalExperiment];
 
 /**
  * Quiet when the caller asks (Tenang / Fokus ujian) or the system prefers reduced motion.
@@ -138,7 +164,7 @@ export function LessonExperiment({ index, quiet }: { index: number; quiet?: bool
 export default function LessonExperiments({ quiet }: { quiet?: boolean }) {
   const isQuiet = useExperimentQuiet(quiet);
   return <section id="eksperimen-materi" className="lesson-experiments" data-quiet={isQuiet}>
-    <div className="section-title"><div><div className="eyebrow">LAB PROTOTIPE / 5 MATERI INTERAKTIF</div><h2>Ubah. Coba. Pahami.</h2></div><p>Setiap konsep punya ruang percobaannya sendiri. Pilih hasil, lakukan percobaan, dan lihat rumus mengikuti tindakanmu.</p></div>
+    <div className="section-title"><div><div className="eyebrow">LAB PROTOTIPE / 6 MATERI INTERAKTIF</div><h2>Ubah. Coba. Pahami.</h2></div><p>Setiap konsep punya ruang percobaannya sendiri. Pilih hasil, lakukan percobaan, dan lihat rumus mengikuti tindakanmu.</p></div>
     <nav className="experiment-jumps" aria-label="Pilih eksperimen materi">{materials.map((m, i) => <a key={m.slug} href={`#eksperimen-${m.slug}`}>0{i + 1} · {m.title}</a>)}</nav>
     <div className="experiment-grid">{materials.map((m, i) => { const Experiment = experiments[i]; return <article className="experiment-card" key={m.slug} id={`eksperimen-${m.slug}`}><div className="eyebrow">EKSPERIMEN 0{i + 1}</div><h3>{m.title}</h3><Experiment quiet={isQuiet} /></article>; })}</div>
   </section>;

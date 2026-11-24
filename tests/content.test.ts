@@ -83,6 +83,12 @@ describe('Rumus pada materi', () => {
     expect(formulaText('frekuensi-kejadian')).toContain('100\\%');
   });
 
+  it('frekuensi harapan punya materi sendiri; frekuensi relatif tidak memuatnya lagi', () => {
+    expect(formulaText('frekuensi-harapan')).toContain('F_h(A)=P(A)\\times n');
+    expect(formulaText('frekuensi-harapan')).toContain('\\frac{n(A)}{n(S)}\\times n');
+    expect(formulaText('frekuensi-kejadian')).not.toContain('F_h');
+  });
+
   it('kejadian majemuk memuat rumus saling lepas dan tidak saling lepas', () => {
     const tex = formulaText('kejadian-majemuk');
     expect(tex).toContain('P(A\\cup B)=P(A)+P(B)-P(A\\cap B)');

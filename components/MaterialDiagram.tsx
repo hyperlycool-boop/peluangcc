@@ -9,6 +9,7 @@ const DIAGRAM_LABELS = [
   'Ruang sampel dadu dengan hasil ganjil disorot',
   'Kejadian A dan komplemennya',
   'Ilustrasi fluktuasi frekuensi relatif, bukan data simulasi',
+  'Ilustrasi frekuensi harapan dibandingkan hasil percobaan',
   'Himpunan A dan B yang beririsan',
   'Pohon dua pengambilan bola tanpa pengembalian',
 ] as const;
@@ -25,7 +26,7 @@ export default function MaterialDiagram({ index, quiet = false }: MaterialDiagra
     >
       <rect x="10" y="10" width="420" height="200" rx="35" fill="#f3f0ee" />
       <text x="28" y="40" fontSize="14" fill="#736b65">
-        {index === 4 ? '3 merah · 2 biru' : 'S'}
+        {index === 5 ? '3 merah · 2 biru' : index === 3 ? 'Dadu · n = 120 · A = {6}' : 'S'}
       </text>
 
       {index === 0 && (
@@ -90,6 +91,30 @@ export default function MaterialDiagram({ index, quiet = false }: MaterialDiagra
 
       {index === 3 && (
         <>
+          <text x="40" y="92" fontSize="14">
+            Harapan
+          </text>
+          <rect x="130" y="76" width="260" height="24" rx="12" fill="#fff" />
+          <rect className="bar-grow" x="130" y="76" width="260" height="24" rx="12" fill="#cf4500" />
+          <text x="40" y="142" fontSize="14">
+            Teramati
+          </text>
+          <rect x="130" y="126" width="260" height="24" rx="12" fill="#fff" />
+          <rect className="bar-grow" x="130" y="126" width="221" height="24" rx="12" fill="#141413" style={{ animationDelay: '120ms' }} />
+          <text x="380" y="93" fontSize="13" fill="white" textAnchor="end">
+            20
+          </text>
+          <text x="341" y="143" fontSize="13" fill="white" textAnchor="end">
+            17
+          </text>
+          <text x="40" y="190" fontSize="12">
+            Fh = 1/6 × 120 = 20 · ilustrasi, bukan data percobaan
+          </text>
+        </>
+      )}
+
+      {index === 4 && (
+        <>
           <circle cx="170" cy="110" r="75" fill="#efb3a3" />
           <circle
             className="venn-reveal"
@@ -111,7 +136,7 @@ export default function MaterialDiagram({ index, quiet = false }: MaterialDiagra
         </>
       )}
 
-      {index === 4 && (
+      {index === 5 && (
         <>
           <path
             className="frequency-trace"

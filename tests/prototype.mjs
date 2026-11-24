@@ -25,7 +25,7 @@ try {
     assert.equal(await page.locator('#dadu').count(), 1, 'Expected #dadu 3D scrolly section to exist on prototype');
     assert.equal(await page.locator('#lab').count(), 1, 'Expected #lab Venn diagram section to exist on prototype');
     assert.equal(await page.locator('#materi').count(), 1, 'Expected #materi MaterialList to exist on prototype');
-    assert.equal(await page.locator('.material-item .module').count(), 5, 'Expected 5 curriculum modules');
+    assert.equal(await page.locator('.material-item .module').count(), 6, 'Expected 6 curriculum modules');
 
     // 1. Verify Section order: #dadu is placed directly after Hero, before #lab
     const sectionOrder = await page.evaluate(() => {
